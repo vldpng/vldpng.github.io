@@ -20,10 +20,10 @@ interface Option {
 }
 
 const implants: Option[] = [
-  { title: 'ROOT®', subtitle: 'Швейцария', price: 490, logo: '/icons/ROOTT_logo.png', img: '/images/implants/root.webp' },
+  { title: 'ROOT®', subtitle: 'Швейцария', price: 490, logo: '/images/implants/brands/roott.png', img: '/images/implants/root.webp' },
   // megagen.webp — квадратный кадр с большими полями, поэтому увеличиваем
-  { title: 'Megagen', subtitle: 'Южная Корея', price: 400, logo: '/icons/megagen_logo.svg', img: '/images/implants/megagen.webp', imgScale: 'scale-[2.2]' },
-  { title: 'Straumann', subtitle: 'Швейцария', price: 900, logo: '/icons/Straumann_Logo.svg', img: '/images/implants/straumann.webp' },
+  { title: 'Megagen', subtitle: 'Южная Корея', price: 400, logo: '/images/implants/brands/megagen.svg', img: '/images/implants/megagen.webp', imgScale: 'scale-[2.2]' },
+  { title: 'Straumann', subtitle: 'Швейцария', price: 900, logo: '/images/implants/brands/straumann.svg', img: '/images/implants/straumann.webp' },
 ];
 
 /** Небольшая иллюстрация импланта (резьба) — фолбэк, если фото не загрузилось. */
@@ -45,10 +45,10 @@ const ImplantGlyph = () => (
 
 const crowns: Option[] = [
   // Фото коронок с крупным белым полем — увеличиваем масштабом (лишнее обрежется).
-  { title: 'Металлическая коронка', price: 550, img: '/images/implants/Metal_dental_crown.webp', imgScale: 'scale-[2.6]' },
+  { title: 'Металлическая коронка', price: 550, img: '/images/implants/crowns/metal.webp', imgScale: 'scale-[2.6]' },
   // TODO: уточнить цену металлокерамической коронки (сейчас временная).
-  { title: 'Металлокерамическая коронка', price: 500, img: '/images/implants/Metalceramic_crown.webp', imgScale: 'scale-[2.6]' },
-  { title: 'Циркониевая коронка', price: 450, img: '/images/implants/Zirconium_crown.webp', imgScale: 'scale-[2.6]' },
+  { title: 'Металлокерамическая коронка', price: 500, img: '/images/implants/crowns/metalceramic.webp', imgScale: 'scale-[2.6]' },
+  { title: 'Циркониевая коронка', price: 450, img: '/images/implants/crowns/zirconium.webp', imgScale: 'scale-[2.6]' },
 ];
 
 interface TreatmentStage {

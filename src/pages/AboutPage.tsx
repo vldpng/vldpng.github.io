@@ -25,7 +25,7 @@ export function AboutPage() {
           <PageBanner
             breadcrumb="О нас"
             title="О нас"
-            imageUrl="/images/banners/AdobeStock_897174040.jpeg"
+            imageUrl="/images/banners/about.jpeg"
             imageAlt="Клиника RoyalDent"
           />
         </div>

@@ -6,11 +6,11 @@ import { SectionBadge } from '../ui/section-badge';
 import { ImageWithFallback } from '../ui/image-with-fallback';
 
 const equipment = [
-  { title: 'Швейцарский микроскоп Zeiss', img: '/images/equipment/eq-1.webp' },
-  { title: 'Интраоральный сканер Primescan', img: '/images/equipment/eq-2.webp' },
-  { title: 'Компьютерная томография (КЛКТ)', img: '/images/equipment/eq-3.webp' },
-  { title: 'Аппарат анестезии Quick Sleeper', img: '/images/equipment/eq-4.webp' },
-  { title: 'Система отбеливания Flash', img: '/images/equipment/eq-5.webp' },
+  { title: 'Швейцарский микроскоп Zeiss', img: '/images/clinic/equipment/eq-1.webp' },
+  { title: 'Интраоральный сканер Primescan', img: '/images/clinic/equipment/eq-2.webp' },
+  { title: 'Компьютерная томография (КЛКТ)', img: '/images/clinic/equipment/eq-3.webp' },
+  { title: 'Аппарат анестезии Quick Sleeper', img: '/images/clinic/equipment/eq-4.webp' },
+  { title: 'Система отбеливания Flash', img: '/images/clinic/equipment/eq-5.webp' },
 ];
 
 export function AboutEquipment() {

@@ -27,7 +27,7 @@ export function About() {
             <FadeIn delay={0.05} className="mt-6 flex-1 min-h-[260px]">
               <div className="h-full overflow-hidden rounded-[2rem]">
                 <img
-                  src="/icons/two_tooth.webp"
+                  src="/images/decor/two-tooth.webp"
                   alt="Стоматология RoyalDent"
                   loading="lazy"
                   className="w-full h-full object-cover"

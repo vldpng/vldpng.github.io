@@ -57,7 +57,7 @@ export function Header() {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="flex items-center cursor-pointer group"
         >
-          <img src="/icons/Logo_RD.svg" alt="RoyalDent" className="h-12 md:h-14 w-auto object-contain" />
+          <img src="/brand/logo.svg" alt="RoyalDent" className="h-12 md:h-14 w-auto object-contain" />
         </Link>
 
         {/* Desktop Nav */}

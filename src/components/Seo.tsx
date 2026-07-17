@@ -50,7 +50,7 @@ export function Seo({ title, description, path, image, noindex }: SeoProps) {
     : `${title} | ${clinic.name}`;
   const desc = description ?? DEFAULT_DESCRIPTION;
   const url = clinic.siteUrl + (path ?? '');
-  const ogImage = image ?? `${clinic.siteUrl}/icons/Logo.png`;
+  const ogImage = image ?? `${clinic.siteUrl}/brand/favicon.png`;
 
   useEffect(() => {
     document.title = fullTitle;

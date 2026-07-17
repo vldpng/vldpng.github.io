@@ -61,7 +61,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-4 lg:col-span-2 flex flex-col gap-8">
             <Link to="/" onClick={scrollToTop} className="flex items-center group">
               <img
-                src="/icons/Logo_RD.svg"
+                src="/brand/logo.svg"
                 alt="RoyalDent"
                 className="h-12 w-auto object-contain dark:brightness-0 dark:invert transition-all"
               />
