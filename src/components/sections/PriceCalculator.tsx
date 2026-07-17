@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, ArrowRight, Check, Info, Minus, ChevronDown } from 'lucide-react';
+import { Plus, ArrowRight, Check, Info, Minus, ChevronDown, Calculator, MousePointerClick } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
@@ -102,6 +102,15 @@ function formatEUR(value: number) {
 /** Ежемесячный платёж по рассрочке (≈ на 9 месяцев). */
 function installment(value: number) {
   return `${Math.round(value * 0.111).toLocaleString('ru-RU')} EUR/мес.`;
+}
+
+/** Русское склонение слова «зуб»: 1 зуб, 2 зуба, 5 зубов. */
+function teethWord(n: number) {
+  const n10 = n % 10;
+  const n100 = n % 100;
+  if (n10 === 1 && n100 !== 11) return 'зуб';
+  if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return 'зуба';
+  return 'зубов';
 }
 
 /* ───────────────────────── ШАГ 1 ─────────────────────────
@@ -504,26 +513,44 @@ export function PriceCalculator() {
                   {/* Правая колонка: интерактивная схема челюстей */}
                   <div className="rounded-3xl bg-[#F8FAFF] text-zinc-900 border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 flex flex-col sm:flex-row items-center gap-6 md:gap-8">
                     <JawPicker selected={teeth} onToggle={toggleTooth} />
-                    <div className="flex flex-col gap-6 w-full sm:w-auto">
-                      <p className="text-sm text-zinc-400">
-                        Отметьте зубы, которые нужно восстановить
-                      </p>
-                      <div>
-                        <p className="font-semibold mb-1 text-zinc-900">Верхняя челюсть</p>
-                        <p className="text-sm text-zinc-500 font-mono">
-                          Количество имплантов: {upperCount} шт.
-                        </p>
-                        <p className="text-sm text-zinc-500 font-mono">
-                          Количество коронок: {upperCount} шт.
-                        </p>
+                    <div className="flex flex-col gap-5 w-full sm:w-auto sm:min-w-[15rem]">
+                      {/* Подсказка: как пользоваться схемой */}
+                      <div className="flex items-start gap-2.5 text-sm text-zinc-500">
+                        <MousePointerClick size={18} className="shrink-0 mt-0.5 text-amber-500" />
+                        <span>Нажимайте на зубы на схеме — отмеченные попадут в расчёт.</span>
                       </div>
-                      <div>
-                        <p className="font-semibold mb-1 text-zinc-900">Нижняя челюсть</p>
-                        <p className="text-sm text-zinc-500 font-mono">
-                          Количество имплантов: {lowerCount} шт.
-                        </p>
-                        <p className="text-sm text-zinc-500 font-mono">
-                          Количество коронок: {lowerCount} шт.
+
+                      {/* Расчёт имплантации: сколько зубов выбрано по челюстям */}
+                      <div className="w-full rounded-2xl bg-white border border-black/[0.05] p-5">
+                        <h3 className="font-semibold text-zinc-900 mb-4 flex items-center gap-2">
+                          <Calculator size={18} className="text-amber-500" />
+                          Расчёт имплантации
+                        </h3>
+                        <div className="space-y-3 text-sm">
+                          <div className="flex items-center justify-between gap-4">
+                            <span className="text-zinc-600">Верхняя челюсть</span>
+                            <span className="text-zinc-900">
+                              <span className="font-bold text-base text-amber-600">{upperCount}</span>{' '}
+                              {teethWord(upperCount)}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between gap-4">
+                            <span className="text-zinc-600">Нижняя челюсть</span>
+                            <span className="text-zinc-900">
+                              <span className="font-bold text-base text-amber-600">{lowerCount}</span>{' '}
+                              {teethWord(lowerCount)}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between gap-4 border-t border-zinc-100 pt-3">
+                            <span className="font-semibold text-zinc-900">Всего выбрано</span>
+                            <span className="font-bold text-base text-zinc-900">
+                              {totalTeeth} {teethWord(totalTeeth)}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="mt-4 flex items-start gap-2 text-xs text-zinc-400">
+                          <Info size={14} className="shrink-0 mt-0.5" />
+                          Каждый выбранный зуб — это 1 имплант и 1 коронка.
                         </p>
                       </div>
                     </div>
