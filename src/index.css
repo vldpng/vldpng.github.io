@@ -1,0 +1,188 @@
+@import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Типографика (DESIGN.md «Function»):
+     - Заголовки — серифный editorial-шрифт Playfair Display (с кириллицей);
+     - Текст/UI — Inter (аналог Ftbase), глобальный трекинг -0.023em на body;
+     - Мелкие метки-надзаголовки — Fragment Mono.
+     Шрифты подключаются в index.html. */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: "Fragment Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  /* Прохладная светло-голубая шкала:
+     основной фон #F0F4FF, лёгкие washes, границы, разделители. */
+  --color-zinc-50: #F0F4FF;  /* основной фон страниц (светло-голубой) */
+  --color-zinc-100: #E4EBFB; /* лёгкий голубой wash (чипы, плашки) */
+  --color-zinc-200: #CBD8F2; /* границы, разделители (голубой) */
+  --color-zinc-300: #B3C4E8; /* границы поглубже, скроллбар */
+  --color-zinc-400: #808988; /* Ash — плейсхолдеры, границы форм */
+  --color-zinc-500: #515151; /* Graphite — второстепенный текст, подписи */
+  --color-zinc-600: #333333; /* Charcoal — основной текст */
+  --color-zinc-700: #333333; /* Charcoal */
+  --color-zinc-800: #2f3033; /* тёмные UI-элементы */
+  --color-zinc-900: #2a2b2f; /* Ink — заголовки */
+  --color-zinc-950: #041B39; /* тёмные секции/блоки (глубокий синий) */
+
+  --color-card: #F8FAFF; /* фон карточек/блоков (светло-голубой, светлее фона) */
+
+  /* Акцентная оранжевая шкала (кнопки, ссылки, активные состояния).
+     Базовый акцент — #F58626. */
+  --color-amber-50: #FEF3EA;
+  --color-amber-100: #FCE0CC;
+  --color-amber-200: #F9C39B;
+  --color-amber-300: #F7A566;
+  --color-amber-400: #F69544;
+  --color-amber-500: #F58626; /* основной акцент (кнопки) */
+  --color-amber-600: #DA7014; /* hover */
+  --color-amber-700: #A9560F;
+  --color-amber-800: #7E400B;
+  --color-amber-900: #5F3008;
+  --color-amber-950: #351B04;
+
+  --color-white: #ffffff;
+
+  /* Контейнер: центрированная колонка 1600px (max-w-7xl mx-auto).
+     Чем шире — тем меньше боковые поля (авто-margin) на широких экранах. */
+  --container-7xl: 100rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Глобальный трекинг Inter (Ftbase) из DESIGN.md. Серифные заголовки
+       возвращают tracking к нормальному через свои классы (.h-*). */
+    letter-spacing: -0.023em;
+  }
+
+  /* Выделение текста — оранжевый акцент */
+  ::selection {
+    background-color: rgba(245, 134, 38, 0.18);
+    color: #2a2b2f;
+  }
+
+  /* Единый видимый фокус для клавиатурной навигации.
+     Через box-shadow, чтобы не конфликтовать с utility-классами outline-none. */
+  :focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-zinc-50),
+      0 0 0 4px var(--color-amber-500);
+    border-radius: 8px;
+  }
+
+  /* У полей ввода фокус показываем сменой границы/подчёркивания,
+     а не кольцом-обводкой — поэтому убираем общий ring. */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    box-shadow: none;
+  }
+
+  /* Аккуратный тонкий скроллбар */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-zinc-300) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-zinc-300);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-zinc-400);
+  }
+}
+
+/* Утилита для скрытия скроллбара (используется в каруселях) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Кнопки: при наведении тёмная заливка #2A2B2F выезжает слева направо.
+   Псевдоэлемент рисуется поверх фона кнопки, но под текстом (z-index: -1). */
+.btn-sweep {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+.btn-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 150%;
+  z-index: -1;
+  background-color: #041B39;
+  transform: skewX(-22deg) translateX(-120%);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.btn-sweep:hover::after,
+.btn-sweep:focus-visible::after {
+  transform: skewX(-22deg) translateX(-15%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-sweep::after {
+    transition: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ТИПОГРАФИЧЕСКАЯ СИСТЕМА
+   Единая шкала для всего сайта. Классы задают только размер,
+   насыщенность, межбуквенный интервал и интерлиньяж — цвет
+   указывается отдельно в месте использования (чтобы работать
+   и на светлых, и на тёмных секциях).
+
+   Иерархия:
+   .eyebrow     — надзаголовок-метка (КАПСОМ над заголовком)
+   .h-display   — главный заголовок страницы / hero (h1)
+   .h-section   — заголовок секции (h2)
+   .h-card      — заголовок карточки / подраздела (h3)
+   .text-lead   — вводный абзац под заголовком секции
+   .text-body   — основной текст
+   ───────────────────────────────────────────────────────────── */
+@layer components {
+  /* Метки-надзаголовки — Fragment Mono, капсом (DESIGN.md eyebrow). */
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-wide;
+  }
+  /* Заголовки — сериф Playfair Display. Трекинг normal:
+     -0.023em принадлежит только Inter, но не серифу (см. DESIGN.md). */
+  .h-display {
+    @apply font-serif text-4xl md:text-5xl lg:text-6xl font-normal tracking-normal leading-[0.95];
+  }
+  .h-section {
+    @apply font-serif text-3xl md:text-4xl lg:text-5xl font-normal tracking-normal leading-[1.1];
+  }
+  .h-card {
+    @apply font-serif text-xl md:text-2xl font-medium tracking-normal leading-snug;
+  }
+  /* Вводный абзац — Inter Light (Ftbase 300). */
+  .text-lead {
+    @apply text-lg md:text-xl font-light leading-relaxed;
+  }
+  .text-body {
+    @apply text-base leading-relaxed;
+  }
+}
