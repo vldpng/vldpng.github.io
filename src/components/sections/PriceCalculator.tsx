@@ -511,17 +511,18 @@ export function PriceCalculator() {
                   </div>
 
                   {/* Правая колонка: интерактивная схема челюстей */}
-                  <div className="rounded-3xl bg-[#F8FAFF] text-zinc-900 border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 flex flex-col sm:flex-row items-center gap-6 md:gap-8">
-                    <JawPicker selected={teeth} onToggle={toggleTooth} />
-                    <div className="flex flex-col gap-5 w-full sm:w-auto sm:min-w-[15rem]">
-                      {/* Подсказка: как пользоваться схемой */}
-                      <div className="flex items-start gap-2.5 text-sm text-zinc-500">
-                        <MousePointerClick size={18} className="shrink-0 mt-0.5 text-amber-500" />
-                        <span>Нажимайте на зубы на схеме — отмеченные попадут в расчёт.</span>
-                      </div>
+                  <div className="rounded-3xl bg-[#F8FAFF] text-zinc-900 border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 flex flex-col gap-6">
+                    {/* Подсказка: как пользоваться схемой (над схемой, во всю ширину) */}
+                    <div className="flex items-start gap-2.5 text-xl font-semibold text-zinc-900">
+                      <MousePointerClick size={22} className="shrink-0 mt-1 text-amber-500" />
+                      <span>Нажимайте на зубы на схеме — отмеченные попадут в расчёт.</span>
+                    </div>
 
-                      {/* Расчёт имплантации: сколько зубов выбрано по челюстям */}
-                      <div className="w-full rounded-2xl bg-white border border-black/[0.05] p-5">
+                    <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8">
+                      <JawPicker selected={teeth} onToggle={toggleTooth} />
+                      <div className="flex flex-col gap-5 w-full sm:w-auto sm:min-w-[15rem]">
+                        {/* Расчёт имплантации: сколько зубов выбрано по челюстям */}
+                        <div className="w-full rounded-2xl bg-white border border-black/[0.05] p-5">
                         <h3 className="font-semibold text-zinc-900 mb-4 flex items-center gap-2">
                           <Calculator size={18} className="text-amber-500" />
                           Расчёт имплантации
@@ -548,10 +549,11 @@ export function PriceCalculator() {
                             </span>
                           </div>
                         </div>
-                        <p className="mt-4 flex items-start gap-2 text-xs text-zinc-400">
-                          <Info size={14} className="shrink-0 mt-0.5" />
-                          Каждый выбранный зуб — это 1 имплант и 1 коронка.
-                        </p>
+                          <p className="mt-4 flex items-start gap-2 text-xs text-zinc-400">
+                            <Info size={14} className="shrink-0 mt-0.5" />
+                            Каждый выбранный зуб — это 1 имплант и 1 коронка.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
