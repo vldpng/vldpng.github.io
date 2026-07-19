@@ -1,110 +1,181 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight, ShieldCheck, Microscope, Sparkles } from 'lucide-react';
-
-import { AnimatedText } from '../ui/animated-text';
+import { Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useBookingModal } from '../../context/BookingModalContext';
-import { Link } from 'react-router-dom';
 
-const highlights = [
-  { icon: <ShieldCheck size={16} />, label: 'Без боли и страха' },
-  { icon: <Microscope size={16} />, label: 'Лечение под микроскопом' },
-  { icon: <Sparkles size={16} />, label: 'Цифровая диагностика' },
+// Фото клиники для карусели (лежат в public/images/clinic).
+// Текст hero статичный — меняются только снимки.
+const images = [
+  '/images/clinic/IMG_4273.jpg_2K_202607182302.webp',
+  '/images/clinic/IMG_4279.jpg_2K_202607182323.webp',
+  '/images/clinic/IMG_4281.jpg_2K_202607182323.webp',
 ];
 
+const features = [
+  'Индивидуальный подход',
+  'Безболезненно',
+  'Цифровой протокол',
+  'Комфортное лечение',
+];
+
+const AUTOPLAY_MS = 6500;
+
 export function Hero() {
+  const [index, setIndex] = useState(0);
   const { openModal } = useBookingModal();
+  const total = images.length;
+
+  const goTo = useCallback((next: number) => {
+    setIndex((next + total) % total);
+  }, [total]);
+
+  // Автопрокрутка; сбрасывается при любой смене слайда (в т.ч. ручной).
+  useEffect(() => {
+    const timer = setTimeout(() => goTo(index + 1), AUTOPLAY_MS);
+    return () => clearTimeout(timer);
+  }, [index, goTo]);
 
   return (
-    <section className="relative min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
-
-      {/* Background Video Placeholder — элегантный анимированный градиент */}
-      <div className="absolute inset-0 z-0" aria-hidden="true">
-        <div className="w-full h-full bg-gradient-to-br from-amber-50 via-zinc-50 to-zinc-100 dark:from-zinc-900 dark:via-zinc-950 dark:to-black" />
-        {/* Мягкие световые пятна */}
-        <motion.div
-          className="absolute -top-32 -left-24 w-[40rem] h-[40rem] rounded-full bg-amber-200/40 dark:bg-amber-500/10 blur-3xl"
-          animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-[-10rem] right-[-6rem] w-[36rem] h-[36rem] rounded-full bg-[#E4EBFB]/50 dark:bg-[#1E2740]/30 blur-3xl"
-          animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        {/* Тонкая сетка для глубины */}
-        <div
-          className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04]"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-          }}
-        />
-        {/* Overlay для читаемости текста */}
-        <div className="absolute inset-0 bg-zinc-50/40 dark:bg-zinc-950/40"></div>
+    <section className="relative overflow-hidden bg-zinc-50">
+      {/* ───────── Фото. На мобильных — во весь экран (фон),
+          на desktop — правая часть со скруглённым левым краем. ───────── */}
+      <div className="absolute top-0 -bottom-0.5 left-0 right-0 lg:left-auto lg:right-0 lg:w-[57%] z-0 overflow-hidden">
+        {images.map((src, i) => (
+          <motion.img
+            key={src}
+            src={src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            initial={false}
+            animate={{ opacity: i === index ? 1 : 0, scale: i === index ? 1 : 1.06 }}
+            transition={{ duration: 0.9, ease: 'easeOut' }}
+          />
+        ))}
+        {/* Затемнение для читаемости белого текста (мобильные) */}
+        <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/25" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-2 md:px-3 w-full flex-1 flex flex-col py-20 relative z-10 justify-center">
+      <div className="relative z-10 max-w-[100rem] px-6 md:px-[50px] lg:pl-8">
+        <div className="grid lg:grid-cols-2 items-center gap-10 min-h-[100svh] lg:min-h-[calc(100svh-2rem)] py-32 lg:py-0">
 
-        {/* Text Content */}
-        <div className="w-full max-w-4xl flex flex-col items-start">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="flex flex-col gap-6 mt-[calc(4rem_+_30px)] md:mt-[calc(7rem_+_30px)]"
-          >
-            <AnimatedText
-              as="h1"
-              text={'Идеальная улыбка\n— Ваша уверенность'}
-              className="items-start max-w-[800px]"
-              textClassName="h-display text-zinc-900 dark:text-zinc-50 text-left"
-              underlineClassName="hidden"
-              duration={0.03}
-              delay={0.1}
+          {/* ───────── Текст + преимущества ───────── */}
+          <div className="relative">
+            {/* Матовая полупрозрачная панель за текстом (desktop):
+                белое стекло с равномерным размытием фона по всей площади. */}
+            <div
+              aria-hidden="true"
+              className="hidden lg:block absolute -left-20 -top-14 -bottom-14 -right-[18%] rounded-[2rem] border border-white/60 bg-white/55 backdrop-blur-2xl shadow-[0_40px_100px_-40px_rgba(4,27,57,0.4)]"
             />
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, duration: 0.5 }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2"
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.14, delayChildren: 0.1 } },
+            }}
+            className="relative flex flex-col items-start max-w-2xl lg:max-w-3xl lg:pl-8 mt-16 sm:mt-24 lg:mt-0"
+          >
+            <motion.h1
+              variants={{
+                hidden: { opacity: 0, y: 28 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="h-display italic text-4xl md:text-5xl lg:text-6xl text-[#FEF9EF] lg:text-zinc-900 whitespace-nowrap"
             >
-              <button
-                onClick={() => openModal()}
-                className="group inline-flex items-center justify-center gap-2 btn-sweep bg-amber-500 hover:bg-amber-600 text-white px-7 py-3.5 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-lg active:scale-95"
-              >
-                Записаться на приём
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </button>
-              <Link
-                to="/prices"
-                className="inline-flex items-center justify-center gap-2 border border-zinc-300 dark:border-zinc-700 hover:border-zinc-900 dark:hover:border-zinc-200 text-zinc-900 dark:text-zinc-100 px-7 py-3.5 rounded-full text-sm font-semibold transition-colors"
-              >
-                Услуги и цены
-              </Link>
-            </motion.div>
+              Найди свою улыбку
+            </motion.h1>
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 24 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="text-lead text-[#FEF9EF]/85 lg:text-zinc-500 max-w-[46ch] lg:max-w-[54ch] mt-6"
+            >
+              Установка виниров с минимальной обточкой зуба. Вашу будущую улыбку
+              вы можете увидеть ещё до начала лечения.
+            </motion.p>
 
+            {/* Преимущества — 2 колонки, оранжевые чек-иконки.
+                Проявляются по очереди, выезжая слева (stagger от контейнера). */}
             <motion.ul
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-              className="flex flex-wrap gap-x-6 gap-y-3 mt-4"
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.12, delayChildren: 0.35 } },
+              }}
+              className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4"
             >
-              {highlights.map((item) => (
-                <li
-                  key={item.label}
-                  className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400"
+              {features.map((label) => (
+                <motion.li
+                  key={label}
+                  variants={{
+                    hidden: { opacity: 0, x: -24 },
+                    visible: { opacity: 1, x: 0 },
+                  }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center gap-3 text-[15px] font-medium text-[#FEF9EF] lg:text-zinc-900"
                 >
-                  <span className="text-amber-500">{item.icon}</span>
-                  {item.label}
-                </li>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500 text-white shadow-sm">
+                    <Check size={14} strokeWidth={3} />
+                  </span>
+                  {label}
+                </motion.li>
               ))}
             </motion.ul>
-          </motion.div>
-        </div>
 
+            {/* CTA — только в мобильной версии (на desktop кнопка есть в шапке) */}
+            <motion.button
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              onClick={openModal}
+              className="lg:hidden btn-sweep mt-10 w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white px-8 py-3.5 rounded-full text-base font-medium shadow-md hover:shadow-lg active:scale-95 transition-all"
+            >
+              Записаться на приём
+            </motion.button>
+          </motion.div>
+          </div>
+
+          {/* Правая колонка — распорка (фото абсолютное на desktop) */}
+          <div className="hidden lg:block" aria-hidden="true" />
+        </div>
+      </div>
+
+      {/* ───────── Индикатор слайдов: крупные цифры + кликабельная линия.
+          Вынесен на уровень секции — позиционируется в % от всей ширины,
+          чтобы стоять внутри фото (правые 57%) на любой ширине экрана. ───────── */}
+      <div className="absolute bottom-8 lg:bottom-12 left-1/2 lg:left-[71.5%] -translate-x-1/2 z-20 flex items-center gap-4">
+        <span className="font-mono text-xl font-bold tabular-nums text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.5)]">
+          01
+        </span>
+        <div className="flex items-center gap-2">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              aria-label={`Слайд ${i + 1}`}
+              aria-current={i === index}
+              className="group py-3 -my-3"
+            >
+              <span
+                className={cn(
+                  'block h-[3px] rounded-full transition-all duration-300',
+                  i === index
+                    ? 'w-12 bg-white'
+                    : 'w-6 bg-white/50 group-hover:bg-white/80',
+                )}
+              />
+            </button>
+          ))}
+        </div>
+        <span className="font-mono text-xl font-bold tabular-nums text-white/70 [text-shadow:0_1px_10px_rgba(0,0,0,0.5)]">
+          {String(total).padStart(2, '0')}
+        </span>
       </div>
     </section>
   );

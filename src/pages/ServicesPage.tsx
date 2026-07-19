@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ServiceCatalog } from '../components/sections/ServiceCatalog';
+import { ServiceCards } from '../components/sections/ServiceCards';
 import { Seo } from '../components/Seo';
 import { PageBanner } from '../components/ui/page-banner';
 
@@ -21,7 +21,7 @@ export function ServicesPage() {
         <PageBanner breadcrumb="Услуги" title="Услуги" />
       </div>
 
-      <ServiceCatalog />
+      <ServiceCards />
     </main>
   );
 }
