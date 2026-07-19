@@ -49,7 +49,8 @@ export function Header() {
       isScrolled ? "top-0 py-3" : "top-0 py-5",
       isVisible ? "translate-y-0" : "-translate-y-full"
     )}>
-      <div className="w-full flex items-center justify-between pointer-events-auto">
+      {/* Единая матовая панель-«пилюля»: логотип, меню, язык и CTA внутри */}
+      <div className="w-full flex items-center justify-between pointer-events-auto rounded-2xl border border-white/40 bg-white/15 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_60px_-25px_rgba(4,27,57,0.35)] px-4 md:px-8 py-2.5">
         
         {/* Logo */}
         <Link
