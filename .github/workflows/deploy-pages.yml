@@ -1,0 +1,58 @@
+# Сборка фронтенда (vite build) и публикация dist/ в GitHub Pages.
+# Запускается на каждый пуш в main. Бэкенд (server.ts) на Pages не деплоится —
+# это статический хостинг; API /api/booking/* требует отдельного Node-хостинга.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npx vite build
+
+      # SPA-фолбэк: GitHub Pages отдаёт 404.html для неизвестных путей,
+      # копия index.html позволяет react-router обрабатывать прямые ссылки.
+      - name: Add SPA fallback (404.html)
+        run: cp dist/index.html dist/404.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
