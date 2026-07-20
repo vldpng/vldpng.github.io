@@ -95,8 +95,8 @@ export function About() {
             {/* Empty column on desktop */}
             <div className="hidden lg:block"></div>
 
-            {/* 01 */}
-            <FadeIn delay={0.2}>
+            {/* 01 — выезжает слева направо */}
+            <FadeIn direction="right" delay={0.1}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">01</span>
                 <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
@@ -108,8 +108,8 @@ export function About() {
               </div>
             </FadeIn>
             
-            {/* 02 */}
-            <FadeIn delay={0.3}>
+            {/* 02 — выезжает справа налево */}
+            <FadeIn direction="left" delay={0.15}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">02</span>
                 <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
@@ -121,8 +121,8 @@ export function About() {
               </div>
             </FadeIn>
 
-            {/* 03 */}
-            <FadeIn delay={0.4}>
+            {/* 03 — выезжает слева направо */}
+            <FadeIn direction="right" delay={0.1}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">03</span>
                 <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
@@ -134,8 +134,8 @@ export function About() {
               </div>
             </FadeIn>
 
-            {/* 04 */}
-            <FadeIn delay={0.5}>
+            {/* 04 — выезжает справа налево */}
+            <FadeIn direction="left" delay={0.15}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">04</span>
                 <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
@@ -147,8 +147,8 @@ export function About() {
               </div>
             </FadeIn>
 
-            {/* 05 */}
-            <FadeIn delay={0.6}>
+            {/* 05 — выезжает слева направо */}
+            <FadeIn direction="right" delay={0.1}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">05</span>
                 <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
@@ -160,8 +160,8 @@ export function About() {
               </div>
             </FadeIn>
 
-            {/* CTA */}
-            <FadeIn delay={0.7}>
+            {/* CTA — выезжает справа налево */}
+            <FadeIn direction="left" delay={0.15}>
               <div className="flex flex-col pt-6 h-full justify-center">
                  <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-8 group relative cursor-default">
                    Обсудим проблему,<br/>подберём специалиста,<br/>расскажем, что делать<br/>дальше
