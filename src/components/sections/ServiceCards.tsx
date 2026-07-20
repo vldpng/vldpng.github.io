@@ -88,10 +88,10 @@ export function ServiceCards() {
               >
                 {/* Текст */}
                 <div className="p-7 pb-6 flex flex-col gap-4">
-                  <h3 className="h-card text-zinc-900 dark:text-zinc-50 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                  <h3 className="font-serif text-xl leading-snug text-zinc-900 dark:text-zinc-50 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                     {card.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">{card.desc}</p>
+                  <p className="text-base leading-snug text-zinc-500 dark:text-zinc-400">{card.desc}</p>
                 </div>
 
                 {/* Фото прижато к низу карточки; поверх — ссылка на услугу */}
