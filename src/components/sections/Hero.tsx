@@ -175,7 +175,7 @@ export function Hero() {
       {/* ───────── Индикатор слайдов: крупные цифры + кликабельная линия.
           Вынесен на уровень секции — позиционируется в % от всей ширины,
           чтобы стоять внутри фото (правые 57%) на любой ширине экрана. ───────── */}
-      <div className="absolute bottom-8 lg:bottom-12 left-1/2 lg:left-[71.5%] -translate-x-1/2 z-20 flex items-center gap-4">
+      <div className="absolute bottom-[calc(2rem_+_env(safe-area-inset-bottom))] lg:bottom-12 left-1/2 lg:left-[71.5%] -translate-x-1/2 z-20 flex items-center gap-4">
         <span className="font-mono text-xl font-bold tabular-nums text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.5)]">
           01
         </span>
