@@ -66,7 +66,7 @@ function ServiceCard({ card }: { card: (typeof serviceCards)[number] }) {
         </div>
       </div>
 
-      <p className="px-6 pb-4 text-sm leading-snug text-white/70 line-clamp-5">
+      <p className="px-6 pb-4 text-base leading-snug text-white/70 line-clamp-5">
         {homeDescriptions[card.to] ?? card.desc}
       </p>
 
