@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,33 @@ const AUTOPLAY_MS = 6500;
 export function Hero() {
   const [index, setIndex] = useState(0);
   const { openModal } = useBookingModal();
+  const sectionRef = useRef<HTMLElement>(null);
   const total = images.length;
+
+  // Цвет браузерной панели (theme-color): на мобильных, пока тёмный hero
+  // находится под панелью Safari, — тёмный тон фото; ниже по странице —
+  // цвет фона сайта, чтобы панель «растворялась». Safari анимирует смену.
+  // На desktop hero светлый, поэтому там всегда светлый цвет.
+  useEffect(() => {
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    const section = sectionRef.current;
+    if (!meta || !section) return;
+    const LIGHT = '#F0F4FF';
+    const DARK = '#2A2B2F';
+    const mobile = window.matchMedia('(max-width: 1023px)');
+    const update = () => {
+      const heroUnderBar = section.getBoundingClientRect().bottom > 80;
+      meta.content = mobile.matches && heroUnderBar ? DARK : LIGHT;
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    mobile.addEventListener('change', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      mobile.removeEventListener('change', update);
+      meta.content = LIGHT;
+    };
+  }, []);
 
   const goTo = useCallback((next: number) => {
     setIndex((next + total) % total);
@@ -37,7 +63,7 @@ export function Hero() {
   }, [index, goTo]);
 
   return (
-    <section className="relative overflow-hidden bg-zinc-50">
+    <section ref={sectionRef} className="relative overflow-hidden bg-zinc-50">
       {/* ───────── Фото. На мобильных — во весь экран (фон),
           на desktop — правая часть со скруглённым левым краем. ───────── */}
       <div className="absolute top-0 -bottom-0.5 left-0 right-0 lg:left-auto lg:right-0 lg:w-[57%] z-0 overflow-hidden">
