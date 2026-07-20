@@ -45,9 +45,7 @@ export function Header() {
 
   return (
     <header className={cn(
-      // mt по safe-area-inset-top: в установленном PWA (и в ландшафте) шапка
-      // опускается ниже «чёлки»/статус-бара; в обычном Safari инсет = 0.
-      "absolute left-0 w-full transition-all duration-300 pointer-events-none z-50 px-6 md:px-[50px] mt-[env(safe-area-inset-top)]",
+      "absolute left-0 w-full transition-all duration-300 pointer-events-none z-50 px-6 md:px-[50px]",
       isScrolled ? "top-0 py-3" : "top-0 py-5",
       isVisible ? "translate-y-0" : "-translate-y-full"
     )}>
