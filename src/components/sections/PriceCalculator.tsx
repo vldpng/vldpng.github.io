@@ -261,7 +261,13 @@ function OptionPill({
               className="h-5 md:h-6 w-full object-contain"
             />
           )}
-          <span className="flex items-center justify-center h-14 w-full overflow-hidden">
+          <span
+            className={cn(
+              'flex items-center justify-center w-full overflow-hidden',
+              // У коронок (без логотипа) фото крупнее, чем у имплантов.
+              option.logo ? 'h-14' : 'h-20 md:h-16',
+            )}
+          >
             {option.img && !imgError ? (
               <img
                 src={option.img}
@@ -285,7 +291,7 @@ function OptionPill({
       )}
       {/* Название: у коронок — текст, у имплантов вместо него показан логотип. */}
       {!option.logo && (
-        <span className="font-semibold text-[13px] leading-tight">{option.title}</span>
+        <span className="w-full font-semibold text-[11px] md:text-[13px] leading-tight break-words hyphens-auto">{option.title}</span>
       )}
       {option.subtitle && (
         <span className={cn('text-[11px]', selected ? 'text-zinc-500' : 'text-zinc-400')}>
