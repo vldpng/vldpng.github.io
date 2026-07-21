@@ -219,13 +219,23 @@ export function BookingModal() {
             onClick={closeModal}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
           />
-          <div className="fixed inset-0 z-[101] pointer-events-none flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 z-[101] pointer-events-none flex items-center justify-center p-4 h-[100dvh]"
+            style={{
+              // Учитываем «чёлку» и панели браузера: считаем высоту от dvh
+              // и не даём модалке залезать под статус-бар / индикатор Home.
+              paddingTop: 'max(1rem, env(safe-area-inset-top))',
+              paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+            }}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: 'spring', duration: 0.5, bounce: 0 }}
-              className="bg-card dark:bg-zinc-900 rounded-[2rem] p-3 shadow-2xl flex flex-col lg:flex-row relative pointer-events-auto max-w-5xl w-full max-h-[90vh] overflow-y-auto"
+              // max-h-full: помещается ровно в видимую область (родитель = 100dvh
+              // минус отступы). Верх/низ мягко затухают при прокрутке (mask).
+              className="bg-card dark:bg-zinc-900 rounded-[2rem] p-3 shadow-2xl flex flex-col lg:flex-row relative pointer-events-auto max-w-5xl w-full max-h-full overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent_0,#000_1.75rem,#000_calc(100%-1.75rem),transparent_100%)] lg:[mask-image:none]"
             >
               <button
                 onClick={closeModal}
