@@ -17,9 +17,32 @@ export function About() {
   return (
     <section id="about" className="pt-12 lg:pt-16 pb-24 lg:pb-32 bg-zinc-50 dark:bg-zinc-950 overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-2 md:px-3">
-        {/* Intro — слева тег + статистика, вертикальная линия, справа тёмный блок */}
+        {/* Intro — слева тёмный блок, вертикальная линия, справа тег + статистика */}
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-12 lg:items-stretch">
-          {/* Левая колонка: тег + статистика */}
+          {/* Левая колонка: тёмный блок с заявлением (левый край — до края экрана) */}
+          <div className="lg:flex-1 lg:flex lg:flex-col bg-[#041B39] rounded-[2rem] p-8 lg:p-12 min-[1600px]:rounded-l-none min-[1600px]:ml-[calc((100vw_-_100rem)_*_-0.5_-_0.75rem)]">
+            <FadeIn delay={0.1}>
+              <p className="text-2xl md:text-3xl lg:text-[2.5rem] font-medium tracking-tight leading-snug text-white">
+                RoyalDent — это современная стоматологическая клиника, призванная дарить
+                здоровые и уверенные улыбки на каждом этапе жизни. Мы сочетаем передовые
+                стоматологические технологии с бережным, индивидуальным подходом, чтобы
+                обеспечить точное, комфортное и эффективное лечение.
+              </p>
+            </FadeIn>
+            <FadeIn delay={0.2} className="lg:mt-auto lg:pt-12">
+              <Link
+                to="/about"
+                className="mt-8 lg:mt-0 inline-flex items-center gap-2 rounded-full bg-white text-zinc-900 px-6 py-3 text-sm font-medium hover:bg-zinc-200 transition-colors"
+              >
+                О клинике <ArrowUpRight size={16} />
+              </Link>
+            </FadeIn>
+          </div>
+
+          {/* Вертикальная линия-разделитель */}
+          <div className="hidden lg:block w-px self-stretch bg-zinc-200 dark:bg-zinc-800" />
+
+          {/* Правая колонка: тег + статистика */}
           <div className="lg:w-[36%] lg:shrink-0 flex flex-col">
             <FadeIn>
               <SectionBadge>Кто мы</SectionBadge>
@@ -47,29 +70,6 @@ export function About() {
                   </div>
                 ))}
               </div>
-            </FadeIn>
-          </div>
-
-          {/* Вертикальная линия-разделитель */}
-          <div className="hidden lg:block w-px self-stretch bg-zinc-200 dark:bg-zinc-800" />
-
-          {/* Правая колонка: тёмный блок с заявлением (правый край — до края экрана) */}
-          <div className="lg:flex-1 bg-[#041B39] rounded-[2rem] p-8 lg:p-12 min-[1600px]:rounded-r-none min-[1600px]:mr-[calc((100vw_-_100rem)_*_-0.5_-_0.75rem)]">
-            <FadeIn delay={0.1}>
-              <p className="text-2xl md:text-3xl lg:text-[2.5rem] font-medium tracking-tight leading-snug text-white">
-                RoyalDent — это современная стоматологическая клиника, призванная дарить
-                здоровые и уверенные улыбки на каждом этапе жизни. Мы сочетаем передовые
-                стоматологические технологии с бережным, индивидуальным подходом, чтобы
-                обеспечить точное, комфортное и эффективное лечение.
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.2}>
-              <Link
-                to="/about"
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-white text-zinc-900 px-6 py-3 text-sm font-medium hover:bg-zinc-200 transition-colors"
-              >
-                О клинике <ArrowUpRight size={16} />
-              </Link>
             </FadeIn>
           </div>
         </div>

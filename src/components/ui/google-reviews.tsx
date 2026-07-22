@@ -69,7 +69,7 @@ function Reviews({ reviews, hasKey, loading = false }: { reviews: any[], hasKey:
   const thirdColumn = reviews.slice(Math.ceil((reviews.length / 3) * 2));
 
   return (
-    <div className="bg-zinc-950 py-20 px-2 md:px-3 relative shadow-2xl w-full">
+    <div className="bg-zinc-50 dark:bg-zinc-950 py-20 px-2 md:px-3 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -82,10 +82,10 @@ function Reviews({ reviews, hasKey, loading = false }: { reviews: any[], hasKey:
           Отзывы Google Maps
         </div>
 
-        <h2 className="h-section text-white mt-5">
+        <h2 className="h-section text-zinc-900 dark:text-white mt-5">
           {loading ? "Синхронизация..." : "Что говорят пациенты"}
         </h2>
-        <p className="mt-4 text-lead text-zinc-400">
+        <p className="mt-4 text-lead text-zinc-500 dark:text-zinc-400">
           Действительные и честные оценки на основе реального опыта лечения в нашей клинике.
         </p>
       </motion.div>

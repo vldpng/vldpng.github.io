@@ -14,7 +14,7 @@ export function AboutPage() {
   return (
     <main className="pt-20 lg:pt-24 min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <Seo
-        title="О нас"
+        title="О клинике"
         description="О стоматологической клинике RoyalDent в Юрмале: индивидуальный подход, инновационные технологии, команда экспертов и 15 лет опыта."
         path="/about"
       />
@@ -23,8 +23,8 @@ export function AboutPage() {
       <div>
         <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
           <PageBanner
-            breadcrumb="О нас"
-            title="О нас"
+            breadcrumb="О клинике"
+            title="О клинике"
             imageUrl="/images/banners/about.jpeg"
             imageAlt="Клиника RoyalDent"
           />

@@ -151,7 +151,7 @@ function ConsultForm() {
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="Телефон"
+          placeholder="Ваш номер телефона"
           autoComplete="tel"
           className="flex-1 min-w-0 rounded-xl border-2 border-amber-500/80 bg-white px-5 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 transition-all"
         />

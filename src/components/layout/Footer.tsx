@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Instagram, Facebook, MessageCircle, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useBookingModal } from '../../context/BookingModalContext';
 import { clinic } from '../../data/clinic';
 import { handleHashClick } from '../../lib/utils';
 
 const columns = [
-  // TODO: вернуть колонку «Услуги» с новыми предложениями
-  // (ранее: эстетика, имплантация, микроскоп, гигиена, отбеливание, элайнеры)
+  {
+    title: 'Услуги',
+    links: [
+      { label: 'Имплантация', href: '/services/implants', type: 'route' as const },
+      { label: 'Керамические реставрации', href: '/services/ceramic', type: 'route' as const },
+      { label: 'Лечение под микроскопом', href: '/services/microscope', type: 'route' as const },
+      { label: 'Профессиональная гигиена', href: '/services/hygiene', type: 'route' as const },
+      { label: 'Отбеливание Flash', href: '/services/whitening', type: 'route' as const },
+      { label: 'Элайнеры', href: '/services/aligners', type: 'route' as const },
+    ],
+  },
   {
     title: 'Клиника',
     links: [
-      { label: 'О нас', href: '/about', type: 'route' as const },
+      { label: 'О клинике', href: '/about', type: 'route' as const },
       { label: 'Врачи', href: '/doctors', type: 'route' as const },
       { label: 'Цены', href: '/prices', type: 'route' as const },
       { label: 'Пациентам', href: '/patients', type: 'route' as const },
@@ -21,183 +29,177 @@ const columns = [
   {
     title: 'Информация',
     links: [
+      { label: 'Контакты', href: '/#contacts', type: 'hash' as const },
+      { label: 'FAQ', href: '/#faq', type: 'hash' as const },
       { label: 'Политика конфиденциальности', href: '/privacy', type: 'route' as const },
       { label: 'Пользовательское соглашение', href: '/terms', type: 'route' as const },
-      { label: 'FAQ', href: '/#faq', type: 'hash' as const },
-      { label: 'Контакты', href: '/#contacts', type: 'hash' as const },
     ],
   },
 ];
 
-export function Footer() {
-  const currentYear = new Date().getFullYear();
-  const { openModal } = useBookingModal();
+const socials = [
+  { Icon: Instagram, href: clinic.social.instagram, label: 'Instagram' },
+  { Icon: Facebook, href: clinic.social.facebook, label: 'Facebook' },
+  { Icon: MessageCircle, href: clinic.social.whatsapp, label: 'WhatsApp' },
+  { Icon: Send, href: clinic.social.telegram, label: 'Telegram' },
+];
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+const linkClass =
+  'text-[13px] text-zinc-400 hover:text-amber-500 transition-colors';
+
+export function Footer() {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+
+  const handleCallback = (e: React.FormEvent) => {
+    e.preventDefault();
+    const phoneValue = phone.trim();
+    if (!phoneValue) return;
+    // Без бэкенда: открываем письмо клинике с данными пациента для обратного звонка.
+    const subject = encodeURIComponent('Заявка на обратный звонок — RoyalDent');
+    const body = encodeURIComponent(
+      `Здравствуйте! Прошу перезвонить мне.\nИмя: ${name.trim() || '—'}\nТелефон: ${phoneValue}`,
+    );
+    window.location.href = `${clinic.emailHref}?subject=${subject}&body=${body}`;
   };
 
   return (
-    <footer className="relative bg-amber-50 dark:bg-zinc-950 overflow-hidden font-sans">
-      {/* Smooth top fade — blends footer color with previous section's bg-zinc-50 */}
-      <div
-        className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-zinc-50 to-transparent dark:hidden pointer-events-none z-10"
-        aria-hidden="true"
-      />
-
-      {/* Decorative angular gradient blur — anchored to the top-left corner */}
+    <footer className="relative bg-zinc-950 text-zinc-300 overflow-hidden font-sans">
+      {/* Мягкое свечение для глубины */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute -top-20 -left-24 w-[55%] h-72 rounded-full bg-amber-500/35 dark:bg-amber-500/25 blur-[150px]" />
-        <div className="absolute top-4 left-[18%] w-[40%] h-56 rounded-full bg-zinc-900/18 dark:bg-zinc-700/40 blur-[150px]" />
-        <div className="absolute top-28 left-[38%] w-[42%] h-60 rounded-full bg-amber-400/22 dark:bg-amber-400/15 blur-[160px]" />
+        <div className="absolute -top-24 left-[8%] w-[45%] h-72 rounded-full bg-amber-500/10 blur-[160px]" />
+        <div className="absolute top-10 right-[5%] w-[35%] h-64 rounded-full bg-amber-400/[0.06] blur-[160px]" />
       </div>
 
-      <div className="relative pt-32 lg:pt-40 px-2 md:px-3 pb-0">
+      <div className="relative mx-auto max-w-7xl px-6 md:px-10 pt-20 lg:pt-24">
 
-        {/* Top: logo + columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10 lg:gap-16 mb-20 lg:mb-28">
+        {/* Колонки */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-12">
 
-          {/* Brand block */}
-          <div className="col-span-2 md:col-span-4 lg:col-span-2 flex flex-col gap-8">
-            <Link to="/" onClick={scrollToTop} className="flex items-center group">
-              <img
-                src="/brand/logo.svg"
-                alt="RoyalDent"
-                className="h-12 w-auto object-contain dark:brightness-0 dark:invert transition-all"
-              />
-            </Link>
-
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-xs leading-relaxed">
-              Безупречная эстетика и комфорт на каждом этапе вашего лечения.
-              {' '}
-              {clinic.address.full}.
-            </p>
-
-            <div className="flex flex-col gap-2">
-              <a
-                href={clinic.phoneHref}
-                className="text-base font-semibold text-zinc-900 dark:text-zinc-50 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-              >
-                {clinic.phoneDisplay}
-              </a>
-              <a
-                href={clinic.emailHref}
-                className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-              >
-                {clinic.email}
-              </a>
-            </div>
-          </div>
-
-          {/* Link columns */}
-          {columns.map((col, idx) => (
-            <div key={idx} className="flex flex-col gap-5">
-              <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-500">
-                {col.title}
-              </h4>
+          {/* Ссылки */}
+          {columns.map((col) => (
+            <div
+              key={col.title}
+              className="lg:col-span-2 first:lg:col-span-3 border-t border-white/10 pt-6"
+            >
+              <h4 className="text-amber-500 text-[15px] font-medium mb-5">{col.title}</h4>
               <ul className="flex flex-col gap-3">
-                {col.links.map((link, i) => (
-                  <li key={i}>
+                {col.links.map((link) => (
+                  <li key={link.label}>
                     {link.type === 'route' ? (
-                      <Link
-                        to={link.href}
-                        className="text-[13px] text-zinc-700 dark:text-zinc-300 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-                      >
+                      <Link to={link.href} className={linkClass}>
                         {link.label}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
                         onClick={handleHashClick(link.href.replace('/', ''))}
-                        className="text-[13px] text-zinc-700 dark:text-zinc-300 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
+                        className={linkClass}
                       >
                         {link.label}
                       </a>
                     )}
                   </li>
                 ))}
-                {col.title === 'Информация' && (
-                  <li>
-                    <button
-                      onClick={() => openModal()}
-                      className="text-[13px] text-zinc-700 dark:text-zinc-300 hover:text-amber-600 dark:hover:text-amber-500 transition-colors text-left"
-                    >
-                      Записаться на приём
-                    </button>
-                  </li>
-                )}
               </ul>
             </div>
           ))}
 
-          {/* Connect column */}
-          <div className="flex flex-col gap-5">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-500">
-              Соцсети
-            </h4>
-            <ul className="flex flex-col gap-3">
-              <li>
+          {/* Подписка */}
+          <div className="lg:col-span-5 border-t border-white/10 pt-6">
+            <h3 className="text-white text-xl md:text-2xl font-medium leading-snug mb-6 max-w-sm">
+              Оставьте телефон и мы вам перезвоним
+            </h3>
+
+            <form onSubmit={handleCallback} className="max-w-md flex flex-col gap-3">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ваше имя"
+                aria-label="Ваше имя"
+                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-zinc-500 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+              />
+              <input
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Номер телефона"
+                aria-label="Номер телефона"
+                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-zinc-500 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+              />
+              <button
+                type="submit"
+                className="btn-sweep self-start bg-amber-500 hover:bg-amber-600 text-white px-7 py-3 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95"
+              >
+                Заказать звонок
+              </button>
+            </form>
+
+            {/* Соцсети */}
+            <div className="flex items-center gap-3 mt-7">
+              {socials.map(({ Icon, href, label }) => (
                 <a
-                  href={clinic.social.instagram}
-                  aria-label="Instagram"
-                  className="inline-flex items-center gap-2 text-[13px] text-zinc-700 dark:text-zinc-300 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/15 text-zinc-400 hover:text-amber-500 hover:border-amber-500 transition-colors"
                 >
-                  <Instagram size={14} /> Instagram
+                  <Icon size={16} className={label === 'Facebook' ? 'fill-current' : ''} />
                 </a>
-              </li>
-              <li>
-                <a
-                  href={clinic.social.facebook}
-                  aria-label="Facebook"
-                  className="inline-flex items-center gap-2 text-[13px] text-zinc-700 dark:text-zinc-300 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-                >
-                  <Facebook size={14} className="fill-current" /> Facebook
-                </a>
-              </li>
-              <li>
-                <a
-                  href={clinic.social.whatsapp}
-                  aria-label="WhatsApp"
-                  className="inline-flex items-center gap-2 text-[13px] text-zinc-700 dark:text-zinc-300 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-                >
-                  <MessageCircle size={14} /> WhatsApp
-                </a>
-              </li>
-              <li>
-                <a
-                  href={clinic.social.telegram}
-                  aria-label="Telegram"
-                  className="inline-flex items-center gap-2 text-[13px] text-zinc-700 dark:text-zinc-300 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-                >
-                  <Send size={14} /> Telegram
-                </a>
-              </li>
-            </ul>
+              ))}
+            </div>
+
+            {/* Контакты */}
+            <div className="flex flex-col gap-1 mt-7">
+              <a
+                href={clinic.phoneHref}
+                className="text-base font-semibold text-white hover:text-amber-500 transition-colors"
+              >
+                {clinic.phoneDisplay}
+              </a>
+              <span className="text-[13px] text-zinc-400">
+                {clinic.address.full} · {clinic.hours.short}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Bottom: copyright + giant wordmark */}
-        <div className="relative">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pb-6">
-            <div className="flex flex-col gap-1">
-              <p className="text-xs font-light text-zinc-500 dark:text-zinc-500">
-                © {clinic.legalName}, {currentYear}. Все права защищены.
-              </p>
-              <p className="text-xs font-light text-zinc-500 dark:text-zinc-500">
-                Reg. nr. {clinic.regNr}
-              </p>
-            </div>
+        {/* Гигантский логотип-водяной знак */}
+        <div
+          className="select-none pointer-events-none relative mt-16 lg:mt-20 -mb-[2vw]"
+          aria-hidden="true"
+        >
+          <span
+            className="block text-center font-bold tracking-tighter leading-[0.8]"
+            style={{
+              fontSize: 'clamp(70px, 18.2vw, 320px)',
+              color: 'transparent',
+              WebkitTextStroke: '1.5px rgba(255,255,255,0.12)',
+            }}
+          >
+            RoyalDent
+          </span>
+        </div>
+
+        {/* Нижняя строка */}
+        <div className="relative border-t border-white/10 py-6 lg:pr-16 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-xs text-zinc-500 leading-relaxed">
+              SIA «Royal Dent» · Reģ. Nr.: 40203129158
+              <br />
+              Veselības Inspekcijas atļauja Nr. 130000095
+            </span>
           </div>
 
-          {/* Giant wordmark — partially clipped at bottom */}
-          <div className="select-none pointer-events-none relative -mb-[3vw]">
-            <span
-              className="block text-center font-bold tracking-tighter leading-[0.85] bg-gradient-to-b from-zinc-900 to-zinc-900/30 dark:from-zinc-50 dark:to-zinc-50/10 bg-clip-text text-transparent"
-              style={{ fontSize: 'clamp(80px, 22vw, 380px)' }}
-              aria-hidden="true"
-            >
-              RoyalDent
-            </span>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="text-[13px] text-zinc-400 hover:text-amber-500 transition-colors">
+              Политика конфиденциальности
+            </Link>
+            <Link to="/terms" className="text-[13px] text-zinc-400 hover:text-amber-500 transition-colors">
+              Пользовательское соглашение
+            </Link>
           </div>
         </div>
       </div>

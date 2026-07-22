@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChevronDown, Menu, X, Globe, MapPin, Phone, Clock, Instagram, Facebook, MessageCircle, Send, Moon, Sun, Search, AlignJustify } from 'lucide-react';
 import { cn, handleHashClick } from '@/lib/utils';
 import { NavHeader } from '../ui/nav-header';
@@ -7,48 +7,13 @@ import { useBookingModal } from '../../context/BookingModalContext';
 import { clinic } from '../../data/clinic';
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('RU');
   const { openModal: openBooking } = useBookingModal();
 
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
-          
-          setIsScrolled(currentScrollY > 20);
-          
-          if (currentScrollY > lastScrollY && currentScrollY > 100) {
-            // Scrolling down and past threshold -> hide
-            setIsVisible(false);
-          } else if (currentScrollY < lastScrollY || currentScrollY <= 100) {
-            // Scrolling up or at top -> show
-            setIsVisible(true);
-          }
-          
-          lastScrollY = currentScrollY;
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <header className={cn(
-      "absolute left-0 w-full transition-all duration-300 pointer-events-none z-50 px-6 md:px-[50px]",
-      isScrolled ? "top-0 py-3" : "top-0 py-5",
-      isVisible ? "translate-y-0" : "-translate-y-full"
-    )}>
+    <header className="absolute left-0 top-0 w-full py-4 pointer-events-none z-50 px-6 md:px-[50px]">
       {/* Единая матовая панель-«пилюля»: логотип, меню, язык и CTA внутри */}
       <div className="w-full flex items-center justify-between pointer-events-auto rounded-2xl border border-white/40 bg-white/15 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_60px_-25px_rgba(4,27,57,0.35)] px-4 md:px-8 py-2.5">
         
