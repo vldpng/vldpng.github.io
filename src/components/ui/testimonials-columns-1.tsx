@@ -26,23 +26,23 @@ export const TestimonialsColumn = (props: {
           ...new Array(2).fill(0).map((_, index) => (
             <React.Fragment key={index}>
               {props.testimonials.map(({ text, image, name, role }, i) => (
-                <div className="p-8 rounded-[2rem] border border-zinc-800 bg-zinc-900 shadow-xl max-w-[320px] w-full" key={i}>
+                <div className="p-8 rounded-[2rem] border border-zinc-200 bg-card shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-xl max-w-[320px] w-full" key={i}>
                   <div className="mb-5 flex gap-1">
                     {[...Array(5)].map((_, starIndex) => (
                       <Star key={starIndex} className="h-4 w-4 fill-amber-500 text-amber-500" />
                     ))}
                   </div>
-                  <div className="text-zinc-300 leading-relaxed text-[15px]">"{text}"</div>
+                  <div className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-[15px]">"{text}"</div>
                   <div className="flex items-center gap-4 mt-8">
                     <img
                       width={48}
                       height={48}
                       src={image}
                       alt={name}
-                      className="h-12 w-12 rounded-full border border-zinc-800 object-cover"
+                      className="h-12 w-12 rounded-full border border-zinc-200 dark:border-zinc-800 object-cover"
                     />
                     <div className="flex flex-col text-left">
-                      <div className="font-semibold tracking-tight text-white leading-tight">{name}</div>
+                      <div className="font-semibold tracking-tight text-zinc-900 dark:text-white leading-tight">{name}</div>
                       <div className="text-[13px] text-zinc-500 tracking-tight mt-0.5">{role}</div>
                     </div>
                   </div>

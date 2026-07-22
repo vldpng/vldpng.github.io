@@ -40,7 +40,7 @@ export function Hero() {
     <section className="relative overflow-hidden bg-zinc-50">
       {/* ───────── Фото. На мобильных — во весь экран (фон),
           на desktop — правая часть со скруглённым левым краем. ───────── */}
-      <div className="absolute top-0 -bottom-0.5 left-0 right-0 lg:left-auto lg:right-0 lg:w-[57%] z-0 overflow-hidden">
+      <div className="absolute top-0 -bottom-0.5 left-0 right-0 lg:left-auto lg:right-0 lg:w-[57%] z-0 overflow-hidden lg:rounded-bl-[3rem]">
         {images.map((src, i) => (
           <motion.img
             key={src}

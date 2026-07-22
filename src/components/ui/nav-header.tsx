@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export function NavHeader() {
   return (
     <ul className="hidden md:flex items-center gap-2 lg:gap-6 relative z-50">
-      <Tab href="/about">Про нас</Tab>
+      <Tab href="/about">О клинике</Tab>
       <Tab href="/services">Услуги</Tab>
       <Tab href="/doctors">Врачи</Tab>
       <Tab href="/prices">Цены</Tab>

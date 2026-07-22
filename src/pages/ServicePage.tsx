@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { servicesList } from '../components/sections/Services';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { useBookingModal } from '../context/BookingModalContext';
 import { Seo } from '../components/Seo';
 
 // Расширенные данные для страницы услуг
@@ -129,8 +128,7 @@ const serviceDetails: Record<string, { fullDesc: string; benefits: string[]; pro
 
 export function ServicePage() {
   const { id } = useParams();
-  const { openModal } = useBookingModal();
-  
+
   const serviceBase = servicesList.find(s => s.id === id);
   const details = serviceBase && id ? serviceDetails[id] : null;
 
@@ -158,11 +156,21 @@ export function ServicePage() {
       <section className="bg-zinc-950 text-white py-20 px-4 mb-20">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-center">
           <div className="flex-1">
-            <Link to="/" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 text-sm">
-              <ArrowLeft size={16} /> Назад к списку услуг
-            </Link>
+            <nav aria-label="Хлебные крошки" className="mb-8">
+              <ol className="flex items-center gap-2 sm:gap-3 text-white/80 text-[10px] sm:text-[13px] font-medium tracking-wide uppercase whitespace-nowrap">
+                <li>
+                  <Link to="/" className="hover:text-white transition-colors">Главная</Link>
+                </li>
+                <li aria-hidden="true"><span className="block w-4 sm:w-6 h-[1.5px] bg-white/70"></span></li>
+                <li>
+                  <Link to="/services" className="hover:text-white transition-colors">Услуги</Link>
+                </li>
+                <li aria-hidden="true"><span className="block w-4 sm:w-6 h-[1.5px] bg-white/70"></span></li>
+                <li aria-current="page" className="text-white font-semibold">{serviceBase.title}</li>
+              </ol>
+            </nav>
             <h1 className="h-display mb-6">{serviceBase.title}</h1>
-            <p className="text-lead text-zinc-400 max-w-2xl">
+            <p className="text-lead text-zinc-200 max-w-2xl">
               {serviceBase.desc}
             </p>
           </div>
@@ -207,22 +215,6 @@ export function ServicePage() {
               ))}
             </ol>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="max-w-4xl mx-auto px-4 mt-24 text-center">
-        <div className="bg-amber-100/50 border border-amber-200 rounded-[3rem] py-16 px-8">
-          <h2 className="h-section text-zinc-900 mb-4">Готовы к здоровой улыбке?</h2>
-          <p className="text-lead text-zinc-600 mb-8 max-w-lg mx-auto">
-            Оставьте заявку на бесплатную консультацию, и мы подберём оптимальный план лечения.
-          </p>
-          <button
-            onClick={() => openModal()}
-            className="bg-amber-500 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-amber-600 transition-colors"
-          >
-            Записаться на приём
-          </button>
         </div>
       </section>
     </main>

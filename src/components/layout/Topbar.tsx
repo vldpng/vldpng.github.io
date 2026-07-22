@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, Clock, Instagram, Facebook, MessageCircle, Send } from 'lucide-react';
+import { MapPin, Phone, Clock, Car, Instagram, Facebook, MessageCircle, Send } from 'lucide-react';
 import { clinic } from '../../data/clinic';
 
 export function Topbar() {
@@ -14,6 +14,11 @@ export function Topbar() {
         <span className="flex items-center gap-1.5 hover:text-white transition-colors cursor-default">
           <Clock size={14} className="text-zinc-500" />
           {clinic.hours.short}
+        </span>
+        <span className="hidden sm:inline text-zinc-700">|</span>
+        <span className="flex items-center gap-1.5 hover:text-white transition-colors cursor-default">
+          <Car size={14} className="text-zinc-500" />
+          Бесплатная парковка
         </span>
       </div>
 
