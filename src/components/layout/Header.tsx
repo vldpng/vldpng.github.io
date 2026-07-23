@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, Menu, X, Globe, MapPin, Phone, Clock, Instagram, Facebook, MessageCircle, Send, Moon, Sun, Search, AlignJustify } from 'lucide-react';
 import { cn, handleHashClick } from '@/lib/utils';
 import { NavHeader } from '../ui/nav-header';
@@ -10,10 +10,46 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('RU');
+  const [isHidden, setIsHidden] = useState(false);
   const { openModal: openBooking } = useBookingModal();
 
+  // Скрываем шапку при скролле вниз, показываем при скролле вверх.
+  // На самом верху страницы шапка всегда видна.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      const y = window.scrollY;
+      if (y <= 10) {
+        setIsHidden(false);
+      } else if (y > lastY + 4) {
+        setIsHidden(true);
+      } else if (y < lastY - 4) {
+        setIsHidden(false);
+      }
+      lastY = y;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className="absolute left-0 top-0 w-full py-4 pointer-events-none z-50 px-6 md:px-[50px]">
+    <header
+      className={cn(
+        'absolute left-0 top-0 w-full py-4 pointer-events-none z-50 px-6 md:px-[50px] transition-transform duration-300 ease-in-out',
+        isHidden && !mobileMenuOpen ? '-translate-y-full' : 'translate-y-0'
+      )}
+    >
       {/* Единая матовая панель-«пилюля»: логотип, меню, язык и CTA внутри */}
       <div className="w-full flex items-center justify-between pointer-events-auto rounded-2xl border border-white/40 bg-white/15 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_60px_-25px_rgba(4,27,57,0.35)] px-4 md:px-8 py-2.5">
         
