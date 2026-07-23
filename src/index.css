@@ -53,13 +53,9 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Фон под safe-area на iOS (за адресной строкой/статус-баром) и в зоне
-       overscroll. Тёмный фирменный тон сливается с hero — без белой полосы. */
-    background-color: #041b39;
   }
 
   body {
-    background-color: #041b39;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
