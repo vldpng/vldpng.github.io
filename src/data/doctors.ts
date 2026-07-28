@@ -50,7 +50,7 @@ export const doctorsData: Doctor[] = [
     id: "1",
     name: "Виталий Двуреченский",
     specialty: "Хирург-имплантолог, ортопед",
-    experience: "15 лет", // TODO: реальный стаж
+    experience: "30 лет",
     educationList: [
       {
         title: 'Донецкий государственный медицинский университет имени Максима Горького',
