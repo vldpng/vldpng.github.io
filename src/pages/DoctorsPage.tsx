@@ -24,13 +24,6 @@ export function DoctorsPage() {
           <div className="max-w-7xl mx-auto px-2 md:px-3">
             <div className="mb-16">
               <PageBanner title="Врачи в клинике RoyalDent" />
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-lead text-zinc-600 dark:text-zinc-400 max-w-2xl mt-8"
-              >
-                Команда профессионалов со стажем и перфекционистским подходом к каждой детали вашего лечения.
-              </motion.p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
