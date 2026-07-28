@@ -133,7 +133,7 @@ export function Hero() {
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              onClick={openModal}
+              onClick={() => openModal()}
               className="lg:hidden btn-sweep mt-10 w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white px-8 py-3.5 rounded-full text-base font-medium shadow-md hover:shadow-lg active:scale-95 transition-all"
             >
               Записаться на приём
