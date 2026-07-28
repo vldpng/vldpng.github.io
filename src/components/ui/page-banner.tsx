@@ -2,19 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface PageBannerProps {
-  /** Крупный заголовок страницы (h1). */
-  title: string;
   /** Подпись в хлебных крошках после «Главная» (выводится капсом). */
   breadcrumb: string;
 }
 
 /**
- * Шапка внутренней страницы: хлебные крошки и h1 обычным текстом,
- * без плашки — контент страницы начинается сразу под заголовком.
+ * Шапка внутренней страницы — только хлебные крошки: контент начинается
+ * сразу под ними, заголовка страницы нет.
  */
-export function PageBanner({ title, breadcrumb }: PageBannerProps) {
+export function PageBanner({ breadcrumb }: PageBannerProps) {
   return (
-    <div className="pb-8 md:pb-10">
+    <div className="pb-6 md:pb-8">
       <nav aria-label="Хлебные крошки">
         <ol className="eyebrow flex items-center gap-3 text-zinc-500 dark:text-zinc-400">
           <li>
@@ -30,8 +28,6 @@ export function PageBanner({ title, breadcrumb }: PageBannerProps) {
           </li>
         </ol>
       </nav>
-
-      <h1 className="h-display text-zinc-900 dark:text-zinc-50 mt-4">{title}</h1>
     </div>
   );
 }

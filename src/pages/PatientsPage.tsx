@@ -114,7 +114,7 @@ export function PatientsPage() {
 
       {/* Banner */}
       <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner breadcrumb="Пациентам" title="Пациентам" />
+        <PageBanner breadcrumb="Пациентам" />
       </div>
 
       <div className="max-w-7xl mx-auto px-2 md:px-3 mt-10 lg:mt-14">

@@ -257,7 +257,7 @@ export function PatientRulesPage() {
       />
 
       <div className="max-w-[1000px] mx-auto px-2 md:px-3 pt-8">
-        <PageBanner breadcrumb="Правила распорядка" title="Правила внутреннего распорядка" />
+        <PageBanner breadcrumb="Правила распорядка" />
       </div>
 
       <article className="max-w-[1000px] mx-auto px-2 md:px-3 mt-10 lg:mt-14 bg-card dark:bg-zinc-900 rounded-3xl border border-black/[0.04] dark:border-white/[0.06] shadow-[0_4px_20px_rgb(58,58,58,0.03)] p-6 md:p-12">

@@ -20,7 +20,7 @@ export function AboutPage() {
       />
 
       <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner breadcrumb="О клинике" title="О клинике" />
+        <PageBanner breadcrumb="О клинике" />
       </div>
 
       <AboutApproach />
