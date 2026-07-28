@@ -75,7 +75,9 @@ export function DoctorPage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 pt-24 pb-20">
+    // lg:pt-32 — на desktop плавающая панель навигации выше и вплотную
+    // прилегала к шапке врача; на мобильных отступа pt-24 достаточно.
+    <main className="min-h-screen bg-zinc-50 pt-24 lg:pt-32 pb-20">
       <Seo
         title={`${doctor.name} — ${doctor.specialty}`}
         description={`${doctor.name}, ${doctor.specialty}. ${doctor.bio}`.slice(0, 160)}
