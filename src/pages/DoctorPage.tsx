@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doctorsData, clinicTechnologies, clinicPromos } from '../data/doctors';
-import { ArrowLeft, ArrowRight, Star, GraduationCap, Sparkles, Tag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, GraduationCap, Sparkles, Tag } from 'lucide-react';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
@@ -122,14 +122,8 @@ export function DoctorPage() {
             </nav>
 
             <h1 className="h-display text-white mb-4">{doctor.name}</h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-8">
+            <div className="mb-8">
               <p className="text-lead text-white/80 font-light">{doctor.specialty}</p>
-              {typeof doctor.rating === 'number' && (
-                <span className="inline-flex items-center gap-1 text-white font-semibold">
-                  <Star size={16} className="fill-white text-white" />
-                  {doctor.rating.toFixed(2)}
-                </span>
-              )}
             </div>
 
             {(doctor.experience || doctor.education) && (

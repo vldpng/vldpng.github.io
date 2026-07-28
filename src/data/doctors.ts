@@ -1,7 +1,7 @@
 /**
  * Команда клиники RoyalDent.
  *
- * ВАЖНО: имена и специальности реальные. Поля стажа, образования, рейтинга,
+ * ВАЖНО: имена и специальности реальные. Поля стажа, образования,
  * профиля лечения и цен помечены TODO — замените на реальные данные.
  * Компоненты автоматически скрывают пустые секции.
  */
@@ -30,8 +30,6 @@ export interface Doctor {
   experience?: string;
   /** Образование (строкой, legacy). TODO. */
   education?: string;
-  /** Рейтинг 0–5. TODO: заменить на реальный. */
-  rating?: number;
   /** Образование — список учреждений. Пусто — секция скрыта. TODO. */
   educationList?: EducationItem[];
   /** Профиль лечения — теги. Пусто — секция скрыта. */
@@ -94,7 +92,6 @@ export const doctorsData: Doctor[] = [
     name: "Виталий Двуреченский",
     specialty: "Хирург-имплантолог, ортопед",
     experience: "15 лет", // TODO: реальный стаж
-    rating: 4.9, // TODO
     educationList: [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO: вуз и годы
     ],
@@ -114,7 +111,6 @@ export const doctorsData: Doctor[] = [
     name: "Элина Хейфец",
     specialty: "Стоматолог-ортопед",
     experience: "12 лет", // TODO: реальный стаж
-    rating: 4.9, // TODO
     educationList: [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
@@ -134,7 +130,6 @@ export const doctorsData: Doctor[] = [
     name: "Ирина Иванова",
     specialty: "Стоматолог-терапевт",
     experience: "10 лет", // TODO: реальный стаж
-    rating: 4.8, // TODO
     educationList: [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
@@ -154,7 +149,6 @@ export const doctorsData: Doctor[] = [
     id: "4",
     name: "Юлия Циплякова",
     specialty: "Гигиенист",
-    rating: 4.9, // TODO
     treatmentProfile: PROFILE_BY_SPECIALTY['Гигиенист'],
     prices: [
       { title: 'Профессиональная гигиена полости рта', price: '60 EUR' }, // TODO
@@ -171,7 +165,6 @@ export const doctorsData: Doctor[] = [
     id: "5",
     name: "Валерия Иванова",
     specialty: "Гигиенист",
-    rating: 4.8, // TODO
     treatmentProfile: PROFILE_BY_SPECIALTY['Гигиенист'],
     prices: [
       { title: 'Профессиональная гигиена полости рта', price: '60 EUR' }, // TODO
@@ -207,7 +200,6 @@ export const doctorsData: Doctor[] = [
     name: "Владислав Двуреченский",
     specialty: "CAD/CAM специалист",
     experience: "6 лет", // TODO: реальный стаж
-    rating: 4.9, // TODO
     educationList: [
       { title: 'Зубной техник / CAD-CAM', subtitle: 'Профильное образование' }, // TODO
     ],

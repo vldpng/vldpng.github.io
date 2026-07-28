@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { X, ChevronLeft, Check, Loader2, Star, Calendar, Clock, User, Phone, Instagram, Facebook, MessageCircle, Send, Stethoscope } from 'lucide-react';
+import { X, ChevronLeft, Check, Loader2, Calendar, Clock, User, Phone, Instagram, Facebook, MessageCircle, Send, Stethoscope } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { useBookingModal } from '../../context/BookingModalContext';
@@ -12,7 +12,6 @@ interface Staff {
   name: string;
   specialization?: string;
   avatar?: string;
-  rating?: number;
 }
 
 interface Service {
@@ -426,11 +425,6 @@ export function BookingModal() {
                                   <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">{doc.specialization}</p>
                                 )}
                               </div>
-                              {doc.rating ? (
-                                <span className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 shrink-0">
-                                  <Star size={13} className="text-amber-400 fill-amber-400" />{doc.rating}
-                                </span>
-                              ) : null}
                             </button>
                           ))}
                         </motion.div>
