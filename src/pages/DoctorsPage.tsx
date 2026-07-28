@@ -23,7 +23,7 @@ export function DoctorsPage() {
         <section className="pt-8 pb-16">
           <div className="max-w-7xl mx-auto px-2 md:px-3">
             <div className="mb-16">
-              <PageBanner breadcrumb="Наши врачи" />
+              <PageBanner title="Врачи в клинике RoyalDent" />
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

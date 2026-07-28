@@ -17,7 +17,7 @@ export function PricesPage() {
       />
       {/* Banner */}
       <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner breadcrumb="Цены" />
+        <PageBanner title="Цены в клинике RoyalDent" />
       </div>
       
       <Prices />

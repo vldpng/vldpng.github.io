@@ -114,7 +114,7 @@ export function PatientsPage() {
 
       {/* Banner */}
       <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner breadcrumb="Пациентам" />
+        <PageBanner title="Информация для посетителей клиники RoyalDent" />
       </div>
 
       <div className="max-w-7xl mx-auto px-2 md:px-3 mt-10 lg:mt-14">
