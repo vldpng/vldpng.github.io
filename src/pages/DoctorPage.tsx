@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doctorsData } from '../data/doctors';
 import { BeforeAfterSlider } from '../components/ui/before-after-slider';
+import { serviceCards } from '../components/sections/ServiceCards';
 import { ArrowLeft, ArrowRight, GraduationCap } from 'lucide-react';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { motion } from 'motion/react';
@@ -32,16 +33,27 @@ export function DoctorPage() {
 
   const others = useMemo(() => doctorsData.filter((d) => d.id !== id).slice(0, 4), [id]);
 
+  // Услуги врача разворачиваются из общего каталога направлений по маршруту:
+  // название берётся оттуда, поэтому не может разойтись со страницей /services.
+  // Неизвестный маршрут молча отбрасывается, а не рисует пустую строку.
+  const services = useMemo(
+    () =>
+      (doctor?.services ?? [])
+        .map((to) => serviceCards.find((c) => c.to === to))
+        .filter((c): c is (typeof serviceCards)[number] => Boolean(c)),
+    [doctor],
+  );
+
   // Секции навигации — только те, для которых есть данные.
   const sections = useMemo(() => {
     if (!doctor) return [];
     return [
       { id: 'education', label: 'Образование', show: !!doctor.educationList?.length },
       { id: 'cases', label: 'Кейсы', show: !!doctor.cases?.length },
-      { id: 'services', label: 'Услуги', show: doctor.services.length > 0 },
+      { id: 'services', label: 'Услуги', show: services.length > 0 },
       { id: 'others', label: 'Другие врачи', show: others.length > 0 },
     ].filter((s) => s.show);
-  }, [doctor, others]);
+  }, [doctor, others, services]);
 
   const [active, setActive] = useState('');
 
@@ -256,14 +268,14 @@ export function DoctorPage() {
             ) : null}
 
             {/* Услуги */}
-            {doctor.services.length > 0 && (
+            {services.length > 0 && (
               <section>
                 <SectionHeading id="services">Услуги</SectionHeading>
                 <div className="flex flex-col gap-3">
-                  {doctor.services.map((service) => (
+                  {services.map((service) => (
                     <Link
-                      key={service.id}
-                      to={service.href}
+                      key={service.to}
+                      to={service.to}
                       className="group flex items-center justify-between px-6 py-4 rounded-2xl bg-card border border-zinc-200 hover:border-amber-500 text-zinc-900 transition-all shadow-sm hover:shadow-md"
                     >
                       <span className="text-lg font-light">{service.title}</span>

@@ -6,12 +6,6 @@
  * Компоненты автоматически скрывают пустые секции.
  */
 
-export interface DoctorService {
-  id: string;
-  title: string;
-  href: string;
-}
-
 export interface EducationItem {
   title: string;
   subtitle?: string;
@@ -39,7 +33,12 @@ export interface Doctor {
   /** Кейсы «до/после». Пусто — секция скрыта. */
   cases?: DoctorCase[];
   bio: string;
-  services: DoctorService[];
+  /**
+   * Услуги врача — маршруты из каталога направлений (serviceCards
+   * в components/sections/ServiceCards). Названия подставляются оттуда,
+   * поэтому здесь только ссылки: '/services/ceramic' и т.п.
+   */
+  services: string[];
   photoLabel: string;
   /** Фото сотрудника. Пусто — показывается заглушка. TODO: добавить реальное фото. */
   photoUrl?: string;
@@ -69,7 +68,11 @@ export const doctorsData: Doctor[] = [
     ],
     bio: "Проводит дентальную имплантацию и хирургическое восстановление зубов, а также ортопедическое протезирование — от планирования до фиксации постоянных конструкций.",
     services: [
-      { id: "s1", title: "Имплантация", href: "/services/implants" },
+      '/services/ceramic',
+      '/services/surgery',
+      '/services/implants',
+      '/services/microscope',
+      '/services/tmj',
     ],
     photoLabel: "[Фото — Виталий Двуреченский, хирург-имплантолог]",
     photoUrl: "/images/staff/Dvurechenskiy.webp",
@@ -83,9 +86,7 @@ export const doctorsData: Doctor[] = [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
     bio: "Занимается протезированием и восстановлением зубов: коронки, виниры, мостовидные и съёмные конструкции с акцентом на эстетику и долговечность результата.",
-    services: [
-      { id: "s4", title: "Имплантация", href: "/services/implants" },
-    ],
+    services: ['/services/ceramic', '/services/implants'],
     photoLabel: "[Фото — Элина Хейфец, стоматолог-ортопед]",
     photoUrl: "/images/staff/Heyfec.webp",
   },
@@ -98,10 +99,7 @@ export const doctorsData: Doctor[] = [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
     bio: "Лечит кариес и его осложнения, проводит реставрацию зубов и эндодонтическое лечение каналов под микроскопом с сохранением естественного вида зуба.",
-    services: [
-      { id: "s5", title: "Лечение под микроскопом", href: "/services/microscope" },
-      { id: "s6", title: "Профессиональная гигиена", href: "/services/hygiene" },
-    ],
+    services: ['/services/microscope', '/services/hygiene'],
     photoLabel: "[Фото — Ирина Иванова, стоматолог-терапевт]",
     photoUrl: "/images/staff/Ivanova.webp",
   },
@@ -110,10 +108,7 @@ export const doctorsData: Doctor[] = [
     name: "Юлия Циплякова",
     specialty: "Гигиенист",
     bio: "Выполняет профессиональную гигиену полости рта, ультразвуковую чистку и Air Flow, а также обучает пациентов правильному домашнему уходу.",
-    services: [
-      { id: "s7", title: "Профессиональная гигиена", href: "/services/hygiene" },
-      { id: "s8", title: "Отбеливание Flash", href: "/services/whitening" },
-    ],
+    services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Юлия Циплякова, гигиенист]",
     photoUrl: "",
   },
@@ -122,10 +117,7 @@ export const doctorsData: Doctor[] = [
     name: "Валерия Иванова",
     specialty: "Гигиенист",
     bio: "Проводит профессиональную чистку зубов, снятие налёта и зубного камня, профилактику кариеса и заболеваний дёсен.",
-    services: [
-      { id: "s9", title: "Профессиональная гигиена", href: "/services/hygiene" },
-      { id: "s10", title: "Отбеливание Flash", href: "/services/whitening" },
-    ],
+    services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Валерия Иванова, гигиенист]",
     photoUrl: "",
   },
@@ -156,9 +148,7 @@ export const doctorsData: Doctor[] = [
       { title: 'Зубной техник / CAD-CAM', subtitle: 'Профильное образование' }, // TODO
     ],
     bio: "Отвечает за цифровое моделирование и изготовление реставраций по технологии CAD/CAM: коронки, виниры и каркасы с высокой точностью прилегания.",
-    services: [
-      { id: "s12", title: "Имплантация", href: "/services/implants" },
-    ],
+    services: ['/services/ceramic', '/services/implants'],
     photoLabel: "[Фото — Владислав Двуреченский, CAD/CAM специалист]",
     photoUrl: "/images/staff/Vladyslav.webp",
   },
