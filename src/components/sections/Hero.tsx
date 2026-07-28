@@ -47,6 +47,11 @@ export function Hero() {
             src={src}
             alt=""
             aria-hidden="true"
+            // Первый слайд — LCP-элемент страницы, грузим приоритетно.
+            // Остальные подтягиваются лениво: до переключения они не видны.
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchPriority={i === 0 ? 'high' : 'low'}
+            decoding={i === 0 ? 'sync' : 'async'}
             className="absolute inset-0 w-full h-full object-cover"
             initial={false}
             animate={{ opacity: i === index ? 1 : 0, scale: i === index ? 1 : 1.06 }}
