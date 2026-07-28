@@ -19,16 +19,8 @@ export function AboutPage() {
         path="/about"
       />
 
-      {/* Banner */}
-      <div>
-        <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-          <PageBanner
-            breadcrumb="О клинике"
-            title="О клинике"
-            imageUrl="/images/banners/about.jpeg"
-            imageAlt="Клиника RoyalDent"
-          />
-        </div>
+      <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
+        <PageBanner breadcrumb="О клинике" title="О клинике" />
       </div>
 
       <AboutApproach />

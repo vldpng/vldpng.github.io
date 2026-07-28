@@ -7,12 +7,6 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": true
-    },
-    {
-      "name": "royaldent-prod",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["vite", "preview", "--port", "4173"],
-      "port": 4173
     }
   ]
 }
