@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, ArrowRight, Check, Info, Minus, ChevronDown, Calculator, MousePointerClick } from 'lucide-react';
+import { Plus, ArrowRight, Check, Info, Minus, ChevronDown, Calculator } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
@@ -517,15 +517,12 @@ export function PriceCalculator() {
                   </div>
 
                   {/* Правая колонка: интерактивная схема челюстей */}
-                  <div className="rounded-3xl bg-[#F8FAFF] text-zinc-900 border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 flex flex-col sm:flex-row items-center gap-6 md:gap-8">
+                  <div className="rounded-3xl bg-[#F8FAFF] text-zinc-900 border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8">
+                    {/* Заголовок — в одном стиле с «Стоимость импланта» слева. */}
+                    <h3 className="text-xl font-semibold mb-5">Выберите зубы на схеме</h3>
+                    <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8">
                     <JawPicker selected={teeth} onToggle={toggleTooth} />
                     <div className="flex flex-col gap-5 w-full sm:w-auto sm:min-w-[15rem]">
-                      {/* Подсказка: как пользоваться схемой */}
-                      <div className="flex items-start gap-2.5 text-sm text-zinc-500">
-                        <MousePointerClick size={18} className="shrink-0 mt-0.5 text-amber-500" />
-                        <span>Выберите зубы на схеме</span>
-                      </div>
-
                       {/* Расчёт имплантации: сколько зубов выбрано по челюстям */}
                       <div className="w-full rounded-2xl bg-white border border-black/[0.05] p-5">
                         <h3 className="font-semibold text-zinc-900 mb-4 flex items-center gap-2">
@@ -577,6 +574,7 @@ export function PriceCalculator() {
                         Следующий шаг
                         <ArrowRight size={20} />
                       </button>
+                    </div>
                     </div>
                   </div>
                 </div>
