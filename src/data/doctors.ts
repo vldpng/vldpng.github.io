@@ -1,8 +1,8 @@
 /**
  * Команда клиники RoyalDent.
  *
- * ВАЖНО: имена и специальности реальные. Поля стажа, образования,
- * профиля лечения и цен помечены TODO — замените на реальные данные.
+ * ВАЖНО: имена и специальности реальные. Поля стажа, образования
+ * и профиля лечения помечены TODO — замените на реальные данные.
  * Компоненты автоматически скрывают пустые секции.
  */
 
@@ -17,11 +17,6 @@ export interface EducationItem {
   subtitle?: string;
 }
 
-export interface PriceItem {
-  title: string;
-  price: string;
-}
-
 export interface Doctor {
   id: string;
   name: string;
@@ -34,48 +29,12 @@ export interface Doctor {
   educationList?: EducationItem[];
   /** Профиль лечения — теги. Пусто — секция скрыта. */
   treatmentProfile?: string[];
-  /** Цены приёма. Пусто — секция скрыта. TODO: реальные цены. */
-  prices?: PriceItem[];
   bio: string;
   services: DoctorService[];
   photoLabel: string;
   /** Фото сотрудника. Пусто — показывается заглушка. TODO: добавить реальное фото. */
   photoUrl?: string;
 }
-
-export interface TechItem {
-  title: string;
-  desc: string;
-}
-
-export interface Promo {
-  title: string;
-  note?: string;
-}
-
-/** Технологии клиники — общие для всех врачей (секция «Используемые технологии»). */
-export const clinicTechnologies: TechItem[] = [
-  {
-    title: 'Цифровая диагностика',
-    desc: '3D-томография и внутриротовое сканирование для точного плана лечения без лишних снимков.',
-  },
-  {
-    title: 'Цифровой дизайн улыбки',
-    desc: 'Проектируем будущую улыбку до начала лечения — вы видите результат заранее.',
-  },
-  {
-    title: 'Протезирование «Всё на 4/6»',
-    desc: 'Восстановление зубов на 4–6 имплантах с несъёмной конструкцией за один этап.',
-  },
-];
-
-/** Акции клиники — общие (секция «Акции»). TODO: актуализировать. */
-export const clinicPromos: Promo[] = [
-  {
-    title: 'Комплексная диагностика и консультация стоматолога-ортопеда',
-    note: 'Приём · 30–45 минут',
-  },
-];
 
 // Профиль лечения по специальности (используется как значение по умолчанию).
 const PROFILE_BY_SPECIALTY: Record<string, string[]> = {
@@ -96,9 +55,6 @@ export const doctorsData: Doctor[] = [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO: вуз и годы
     ],
     treatmentProfile: PROFILE_BY_SPECIALTY['Хирург-имплантолог, ортопед'],
-    prices: [
-      { title: 'Первичная консультация хирурга-имплантолога', price: '30 EUR' }, // TODO
-    ],
     bio: "Проводит дентальную имплантацию и хирургическое восстановление зубов, а также ортопедическое протезирование — от планирования до фиксации постоянных конструкций.",
     services: [
       { id: "s1", title: "Имплантация", href: "/services/implants" },
@@ -115,9 +71,6 @@ export const doctorsData: Doctor[] = [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
     treatmentProfile: PROFILE_BY_SPECIALTY['Стоматолог-ортопед'],
-    prices: [
-      { title: 'Первичная консультация стоматолога-ортопеда', price: '30 EUR' }, // TODO
-    ],
     bio: "Занимается протезированием и восстановлением зубов: коронки, виниры, мостовидные и съёмные конструкции с акцентом на эстетику и долговечность результата.",
     services: [
       { id: "s4", title: "Имплантация", href: "/services/implants" },
@@ -134,9 +87,6 @@ export const doctorsData: Doctor[] = [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
     treatmentProfile: PROFILE_BY_SPECIALTY['Стоматолог-терапевт'],
-    prices: [
-      { title: 'Первичная консультация стоматолога-терапевта', price: '25 EUR' }, // TODO
-    ],
     bio: "Лечит кариес и его осложнения, проводит реставрацию зубов и эндодонтическое лечение каналов под микроскопом с сохранением естественного вида зуба.",
     services: [
       { id: "s5", title: "Лечение под микроскопом", href: "/services/microscope" },
@@ -150,9 +100,6 @@ export const doctorsData: Doctor[] = [
     name: "Юлия Циплякова",
     specialty: "Гигиенист",
     treatmentProfile: PROFILE_BY_SPECIALTY['Гигиенист'],
-    prices: [
-      { title: 'Профессиональная гигиена полости рта', price: '60 EUR' }, // TODO
-    ],
     bio: "Выполняет профессиональную гигиену полости рта, ультразвуковую чистку и Air Flow, а также обучает пациентов правильному домашнему уходу.",
     services: [
       { id: "s7", title: "Профессиональная гигиена", href: "/services/hygiene" },
@@ -166,9 +113,6 @@ export const doctorsData: Doctor[] = [
     name: "Валерия Иванова",
     specialty: "Гигиенист",
     treatmentProfile: PROFILE_BY_SPECIALTY['Гигиенист'],
-    prices: [
-      { title: 'Профессиональная гигиена полости рта', price: '60 EUR' }, // TODO
-    ],
     bio: "Проводит профессиональную чистку зубов, снятие налёта и зубного камня, профилактику кариеса и заболеваний дёсен.",
     services: [
       { id: "s9", title: "Профессиональная гигиена", href: "/services/hygiene" },
@@ -204,9 +148,6 @@ export const doctorsData: Doctor[] = [
       { title: 'Зубной техник / CAD-CAM', subtitle: 'Профильное образование' }, // TODO
     ],
     treatmentProfile: PROFILE_BY_SPECIALTY['CAD/CAM специалист'],
-    prices: [
-      { title: 'Изготовление коронки CAD/CAM', price: 'от 300 EUR' }, // TODO
-    ],
     bio: "Отвечает за цифровое моделирование и изготовление реставраций по технологии CAD/CAM: коронки, виниры и каркасы с высокой точностью прилегания.",
     services: [
       { id: "s12", title: "Имплантация", href: "/services/implants" },

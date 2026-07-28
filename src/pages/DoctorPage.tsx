@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doctorsData, clinicTechnologies, clinicPromos } from '../data/doctors';
-import { ArrowLeft, ArrowRight, GraduationCap, Sparkles, Tag } from 'lucide-react';
+import { doctorsData } from '../data/doctors';
+import { ArrowLeft, ArrowRight, GraduationCap } from 'lucide-react';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
@@ -38,9 +38,6 @@ export function DoctorPage() {
       { id: 'education', label: 'Образование', show: !!doctor.educationList?.length },
       { id: 'profile', label: 'Профиль лечения', show: !!doctor.treatmentProfile?.length },
       { id: 'services', label: 'Услуги', show: doctor.services.length > 0 },
-      { id: 'prices', label: 'Цены', show: !!doctor.prices?.length },
-      { id: 'promos', label: 'Акции', show: clinicPromos.length > 0 },
-      { id: 'technologies', label: 'Технологии', show: clinicTechnologies.length > 0 },
       { id: 'others', label: 'Другие врачи', show: others.length > 0 },
     ].filter((s) => s.show);
   }, [doctor, others]);
@@ -258,62 +255,6 @@ export function DoctorPage() {
                         className="shrink-0 ml-4 text-zinc-400 group-hover:text-amber-500 group-hover:translate-x-1 transition-all"
                       />
                     </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Цены */}
-            {doctor.prices?.length ? (
-              <section>
-                <SectionHeading id="prices">Цены</SectionHeading>
-                <div className={cn(cardClass, 'flex flex-col divide-y divide-zinc-100')}>
-                  {doctor.prices.map((p, i) => (
-                    <div key={i} className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
-                      <span className="text-zinc-700">{p.title}</span>
-                      <span className="font-semibold text-zinc-900 whitespace-nowrap">{p.price}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
-            {/* Акции */}
-            {clinicPromos.length > 0 && (
-              <section>
-                <SectionHeading id="promos">Акции</SectionHeading>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {clinicPromos.map((promo, i) => (
-                    <div
-                      key={i}
-                      className="flex items-start gap-4 rounded-3xl bg-amber-50 border border-amber-100 p-6"
-                    >
-                      <span className="w-11 h-11 rounded-xl bg-white text-amber-600 flex items-center justify-center shrink-0">
-                        <Tag size={20} />
-                      </span>
-                      <div>
-                        <p className="font-medium text-zinc-900 leading-snug">{promo.title}</p>
-                        {promo.note && <p className="text-sm text-zinc-500 mt-1">{promo.note}</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Используемые технологии */}
-            {clinicTechnologies.length > 0 && (
-              <section>
-                <SectionHeading id="technologies">Используемые технологии</SectionHeading>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {clinicTechnologies.map((t) => (
-                    <div key={t.title} className={cn(cardClass, 'p-5')}>
-                      <span className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
-                        <Sparkles size={20} />
-                      </span>
-                      <h3 className="font-semibold text-zinc-900 mb-1.5 leading-snug">{t.title}</h3>
-                      <p className="text-sm text-zinc-500 leading-relaxed">{t.desc}</p>
-                    </div>
                   ))}
                 </div>
               </section>
