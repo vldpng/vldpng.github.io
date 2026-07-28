@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doctorsData } from '../data/doctors';
+import { BeforeAfterSlider } from '../components/ui/before-after-slider';
 import { ArrowLeft, ArrowRight, GraduationCap } from 'lucide-react';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { motion } from 'motion/react';
@@ -36,7 +37,7 @@ export function DoctorPage() {
     if (!doctor) return [];
     return [
       { id: 'education', label: 'Образование', show: !!doctor.educationList?.length },
-      { id: 'profile', label: 'Профиль лечения', show: !!doctor.treatmentProfile?.length },
+      { id: 'cases', label: 'Кейсы', show: !!doctor.cases?.length },
       { id: 'services', label: 'Услуги', show: doctor.services.length > 0 },
       { id: 'others', label: 'Другие врачи', show: others.length > 0 },
     ].filter((s) => s.show);
@@ -220,18 +221,33 @@ export function DoctorPage() {
               </section>
             ) : null}
 
-            {/* Профиль лечения */}
-            {doctor.treatmentProfile?.length ? (
+            {/* Кейсы — горизонтальная лента карточек «до/после».
+                Прокрутка нативная (overflow-x + scroll-snap), без JS. */}
+            {doctor.cases?.length ? (
               <section>
-                <SectionHeading id="profile">Профиль лечения</SectionHeading>
-                <div className={cn(cardClass, 'flex flex-wrap gap-2.5')}>
-                  {doctor.treatmentProfile.map((t) => (
-                    <span
-                      key={t}
-                      className="inline-flex rounded-full bg-white border border-zinc-200 text-zinc-700 px-4 py-2 text-sm font-medium"
+                <SectionHeading id="cases">Кейсы</SectionHeading>
+                <div
+                  className="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 pb-4 [scrollbar-width:thin]"
+                  role="group"
+                  aria-label="Работы врача до и после"
+                >
+                  {doctor.cases.map((c, i) => (
+                    <figure
+                      key={i}
+                      className={cn(
+                        cardClass,
+                        'w-[85%] sm:w-[19rem] shrink-0 snap-start !p-4 flex flex-col gap-3',
+                      )}
                     >
-                      {t}
-                    </span>
+                      <BeforeAfterSlider
+                        beforeSrc={c.before}
+                        afterSrc={c.after}
+                        aspectClass="aspect-[4/5]"
+                      />
+                      <figcaption className="font-medium text-zinc-900 leading-snug">
+                        {c.title}
+                      </figcaption>
+                    </figure>
                   ))}
                 </div>
               </section>
