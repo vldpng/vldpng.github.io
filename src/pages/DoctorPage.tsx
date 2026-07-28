@@ -91,7 +91,10 @@ export function DoctorPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none lg:w-[29%] aspect-[4/5] lg:aspect-[2/3] lg:self-start min-h-[420px] relative rounded-[2rem] overflow-hidden shadow-xl shrink-0 bg-zinc-100"
+            // На desktop высоту задаёт соседняя карточка (items-stretch у ряда):
+            // без self-start и фиксированной пропорции фото тянется на всю высоту.
+            // На мобильных блоки идут друг под другом — там пропорция 4:5.
+            className="w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none lg:w-[29%] aspect-[4/5] lg:aspect-auto min-h-[420px] relative rounded-[2rem] overflow-hidden shadow-xl shrink-0 bg-zinc-100"
           >
             {doctor.photoUrl ? (
               <img src={doctor.photoUrl} alt={doctor.name} className="w-full h-full object-cover" />
