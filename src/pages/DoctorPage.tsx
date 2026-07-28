@@ -200,13 +200,6 @@ export function DoctorPage() {
                   </a>
                 ))}
               </nav>
-              <button
-                onClick={() => openModal()}
-                className="btn-sweep mt-3 w-full inline-flex items-center justify-center gap-2 rounded-full border-2 border-amber-500 text-amber-600 hover:text-white px-6 py-3 font-semibold transition-colors active:scale-95"
-              >
-                Записаться на приём
-                <ArrowRight size={18} />
-              </button>
             </div>
           </aside>
 
