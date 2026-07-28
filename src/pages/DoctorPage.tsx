@@ -84,16 +84,6 @@ export function DoctorPage() {
         path={`/doctors/${doctor.id}`}
       />
       <div className="max-w-7xl mx-auto px-2 md:px-3">
-        {/* Назад */}
-        <div className="mb-8">
-          <Link
-            to="/doctors"
-            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
-          >
-            <ArrowLeft size={16} /> Назад к списку врачей
-          </Link>
-        </div>
-
         {/* Шапка врача — hero: фото + оранжевая карточка */}
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch mb-10">
           {/* Фото */}
@@ -158,7 +148,7 @@ export function DoctorPage() {
 
             <p className="text-lead text-white/90 font-light max-w-2xl mb-auto">{doctor.bio}</p>
 
-            <div className="mt-10 md:mt-14">
+            <div className="mt-10 md:mt-14 flex flex-wrap items-center gap-x-7 gap-y-4">
               <button
                 onClick={() => openModal()}
                 className="group inline-flex items-center gap-3 bg-white text-zinc-900 pl-7 pr-2.5 py-2.5 rounded-full text-sm md:text-base font-semibold transition-all hover:shadow-lg active:scale-95 cursor-pointer"
@@ -168,6 +158,13 @@ export function DoctorPage() {
                   <ArrowRight size={18} />
                 </span>
               </button>
+              {/* Возврат к списку — рядом с CTA. Цвета под оранжевый фон карточки. */}
+              <Link
+                to="/doctors"
+                className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors"
+              >
+                <ArrowLeft size={16} /> Назад к списку врачей
+              </Link>
             </div>
           </motion.div>
         </div>
