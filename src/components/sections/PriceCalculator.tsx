@@ -523,7 +523,7 @@ export function PriceCalculator() {
                       {/* Подсказка: как пользоваться схемой */}
                       <div className="flex items-start gap-2.5 text-sm text-zinc-500">
                         <MousePointerClick size={18} className="shrink-0 mt-0.5 text-amber-500" />
-                        <span>Нажимайте на зубы на схеме — отмеченные попадут в расчёт.</span>
+                        <span>Выберите зубы на схеме</span>
                       </div>
 
                       {/* Расчёт имплантации: сколько зубов выбрано по челюстям */}
@@ -559,27 +559,27 @@ export function PriceCalculator() {
                           Каждый выбранный зуб — это 1 имплант и 1 коронка.
                         </p>
                       </div>
+
+                      {/* Следующий шаг — активна после выбора хотя бы одного зуба.
+                         Кнопка всегда в DOM (меняем лишь видимость), чтобы
+                         колонка не дёргалась при её появлении. */}
+                      <button
+                        onClick={advance}
+                        disabled={totalTeeth === 0}
+                        aria-hidden={totalTeeth === 0}
+                        className={cn(
+                          'w-full inline-flex items-center justify-center gap-3 rounded-full border-2 border-[#041B39] px-8 py-4 text-[#041B39] font-semibold transition-all duration-300 active:scale-95',
+                          totalTeeth > 0
+                            ? 'opacity-100 translate-y-0 hover:bg-[#041B39] hover:text-white'
+                            : 'opacity-0 translate-y-2 pointer-events-none',
+                        )}
+                      >
+                        Следующий шаг
+                        <ArrowRight size={20} />
+                      </button>
                     </div>
                   </div>
                 </div>
-
-                {/* Следующий шаг — активна после выбора хотя бы одного зуба.
-                   Кнопка всегда в DOM (меняем лишь видимость), чтобы блок
-                   «Этапы имплантации» ниже не смещался при её появлении. */}
-                <button
-                  onClick={advance}
-                  disabled={totalTeeth === 0}
-                  aria-hidden={totalTeeth === 0}
-                  className={cn(
-                    'mt-10 inline-flex items-center gap-3 rounded-full border-2 border-[#041B39] px-8 py-4 text-[#041B39] font-semibold transition-all duration-300 active:scale-95',
-                    totalTeeth > 0
-                      ? 'opacity-100 translate-y-0 hover:bg-[#041B39] hover:text-white'
-                      : 'opacity-0 translate-y-2 pointer-events-none',
-                  )}
-                >
-                  Следующий шаг
-                  <ArrowRight size={20} />
-                </button>
               </motion.div>
             )}
 
