@@ -78,8 +78,8 @@ export function About() {
         <div className="mt-24 pt-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
             
-            {/* Header - span 2 columns on large screens */}
-            <div className="md:col-span-2 flex flex-col mb-4">
+            {/* Header — во всю ширину сетки, содержимое по центру */}
+            <div className="md:col-span-2 lg:col-span-3 flex flex-col items-center text-center mb-4">
                <FadeIn delay={0.1}>
                  <h2 className="h-section uppercase text-zinc-900 dark:text-zinc-50 mb-8">
                    Технологии в RoyalDent
@@ -91,9 +91,6 @@ export function About() {
                  </p>
                </FadeIn>
             </div>
-
-            {/* Empty column on desktop */}
-            <div className="hidden lg:block"></div>
 
             {/* 01 — выезжает слева направо */}
             <FadeIn direction="right" delay={0.1}>
