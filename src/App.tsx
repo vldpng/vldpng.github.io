@@ -29,8 +29,13 @@ const PatientRulesPage = lazy(() =>
 );
 
 function PageLoader() {
+  // 100svh, а не 60vh: при 60vh подвал попадал в первый кадр сразу под
+  // спиннером, а после загрузки ленивого чанка страницы улетал вниз —
+  // Lighthouse засчитывал это как CLS 0.37 (подвал, сдвиг ~488px).
+  // Полноэкранный фолбэк держит подвал за нижней границей вьюпорта,
+  // и подмена происходит вне видимой области.
   return (
-    <div className="flex min-h-[60vh] items-center justify-center">
+    <div className="flex min-h-[100svh] items-center justify-center">
       <span
         className="h-10 w-10 animate-spin rounded-full border-2 border-zinc-200 border-t-amber-500 dark:border-zinc-800 dark:border-t-amber-400"
         role="status"
