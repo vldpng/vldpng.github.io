@@ -243,7 +243,6 @@ function OptionPill({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      aria-label={option.title}
       className={cn(
         'flex flex-col items-center justify-center text-center gap-1 rounded-xl border-2 p-3 min-h-[6rem] transition-all',
         selected
@@ -256,7 +255,7 @@ function OptionPill({
           {option.logo && (
             <img
               src={option.logo}
-              alt=""
+              alt={option.title}
               loading="lazy"
               className="h-5 md:h-6 w-full object-contain"
             />
@@ -294,7 +293,7 @@ function OptionPill({
         <span className="w-full font-semibold text-[11px] md:text-[13px] leading-tight break-words hyphens-auto">{option.title}</span>
       )}
       {option.subtitle && (
-        <span className={cn('text-[11px]', selected ? 'text-zinc-500' : 'text-zinc-400')}>
+        <span className={cn('text-[11px]', selected ? 'text-zinc-600' : 'text-zinc-500')}>
           {option.subtitle}
         </span>
       )}
@@ -329,7 +328,7 @@ function StepIndicator({
             key={label}
             className={cn(
               'text-[13px] md:text-sm leading-snug whitespace-pre-line',
-              i + 1 <= step ? 'text-zinc-900 font-medium' : 'text-zinc-400',
+              i + 1 <= step ? 'text-zinc-900 font-medium' : 'text-zinc-500',
             )}
           >
             {label}
@@ -353,7 +352,7 @@ function StepIndicator({
                   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold border-2 transition-all',
                   done || active
                     ? 'bg-[#041B39] border-[#041B39] text-white'
-                    : 'bg-white border-zinc-300 text-zinc-400',
+                    : 'bg-white border-zinc-300 text-zinc-500',
                   active && 'ring-4 ring-[#041B39]/15',
                   n > maxStep && 'cursor-not-allowed',
                 )}
@@ -465,8 +464,8 @@ export function PriceCalculator() {
                     {/* Имплант */}
                     <div className="rounded-3xl bg-[#F8FAFF] text-zinc-900 border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8">
                       <h3 className="text-xl font-semibold">Стоимость импланта</h3>
-                      <p className="text-sm text-zinc-400 mb-5">Хирургический этап</p>
-                      <p className="eyebrow text-zinc-400 mb-4 pb-4 border-b border-zinc-200">
+                      <p className="text-sm text-zinc-500 mb-5">Хирургический этап</p>
+                      <p className="eyebrow text-zinc-500 mb-4 pb-4 border-b border-zinc-200">
                         Выберите имплант
                       </p>
                       <div className="grid grid-cols-3 gap-3">
@@ -494,8 +493,8 @@ export function PriceCalculator() {
                     {/* Коронка */}
                     <div className="rounded-3xl bg-[#F8FAFF] text-zinc-900 border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8">
                       <h3 className="text-xl font-semibold">Стоимость коронки</h3>
-                      <p className="text-sm text-zinc-400 mb-5">Ортопедический этап</p>
-                      <p className="eyebrow text-zinc-400 mb-4 pb-4 border-b border-zinc-200">
+                      <p className="text-sm text-zinc-500 mb-5">Ортопедический этап</p>
+                      <p className="eyebrow text-zinc-500 mb-4 pb-4 border-b border-zinc-200">
                         Выберите коронку
                       </p>
                       <div className="grid grid-cols-3 gap-3">
@@ -555,7 +554,7 @@ export function PriceCalculator() {
                             </span>
                           </div>
                         </div>
-                        <p className="mt-4 flex items-start gap-2 text-xs text-zinc-400">
+                        <p className="mt-4 flex items-start gap-2 text-xs text-zinc-500">
                           <Info size={14} className="shrink-0 mt-0.5" />
                           Каждый выбранный зуб — это 1 имплант и 1 коронка.
                         </p>
@@ -597,7 +596,7 @@ export function PriceCalculator() {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[640px] border-collapse">
                     <thead>
-                      <tr className="text-left text-zinc-400 text-sm">
+                      <tr className="text-left text-zinc-500 text-sm">
                         <th className="font-normal py-4 pr-4">Процедуры</th>
                         <th className="font-normal py-4 px-4">Кол-во и цена</th>
                         <th className="font-normal py-4 px-4 text-right">Стоимость</th>
@@ -781,13 +780,13 @@ export function PriceCalculator() {
                   </h3>
                   <div className="flex flex-wrap gap-x-12 gap-y-4 mb-8">
                     <div>
-                      <p className="text-sm text-zinc-400 mb-1">Стоимость</p>
+                      <p className="text-sm text-zinc-500 mb-1">Стоимость</p>
                       <p className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
                         {formatEUR(total)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-400 mb-1">Рассрочка</p>
+                      <p className="text-sm text-zinc-500 mb-1">Рассрочка</p>
                       <p className="text-2xl md:text-3xl font-bold text-amber-600">
                         {installment(total)}
                       </p>

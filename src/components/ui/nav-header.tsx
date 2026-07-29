@@ -29,13 +29,15 @@ const Tab = ({
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }) => {
   return (
-    <Link
-      to={href}
-      onMouseEnter={onMouseEnter}
-      onClick={onClick}
-      className="block whitespace-nowrap px-4 py-2 text-base lg:text-lg font-medium text-zinc-900 dark:text-zinc-100 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
-    >
-      {children}
-    </Link>
+    <li>
+      <Link
+        to={href}
+        onMouseEnter={onMouseEnter}
+        onClick={onClick}
+        className="block whitespace-nowrap px-4 py-2 text-base lg:text-lg font-medium text-zinc-900 dark:text-zinc-100 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+      >
+        {children}
+      </Link>
+    </li>
   );
 };

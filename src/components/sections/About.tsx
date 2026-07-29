@@ -96,9 +96,9 @@ export function About() {
             <FadeIn direction="right" delay={0.1}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">01</span>
-                <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
+                <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Американские протоколы<br className="hidden lg:block"/>
-                </h4>
+                </h3>
                 <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
                   В процессе всех процедур отбеливания и профессиональной гигиены мы работаем по Американским протоколам и стандартам, обеспечивая бережный подход без дискомфорта.
                 </p>
@@ -109,9 +109,9 @@ export function About() {
             <FadeIn direction="left" delay={0.15}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">02</span>
-                <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
+                <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Полный цифровой протокол<br className="hidden lg:block"/>
-                </h4>
+                </h3>
                 <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
                   В нашем центре мы используем цифровой протокол, который применяется на всех этапах диагностики, профилактики и лечения.
                 </p>
@@ -122,9 +122,9 @@ export function About() {
             <FadeIn direction="right" delay={0.1}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">03</span>
-                <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
+                <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Работа проводится под микроскопом<br className="hidden lg:block"/>
-                </h4>
+                </h3>
                 <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
                   Все наши специалисты работают строго с увеличением, потому что врач без микроскопа — это слепой врач.
                 </p>
@@ -135,9 +135,9 @@ export function About() {
             <FadeIn direction="left" delay={0.15}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">04</span>
-                <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
+                <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   SmileDesign
-                </h4>
+                </h3>
                 <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
                   Перед началом лечения вы можете получить мотивационный дизайн вашей будущей улыбки, чтобы увидеть, как вы будете улыбаться после.
                 </p>
@@ -148,9 +148,9 @@ export function About() {
             <FadeIn direction="right" delay={0.1}>
               <div className="flex flex-col border-t border-zinc-900 dark:border-zinc-100 pt-6 h-full">
                 <span className="text-3xl text-zinc-900 dark:text-zinc-100 mb-6 font-light">05</span>
-                <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
+                <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Защищенность
-                </h4>
+                </h3>
                 <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
                   Мы обеспечиваем максимальный контроль качества в ходе многофакторной стерилизации, гарантируя 100% защиту от ВИЧ и гепатита.
                 </p>
@@ -160,9 +160,9 @@ export function About() {
             {/* CTA — выезжает справа налево */}
             <FadeIn direction="left" delay={0.15}>
               <div className="flex flex-col pt-6 h-full justify-center">
-                 <h4 className="h-card text-zinc-900 dark:text-zinc-100 mb-8 group relative cursor-default">
+                 <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-8 group relative cursor-default">
                    Обсудим проблему,<br/>подберём специалиста,<br/>расскажем, что делать<br/>дальше
-                 </h4>
+                 </h3>
                  <button 
                   onClick={openModal}
                   className="btn-sweep bg-amber-500 hover:bg-amber-600 text-white py-3.5 px-6 rounded-[20px] font-medium transition-colors w-max text-base shadow-sm"
