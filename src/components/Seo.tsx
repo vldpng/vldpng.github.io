@@ -12,7 +12,18 @@ interface SeoProps {
   image?: string;
   /** noindex для служебных/неполных страниц. */
   noindex?: boolean;
+  /**
+   * Цвет панели браузера (адресная строка iOS Safari, шапка Android Chrome).
+   * Safari красит область за адресной строкой этим цветом; без него — белым,
+   * что на тёмной главной выглядело белой полосой, «обрезающей» сайт.
+   * Цвет разный по маршрутам: главная тёмная, внутренние страницы светлые —
+   * поэтому статичный meta в index.html не подходит, ставим через JS.
+   */
+  themeColor?: string;
 }
+
+/** Светлый фон внутренних страниц (bg-zinc-50). */
+const DEFAULT_THEME_COLOR = '#fafafa';
 
 const DEFAULT_DESCRIPTION = clinic.description;
 
@@ -44,7 +55,7 @@ function upsertLink(rel: string, href: string) {
  * исходный HTML. Базовые теги дублируются в index.html. Для полноценного SEO
  * рекомендуется перейти на SSR/SSG (Remix / Next.js).
  */
-export function Seo({ title, description, path, image, noindex }: SeoProps) {
+export function Seo({ title, description, path, image, noindex, themeColor }: SeoProps) {
   const fullTitle = title.includes(clinic.name)
     ? title
     : `${title} | ${clinic.name}`;
@@ -74,7 +85,13 @@ export function Seo({ title, description, path, image, noindex }: SeoProps) {
     upsertMeta('name', 'twitter:image', ogImage);
 
     upsertLink('canonical', url);
-  }, [fullTitle, desc, url, ogImage, noindex]);
+
+    // Панель Safari/Chrome + фон <html>: второй нужен, чтобы «резинка»
+    // при оттягивании страницы за края была того же цвета, что и панель.
+    const barColor = themeColor ?? DEFAULT_THEME_COLOR;
+    upsertMeta('name', 'theme-color', barColor);
+    document.documentElement.style.backgroundColor = barColor;
+  }, [fullTitle, desc, url, ogImage, noindex, themeColor]);
 
   return null;
 }
