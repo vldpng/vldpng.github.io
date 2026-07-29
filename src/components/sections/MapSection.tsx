@@ -61,7 +61,7 @@ export function MapSection() {
                   <MapPin size={18} />
                 </span>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">Адрес</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Адрес</p>
                   <p className="text-zinc-900 dark:text-zinc-100 font-medium">{clinic.address.full}</p>
                 </div>
               </li>
@@ -70,7 +70,7 @@ export function MapSection() {
                   <Clock size={18} />
                 </span>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">Часы работы</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Часы работы</p>
                   <p className="text-zinc-900 dark:text-zinc-100 font-medium">{clinic.hours.short}</p>
                   <p className="text-zinc-500 dark:text-zinc-400 text-sm">{clinic.hours.weekend}</p>
                 </div>
@@ -80,7 +80,7 @@ export function MapSection() {
                   <Phone size={18} />
                 </span>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">Телефон</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Телефон</p>
                   <a href={clinic.phoneHref} className="text-zinc-900 dark:text-zinc-100 font-medium hover:text-amber-500 transition-colors">
                     {clinic.phoneDisplay}
                   </a>
