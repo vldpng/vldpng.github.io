@@ -59,14 +59,41 @@
     background-color: var(--color-zinc-50);
   }
 
+  /* Полоса-притемнение под системной строкой. Нужна из-за
+     apple-mobile-web-app-status-bar-style=black-translucent: текст часов там
+     всегда белый, а внутренние страницы светлые (#F0F4FF) — без градиента
+     часы были бы нечитаемы. Градиент, а не заливка: фон просвечивает.
+     Вне standalone элемента на экране нет. */
+  .safe-area-scrim {
+    display: none;
+  }
+
   /* Запуск с домашнего экрана (standalone): интерфейса браузера нет, контент
      занимает весь экран и уходит под системную строку. Отступ возвращает
      содержимое из-под часов и «чёлки», оставляя фон во всю высоту.
-     В обычной вкладке Safari safe-area-inset-top равен 0 — правило не влияет. */
+     В обычной вкладке Safari safe-area-inset-top равен 0 — правила не влияют. */
   @media (display-mode: standalone) {
     body {
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .safe-area-scrim {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: env(safe-area-inset-top);
+      z-index: 60; /* выше шапки (z-50), но ниже модалок (z-[100]) */
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.1));
+    }
+
+    /* Шапка липнет к верху вьюпорта, а он теперь начинается под часами —
+       без сдвига логотип уезжал бы под системную строку. */
+    .header-sticky {
+      top: env(safe-area-inset-top);
     }
   }
 

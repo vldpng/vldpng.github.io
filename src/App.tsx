@@ -70,8 +70,10 @@ export default function App() {
       <BookingModalProvider>
       <div className="min-h-screen font-sans bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 selection:bg-zinc-200 dark:selection:bg-zinc-800 selection:text-zinc-900 dark:selection:text-zinc-100">
         <ScrollToTop />
+        {/* Притемнение полосы под часами — только в standalone (см. index.css) */}
+        <div className="safe-area-scrim" aria-hidden="true" />
         <Topbar />
-        <div className="sticky top-0 z-50 w-full h-0">
+        <div className="header-sticky sticky top-0 z-50 w-full h-0">
           <Header />
         </div>
         <Suspense fallback={<PageLoader />}>
