@@ -3,8 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <!-- Без theme-color: iOS Safari делает верхнюю панель полупрозрачной
-         матовой, сквозь неё просвечивает контент (а не сплошная заливка). -->
+
+    <!-- theme-color красит панель Safari/Chrome. Значение здесь — только фон
+         первого кадра для внутренних страниц; дальше компонент Seo меняет его
+         по маршруту (главная тёмная, остальные светлые), см. src/components/Seo.tsx. -->
+    <meta name="theme-color" content="#F0F4FF" />
+
+    <!-- Запуск с домашнего экрана без интерфейса браузера: только в этом режиме
+         контент может уходить под системную строку (часы, Wi-Fi, батарея).
+         В обычной вкладке Safari эти теги ни на что не влияют. -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="RoyalDent" />
 
     <title>RoyalDent — Стоматология в Юрмале | Имплантация и лечение под микроскопом</title>
     <meta

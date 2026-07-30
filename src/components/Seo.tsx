@@ -22,8 +22,12 @@ interface SeoProps {
   themeColor?: string;
 }
 
-/** Светлый фон внутренних страниц (bg-zinc-50). */
-const DEFAULT_THEME_COLOR = '#fafafa';
+/**
+ * Фон внутренних страниц — переменная --color-zinc-50 из index.css.
+ * У проекта переопределена палитра zinc: это светло-голубой #F0F4FF,
+ * а не почти-белый #fafafa из стандартного Tailwind.
+ */
+const DEFAULT_THEME_COLOR = '#F0F4FF';
 
 const DEFAULT_DESCRIPTION = clinic.description;
 

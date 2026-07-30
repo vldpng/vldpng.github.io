@@ -53,6 +53,21 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Фон дублирует theme-color: он виден в «резинке» при оттягивании
+       страницы и за системной строкой в standalone-режиме.
+       Компонент Seo переопределяет его инлайном по маршруту. */
+    background-color: var(--color-zinc-50);
+  }
+
+  /* Запуск с домашнего экрана (standalone): интерфейса браузера нет, контент
+     занимает весь экран и уходит под системную строку. Отступ возвращает
+     содержимое из-под часов и «чёлки», оставляя фон во всю высоту.
+     В обычной вкладке Safari safe-area-inset-top равен 0 — правило не влияет. */
+  @media (display-mode: standalone) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
   }
 
   body {
