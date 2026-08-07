@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export function NavHeader() {
   return (
-    <ul className="hidden md:flex items-center gap-2 lg:gap-6 relative z-50">
+    <ul className="hidden xl:flex items-center gap-0 2xl:gap-2 relative z-50">
       <Tab href="/about">О клинике</Tab>
       <Tab href="/services">Услуги</Tab>
       <Tab href="/doctors">Врачи</Tab>
@@ -34,7 +34,7 @@ const Tab = ({
         to={href}
         onMouseEnter={onMouseEnter}
         onClick={onClick}
-        className="block whitespace-nowrap px-4 py-2 text-base lg:text-lg font-medium text-zinc-900 dark:text-zinc-100 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+        className="block whitespace-nowrap px-3 2xl:px-4 py-2 text-base 2xl:text-lg font-medium text-zinc-900 dark:text-zinc-100 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
       >
         {children}
       </Link>

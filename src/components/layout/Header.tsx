@@ -57,17 +57,23 @@ export function Header() {
         <Link
           to="/"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center cursor-pointer group"
+          className="flex items-center cursor-pointer group shrink-0"
         >
+          {/* shrink-0 обязателен: логотип — широкий wordmark (1144×205) без
+              заданной ширины, и без него флекс сжимал его до нуля, как только
+              содержимое шапки переставало помещаться. */}
           <img src="/brand/logo.svg" alt="RoyalDent" className="h-12 md:h-14 w-auto object-contain" />
         </Link>
 
         {/* Desktop Nav */}
         <NavHeader />
 
-        {/* Actions */}
-        <div className="hidden md:flex items-center gap-6">
-          <div className="relative">
+        {/* Действия справа. На планшете горизонтальное меню не помещается
+            (логотип + 6 пунктов + кнопка шире экрана), поэтому до xl пункты
+            уходят в выдвижную панель, а в шапке остаются кнопка записи и бургер.
+            Переключатель языка там же, в панели. */}
+        <div className="flex items-center gap-4 md:gap-6 shrink-0">
+          <div className="relative hidden xl:block">
             <button 
               className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 uppercase tracking-widest transition-colors"
               onClick={() => setLangOpen(!langOpen)}
@@ -94,26 +100,25 @@ export function Header() {
               </div>
             )}
           </div>
-          <button onClick={(e) => { e.preventDefault(); openBooking(); }} className="btn-sweep bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95">
+          <button onClick={(e) => { e.preventDefault(); openBooking(); }} className="hidden md:block btn-sweep bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap">
             Записаться на приём
           </button>
-        </div>
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden p-2 text-zinc-600 dark:text-zinc-300 pointer-events-auto active:scale-95 transition-transform"
-          onClick={() => setMobileMenuOpen(true)}
-          aria-label="Открыть меню"
-          aria-expanded={mobileMenuOpen}
-        >
-          <Menu size={24} />
-        </button>
+          <button
+            className="xl:hidden p-2 text-zinc-600 dark:text-zinc-300 pointer-events-auto active:scale-95 transition-transform"
+            onClick={() => setMobileMenuOpen(true)}
+            aria-label="Открыть меню"
+            aria-expanded={mobileMenuOpen}
+          >
+            <Menu size={24} />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Backdrop */}
       {mobileMenuOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] pointer-events-auto"
+          className="xl:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] pointer-events-auto"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -121,7 +126,7 @@ export function Header() {
       {/* Mobile Menu Drawer */}
       <div 
         className={cn(
-          "md:hidden fixed top-0 right-0 w-[85%] max-w-[360px] h-[100dvh] bg-card dark:bg-zinc-950 z-[70] shadow-2xl flex flex-col pointer-events-auto transition-transform duration-300 ease-in-out",
+          "xl:hidden fixed top-0 right-0 w-[85%] max-w-[360px] h-[100dvh] bg-card dark:bg-zinc-950 z-[70] shadow-2xl flex flex-col pointer-events-auto transition-transform duration-300 ease-in-out",
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
