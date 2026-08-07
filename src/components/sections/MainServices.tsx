@@ -228,33 +228,42 @@ export function MainServices() {
             <div
               ref={scrollContainerRef}
               onScroll={handleScroll}
-              className="flex gap-6 overflow-x-auto pt-6 pb-12 lg:py-12 snap-x snap-mandatory lg:snap-none hide-scrollbar"
+              // Прилипание включено и на десктопе: контейнер шириной ровно в две
+              // карточки, и без snap ручная прокрутка замирала между ними —
+              // по краям торчали обрезанные карточки.
+              className="flex gap-6 overflow-x-auto pt-6 pb-12 md:py-12 snap-x snap-mandatory hide-scrollbar"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {[0, 1, 2].flatMap((copy) => serviceCards.map((card, idx) => (
                 <div
                   key={`${copy}-${idx}`}
-                  className="snap-start shrink-0 w-full lg:w-[350px]"
+                  // На планшете показываем две карточки: половина ширины
+                  // за вычетом половины отступа gap-6 (24px).
+                  className="snap-start shrink-0 w-full md:w-[calc(50%-0.75rem)] lg:w-[350px]"
                 >
                   <ServiceCard card={card} />
                 </div>
               )))}
             </div>
 
-            {/* Scroll Controls. На мобильных — ряд под каруселью; на десктопе
-                контейнер «растворяется» (lg:contents), а кнопки становятся
-                абсолютными по бокам карусели, по центру карточек. */}
-            <div className="flex justify-end gap-3 mt-2 lg:contents">
+            {/* Scroll Controls. На мобильных — ряд под каруселью; от планшета
+                контейнер «растворяется» (md:contents), а кнопки становятся
+                абсолютными по краям карусели, по центру карточек.
+                На планшете карусель во всю ширину, поэтому кнопки лежат поверх
+                краёв карточек; на десктопе она фиксированной ширины и
+                центрируется, так что по бокам есть место вынести их наружу
+                (lg:±translate-x-1/2). */}
+            <div className="flex justify-end gap-3 mt-2 md:contents">
               <button
                 onClick={() => scrollLib('left')}
-                className="w-12 h-12 bg-card dark:bg-zinc-900 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors lg:absolute lg:z-10 lg:top-1/2 lg:-translate-y-1/2 lg:left-0 lg:-translate-x-1/2"
+                className="w-12 h-12 bg-card dark:bg-zinc-900 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors md:absolute md:z-10 md:top-1/2 md:-translate-y-1/2 md:left-0 lg:-translate-x-1/2"
                 aria-label="Предыдущая карточка"
               >
                 <ChevronLeft size={24} />
               </button>
               <button
                 onClick={() => scrollLib('right')}
-                className="w-12 h-12 bg-card dark:bg-zinc-900 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors lg:absolute lg:z-10 lg:top-1/2 lg:-translate-y-1/2 lg:right-0 lg:translate-x-1/2"
+                className="w-12 h-12 bg-card dark:bg-zinc-900 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors md:absolute md:z-10 md:top-1/2 md:-translate-y-1/2 md:right-0 lg:translate-x-1/2"
                 aria-label="Следующая карточка"
               >
                 <ChevronRight size={24} />
