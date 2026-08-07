@@ -203,8 +203,11 @@ export function DoctorPage() {
             </div>
           </aside>
 
-          {/* Секции */}
-          <div className="flex flex-col gap-12">
+          {/* Секции. min-w-0 обязателен: у элемента сетки min-width по умолчанию
+              auto, поэтому колонка не сжималась уже своего min-content и на
+              телефоне вылезала за экран (489px при ширине сетки 374px),
+              утаскивая за собой все секции. */}
+          <div className="flex flex-col gap-12 min-w-0">
             {/* Образование */}
             {doctor.educationList?.length ? (
               <section>
