@@ -12,22 +12,15 @@ interface SeoProps {
   image?: string;
   /** noindex для служебных/неполных страниц. */
   noindex?: boolean;
-  /**
-   * Цвет панели браузера (адресная строка iOS Safari, шапка Android Chrome).
-   * Safari красит область за адресной строкой этим цветом; без него — белым,
-   * что на тёмной главной выглядело белой полосой, «обрезающей» сайт.
-   * Цвет разный по маршрутам: главная тёмная, внутренние страницы светлые —
-   * поэтому статичный meta в index.html не подходит, ставим через JS.
-   */
-  themeColor?: string;
 }
 
 /**
- * Фон внутренних страниц — переменная --color-zinc-50 из index.css.
+ * Цвет панелей браузера (адресная строка iOS Safari, шапка Android Chrome)
+ * — тот же, что фон страницы: переменная --color-zinc-50 из index.css.
  * У проекта переопределена палитра zinc: это светло-голубой #F0F4FF,
  * а не почти-белый #fafafa из стандартного Tailwind.
  */
-const DEFAULT_THEME_COLOR = '#F0F4FF';
+const THEME_COLOR = '#F0F4FF';
 
 const DEFAULT_DESCRIPTION = clinic.description;
 
@@ -59,7 +52,7 @@ function upsertLink(rel: string, href: string) {
  * исходный HTML. Базовые теги дублируются в index.html. Для полноценного SEO
  * рекомендуется перейти на SSR/SSG (Remix / Next.js).
  */
-export function Seo({ title, description, path, image, noindex, themeColor }: SeoProps) {
+export function Seo({ title, description, path, image, noindex }: SeoProps) {
   const fullTitle = title.includes(clinic.name)
     ? title
     : `${title} | ${clinic.name}`;
@@ -90,12 +83,11 @@ export function Seo({ title, description, path, image, noindex, themeColor }: Se
 
     upsertLink('canonical', url);
 
-    // Панель Safari/Chrome + фон <html>: второй нужен, чтобы «резинка»
-    // при оттягивании страницы за края была того же цвета, что и панель.
-    const barColor = themeColor ?? DEFAULT_THEME_COLOR;
-    upsertMeta('name', 'theme-color', barColor);
-    document.documentElement.style.backgroundColor = barColor;
-  }, [fullTitle, desc, url, ogImage, noindex, themeColor]);
+    // Панели Safari/Chrome + фон <html>: второй нужен, чтобы «резинка»
+    // при оттягивании страницы за края была того же цвета, что и панели.
+    upsertMeta('name', 'theme-color', THEME_COLOR);
+    document.documentElement.style.backgroundColor = THEME_COLOR;
+  }, [fullTitle, desc, url, ogImage, noindex]);
 
   return null;
 }
