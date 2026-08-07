@@ -44,6 +44,7 @@ export function Header() {
   }, []);
 
   return (
+    <>
     <header
       className={cn(
         'absolute left-0 top-0 w-full py-4 pointer-events-none z-50 px-6 md:px-[50px] transition-transform duration-300 ease-in-out',
@@ -114,6 +115,12 @@ export function Header() {
           </button>
         </div>
       </div>
+    </header>
+
+      {/* Подложка и панель живут вне <header>: у шапки есть translate для
+          скрытия при скролле, а трансформация делает элемент containing block
+          для fixed-потомков — внутри неё панель отсчитывалась бы от шапки
+          (390×101), а не от экрана. */}
 
       {/* Mobile Menu Backdrop */}
       {mobileMenuOpen && (
@@ -123,13 +130,20 @@ export function Header() {
         />
       )}
 
-      {/* Mobile Menu Drawer */}
-      <div 
-        className={cn(
-          "xl:hidden fixed top-0 right-0 w-[85%] max-w-[360px] h-[100dvh] bg-card dark:bg-zinc-950 z-[70] shadow-2xl flex flex-col pointer-events-auto transition-transform duration-300 ease-in-out",
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        )}
-      >
+      {/* Mobile Menu Drawer.
+          Обёртка ровно по экрану и с overflow-hidden обрезает панель, когда та
+          уехала вправо. Без обёртки закрытая панель растягивала макет до
+          ширины экрана + 360px: страницу можно было увести вбок (выглядело как
+          самопроизвольно открытое меню), а fixed-элементы вроде кнопки
+          «наверх» отсчитывались от раздутого макета и уползали за правый край.
+          pointer-events-none, чтобы прозрачная обёртка не перехватывала клики. */}
+      <div className="xl:hidden fixed inset-0 z-[70] overflow-hidden pointer-events-none">
+        <div
+          className={cn(
+            "absolute top-0 right-0 w-[85%] max-w-[360px] h-full bg-card dark:bg-zinc-950 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out",
+            mobileMenuOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full"
+          )}
+        >
         <div className="flex items-center justify-between p-4 px-6 border-b border-zinc-100 dark:border-zinc-800 shrink-0 h-[72px]">
           <span className="font-bold text-xl tracking-tight text-zinc-900 dark:text-white">Меню</span>
           <button
@@ -230,7 +244,8 @@ export function Header() {
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </header>
+    </>
   );
 }
