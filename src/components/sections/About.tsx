@@ -60,7 +60,7 @@ export function About() {
             <FadeIn delay={0.1} className="mt-6">
               <div className="flex divide-x divide-zinc-200 dark:divide-zinc-800 border-y border-zinc-200 dark:border-zinc-800 py-6">
                 {aboutStats.map((stat) => (
-                  <div key={stat.label} className="flex-1 px-4 first:pl-0 last:pr-0">
+                  <div key={stat.label} className="flex-1 px-4 text-center">
                     <div className="font-serif text-3xl md:text-4xl font-normal leading-none text-zinc-900 dark:text-white">
                       {stat.value}
                     </div>
