@@ -42,6 +42,12 @@ export interface Doctor {
   photoLabel: string;
   /** Фото сотрудника. Пусто — показывается заглушка. TODO: добавить реальное фото. */
   photoUrl?: string;
+  /**
+   * Вспомогательный персонал (ассистенты, администраторы): личной страницы
+   * нет и на приём к ним не записываются. Карточка показывает фото и
+   * должность, но никуда не ведёт; /doctors/:id уводит обратно в список.
+   */
+  support?: boolean;
 }
 
 export const doctorsData: Doctor[] = [
@@ -75,7 +81,7 @@ export const doctorsData: Doctor[] = [
       '/services/tmj',
     ],
     photoLabel: "[Фото — Виталий Двуреченский, хирург-имплантолог]",
-    photoUrl: "/images/staff/Dvurechenskiy.webp",
+    photoUrl: "", // TODO: новое фото ещё не снято
   },
   {
     id: "2",
@@ -88,7 +94,7 @@ export const doctorsData: Doctor[] = [
     bio: "Занимается протезированием и восстановлением зубов: коронки, виниры, мостовидные и съёмные конструкции с акцентом на эстетику и долговечность результата.",
     services: ['/services/ceramic', '/services/implants'],
     photoLabel: "[Фото — Элина Хейфец, стоматолог-ортопед]",
-    photoUrl: "/images/staff/Heyfec.webp",
+    photoUrl: "/images/staff/Elina_doctor.webp",
   },
   {
     id: "3",
@@ -101,7 +107,7 @@ export const doctorsData: Doctor[] = [
     bio: "Лечит кариес и его осложнения, проводит реставрацию зубов и эндодонтическое лечение каналов под микроскопом с сохранением естественного вида зуба.",
     services: ['/services/microscope', '/services/hygiene'],
     photoLabel: "[Фото — Ирина Иванова, стоматолог-терапевт]",
-    photoUrl: "/images/staff/Ivanova.webp",
+    photoUrl: "", // TODO: новое фото ещё не снято
   },
   {
     id: "4",
@@ -119,7 +125,25 @@ export const doctorsData: Doctor[] = [
     bio: "Проводит профессиональную чистку зубов, снятие налёта и зубного камня, профилактику кариеса и заболеваний дёсен.",
     services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Валерия Иванова, гигиенист]",
-    photoUrl: "",
+    photoUrl: "/images/staff/Valerija_higienist.webp",
+  },
+  {
+    id: "9",
+    name: "Алина Пурвиня",
+    specialty: "Гигиенист",
+    bio: "Выполняет профессиональную гигиену полости рта, снятие зубных отложений и полировку, подбирает средства для домашнего ухода.",
+    services: ['/services/hygiene', '/services/whitening'],
+    photoLabel: "[Фото — Алина Пурвиня, гигиенист]",
+    photoUrl: "", // TODO: фото ещё не снято
+  },
+  {
+    id: "10",
+    name: "Елена Якунчихина",
+    specialty: "Косметолог",
+    bio: "Проводит эстетические процедуры для лица и зоны вокруг губ, дополняя работу стоматологов и помогая добиться гармоничного результата.",
+    services: [],
+    photoLabel: "[Фото — Елена Якунчихина, косметолог]",
+    photoUrl: "/images/staff/Jelena_cosmetology.webp",
   },
   {
     id: "6",
@@ -128,16 +152,8 @@ export const doctorsData: Doctor[] = [
     bio: "Ассистирует врачам во время приёма, готовит кабинет и материалы, помогает пациентам чувствовать себя комфортно на каждом этапе лечения.",
     services: [],
     photoLabel: "[Фото — Даниэла Иванова, ассистент]",
-    photoUrl: "",
-  },
-  {
-    id: "7",
-    name: "Анастасия Иванова",
-    specialty: "Ассистент",
-    bio: "Ассистирует стоматологам на приёме, отвечает за стерильность и подготовку инструментов, сопровождает пациента во время процедур.",
-    services: [],
-    photoLabel: "[Фото — Анастасия Иванова, ассистент]",
-    photoUrl: "",
+    photoUrl: "/images/staff/Daniela_asistent.webp",
+    support: true,
   },
   {
     id: "8",
@@ -150,6 +166,26 @@ export const doctorsData: Doctor[] = [
     bio: "Отвечает за цифровое моделирование и изготовление реставраций по технологии CAD/CAM: коронки, виниры и каркасы с высокой точностью прилегания.",
     services: ['/services/ceramic', '/services/implants'],
     photoLabel: "[Фото — Владислав Двуреченский, CAD/CAM специалист]",
-    photoUrl: "/images/staff/Vladyslav.webp",
+    photoUrl: "", // TODO: новое фото ещё не снято
+  },
+  {
+    id: "11",
+    name: "Эдита", // TODO: добавить фамилию
+    specialty: "Администратор",
+    bio: "Встречает пациентов, ведёт запись на приём и помогает подобрать удобное время визита, отвечает на вопросы по лечению и документам.",
+    services: [],
+    photoLabel: "[Фото — Эдита, администратор]",
+    photoUrl: "/images/staff/Edita_admin.webp",
+    support: true,
+  },
+  {
+    id: "12",
+    name: "Татьяна", // TODO: добавить фамилию
+    specialty: "Администратор",
+    bio: "Координирует расписание клиники и сопровождает пациентов от первого звонка до завершения лечения.",
+    services: [],
+    photoLabel: "[Фото — Татьяна, администратор]",
+    photoUrl: "/images/staff/Tatiana_admin.webp",
+    support: true,
   },
 ];

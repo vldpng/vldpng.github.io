@@ -6,6 +6,7 @@ import { ArrowRight, Calendar } from 'lucide-react';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { Seo } from '../components/Seo';
 import { PageBanner } from '../components/ui/page-banner';
+import { cn } from '@/lib/utils';
 
 export function DoctorsPage() {
   useEffect(() => {
@@ -27,56 +28,86 @@ export function DoctorsPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {doctorsData.map((doctor, index) => (
-                <motion.div
-                  key={doctor.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="group bg-card dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-amber-500/30 dark:hover:border-amber-500/30 transition-all flex flex-col"
-                >
-                  <Link to={`/doctors/${doctor.id}`} className="block relative aspect-[4/5] overflow-hidden">
-                    {doctor.photoUrl ? (
-                      <img src={doctor.photoUrl} alt={doctor.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    ) : (
-                      <div className="absolute inset-0 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center p-6 text-center text-sm text-zinc-400 group-hover:scale-105 transition-transform duration-700">
-                        <BlackPlaceholder label={doctor.photoLabel} className="w-full h-full rounded-2xl" />
-                      </div>
+              {doctorsData.map((doctor, index) => {
+                // Ассистенты и администраторы: личной страницы нет, поэтому
+                // карточка показывает фото и должность, но никуда не ведёт —
+                // ни фото, ни имя, ни стрелка не кликабельны.
+                const linked = !doctor.support;
+                const photo = doctor.photoUrl ? (
+                  <img
+                    src={doctor.photoUrl}
+                    alt={doctor.name}
+                    className={cn(
+                      'absolute inset-0 w-full h-full object-cover transition-transform duration-700',
+                      linked && 'group-hover:scale-105',
                     )}
-                  </Link>
-
-                  <div className="p-8 flex-grow flex flex-col">
-                    <div className="mb-4">
-                      <h3 className="h-card mb-1 group-hover:text-amber-500 transition-colors">
-                        <Link to={`/doctors/${doctor.id}`}>{doctor.name}</Link>
-                      </h3>
-                      <p className="eyebrow text-zinc-500 mt-1">{doctor.specialty}</p>
-                    </div>
-
-                    <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6 flex-grow line-clamp-3">
-                      {doctor.bio}
-                    </p>
-
-                    <div className="flex items-center justify-between mt-auto">
-                      {doctor.experience ? (
-                        <span className="text-xs font-medium bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-full text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
-                          <Calendar size={12} />
-                          Опыт {doctor.experience}
-                        </span>
-                      ) : (
-                        <span />
-                      )}
-                      <Link
-                        to={`/doctors/${doctor.id}`}
-                        className="text-amber-500 hover:text-amber-600 transition-colors bg-amber-50 dark:bg-amber-500/10 p-2.5 rounded-full"
-                      >
-                        <ArrowRight size={18} />
-                      </Link>
-                    </div>
+                  />
+                ) : (
+                  <div
+                    className={cn(
+                      'absolute inset-0 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center p-6 text-center text-sm text-zinc-400 transition-transform duration-700',
+                      linked && 'group-hover:scale-105',
+                    )}
+                  >
+                    <BlackPlaceholder label={doctor.photoLabel} className="w-full h-full rounded-2xl" />
                   </div>
-                </motion.div>
-              ))}
+                );
+
+                return (
+                  <motion.div
+                    key={doctor.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className={cn(
+                      'group bg-card dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all flex flex-col',
+                      linked && 'hover:border-amber-500/30 dark:hover:border-amber-500/30',
+                    )}
+                  >
+                    {linked ? (
+                      <Link to={`/doctors/${doctor.id}`} className="block relative aspect-[4/5] overflow-hidden">
+                        {photo}
+                      </Link>
+                    ) : (
+                      <div className="relative aspect-[4/5] overflow-hidden">{photo}</div>
+                    )}
+
+                    <div className="p-8 flex-grow flex flex-col">
+                      <div className="mb-4">
+                        <h3 className={cn('h-card mb-1 transition-colors', linked && 'group-hover:text-amber-500')}>
+                          {linked ? <Link to={`/doctors/${doctor.id}`}>{doctor.name}</Link> : doctor.name}
+                        </h3>
+                        <p className="eyebrow text-zinc-500 mt-1">{doctor.specialty}</p>
+                      </div>
+
+                      <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6 flex-grow line-clamp-3">
+                        {doctor.bio}
+                      </p>
+
+                      <div className="flex items-center justify-between mt-auto">
+                        {doctor.experience ? (
+                          <span className="text-xs font-medium bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-full text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
+                            <Calendar size={12} />
+                            Опыт {doctor.experience}
+                          </span>
+                        ) : (
+                          <span />
+                        )}
+                        {linked && (
+                          <Link
+                            to={`/doctors/${doctor.id}`}
+                            aria-label={`Подробнее о враче: ${doctor.name}`}
+                            className="text-amber-500 hover:text-amber-600 transition-colors bg-amber-50 dark:bg-amber-500/10 p-2.5 rounded-full"
+                          >
+                            <ArrowRight size={18} />
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>

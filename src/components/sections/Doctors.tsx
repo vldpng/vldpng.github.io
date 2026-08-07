@@ -1,11 +1,12 @@
 import React, { useEffect, useCallback } from 'react';
-import { ArrowRight, ArrowLeft, User, Briefcase } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ArrowUpRight, User, Briefcase } from 'lucide-react';
 import { FadeIn } from '../ui/fade-in';
 import { SectionBadge } from '../ui/section-badge';
 import { Link } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import { doctorsData, type Doctor } from '../../data/doctors';
 import { useBookingModal } from '../../context/BookingModalContext';
+import { cn } from '@/lib/utils';
 
 function DoctorCard({ doctor }: { doctor: Doctor }) {
   const { openModal } = useBookingModal();
@@ -18,13 +19,21 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
   };
 
   return (
-    <div className="group relative aspect-[3/4] overflow-hidden rounded-3xl bg-zinc-100 dark:bg-zinc-900 shadow-sm ring-1 ring-black/[0.04] dark:ring-white/[0.06] transition-shadow duration-300 hover:shadow-xl">
+    <div
+      className={cn(
+        'group relative aspect-[3/4] overflow-hidden rounded-3xl bg-zinc-100 dark:bg-zinc-900 shadow-sm ring-1 ring-black/[0.04] dark:ring-white/[0.06] transition-shadow duration-300',
+        !doctor.support && 'hover:shadow-xl',
+      )}
+    >
       {doctor.photoUrl ? (
         <img
           src={doctor.photoUrl}
           alt={doctor.name}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className={cn(
+            'absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out',
+            !doctor.support && 'group-hover:scale-105',
+          )}
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center text-zinc-300 dark:text-zinc-700">
@@ -47,12 +56,15 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/40 to-transparent"
       />
 
-      {/* Растянутая ссылка на страницу врача — навигация по клику на карточку */}
-      <Link
-        to={`/doctors/${doctor.id}`}
-        aria-label={doctor.name}
-        className="absolute inset-0 z-10"
-      />
+      {/* Растянутая ссылка на страницу врача — навигация по клику на карточку.
+          У вспомогательного персонала страницы нет, карточка некликабельна. */}
+      {!doctor.support && (
+        <Link
+          to={`/doctors/${doctor.id}`}
+          aria-label={doctor.name}
+          className="absolute inset-0 z-10"
+        />
+      )}
 
       {/* Контент поверх фото. pointer-events-none — клики проходят к ссылке;
           интерактивной остаётся только кнопка записи. */}
@@ -74,13 +86,28 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
           </div>
         )}
 
-        <button
-          type="button"
-          onClick={handleBooking}
-          className="btn-sweep pointer-events-auto mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-amber-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-amber-600 active:scale-95"
-        >
-          Записаться
-        </button>
+        {/* Карточка целиком ведёт на страницу врача, но на телефоне это неочевидно
+            — стрелка проговаривает переход явно. Запись занимает всю свободную
+            ширину, стрелка сжата до квадрата и оформлена как бейдж стажа выше. */}
+        {!doctor.support && (
+          <div className="mt-4 flex items-stretch gap-2">
+            <button
+              type="button"
+              onClick={handleBooking}
+              className="btn-sweep pointer-events-auto flex flex-1 items-center justify-center gap-2 rounded-full bg-amber-500 px-3 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-amber-600 active:scale-95"
+            >
+              Записаться
+            </button>
+            <Link
+              to={`/doctors/${doctor.id}`}
+              aria-label={`Подробнее о враче: ${doctor.name}`}
+              title="Подробнее о враче"
+              className="pointer-events-auto flex shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/15 px-3 text-white backdrop-blur-sm transition-colors hover:bg-white/25 active:scale-95"
+            >
+              <ArrowUpRight size={18} />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

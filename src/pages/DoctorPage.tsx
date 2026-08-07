@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { doctorsData } from '../data/doctors';
 import { BeforeAfterSlider } from '../components/ui/before-after-slider';
 import { serviceCards } from '../components/sections/ServiceCards';
@@ -31,7 +31,12 @@ export function DoctorPage() {
     window.scrollTo(0, 0);
   }, [id]);
 
-  const others = useMemo(() => doctorsData.filter((d) => d.id !== id).slice(0, 4), [id]);
+  // Вспомогательный персонал сюда не попадает: у него нет своей страницы,
+  // ссылка вела бы на редирект обратно в список.
+  const others = useMemo(
+    () => doctorsData.filter((d) => d.id !== id && !d.support).slice(0, 4),
+    [id],
+  );
 
   // Услуги врача разворачиваются из общего каталога направлений по маршруту:
   // название берётся оттуда, поэтому не может разойтись со страницей /services.
@@ -73,6 +78,13 @@ export function DoctorPage() {
     });
     return () => obs.disconnect();
   }, [sections]);
+
+  // Ассистенты и администраторы в данных есть, но страницы у них нет:
+  // уводим в общий список, а не показываем «врач не найден» — человек
+  // существует, просто у него нет карточки с образованием и услугами.
+  if (doctor?.support) {
+    return <Navigate to="/doctors" replace />;
+  }
 
   if (!doctor) {
     return (
