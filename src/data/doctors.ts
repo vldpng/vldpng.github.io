@@ -20,6 +20,14 @@ export interface DoctorCase {
   after?: string;
 }
 
+export interface Certificate {
+  /** Скан сертификата. Пусто — в ленте будет пустая рамка-заглушка.
+   *  Класть в public/images/certificates/, путь от корня: /images/certificates/... */
+  src?: string;
+  /** Подпись под сертификатом. Пусто — подписи не будет. */
+  title?: string;
+}
+
 export interface Doctor {
   id: string;
   name: string;
@@ -30,6 +38,8 @@ export interface Doctor {
   education?: string;
   /** Образование — список учреждений. Пусто — секция скрыта. TODO. */
   educationList?: EducationItem[];
+  /** Сертификаты — лента под списком образования. Пусто — ленты нет. */
+  certificates?: Certificate[];
   /** Кейсы «до/после». Пусто — секция скрыта. */
   cases?: DoctorCase[];
   bio: string;
@@ -65,6 +75,9 @@ export const doctorsData: Doctor[] = [
       { title: 'Специализация по ортопедической стоматологии', subtitle: '1996 — 1997' },
       { title: 'Специализация по хирургической стоматологии', subtitle: '1997 — 1998' },
     ],
+    // TODO: положить сканы в public/images/certificates/ и проставить src с
+    // подписями. Пока три пустые рамки — заготовка ленты, не реальные данные.
+    certificates: [{}, {}, {}],
     // TODO: положить снимки в public/images/cases/ и проставить before/after.
     // Без путей слайдер показывает тёмную заглушку «[Фото до] / [Фото после]».
     cases: [

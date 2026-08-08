@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { doctorsData } from '../data/doctors';
+import { doctorsData, type Certificate } from '../data/doctors';
 import { BeforeAfterSlider } from '../components/ui/before-after-slider';
 import { serviceCards } from '../components/sections/ServiceCards';
-import { ArrowLeft, ArrowRight, GraduationCap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, GraduationCap, Award } from 'lucide-react';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
@@ -21,6 +21,121 @@ function SectionHeading({ id, children }: { id: string; children: React.ReactNod
 
 const cardClass =
   'rounded-3xl bg-card border border-black/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8';
+
+/**
+ * Лента сертификатов под списком образования.
+ *
+ * Прокрутка нативная (overflow-x + scroll-snap) — свайп на телефоне работает
+ * сам. Стрелки только доводят ленту на ширину одной плитки, поэтому позиция
+ * читается из scrollLeft, а не хранится отдельным состоянием: иначе свайп и
+ * стрелки разъезжались бы между собой.
+ */
+function CertificatesStrip({ items, doctorName }: { items: Certificate[]; doctorName: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: true, end: true });
+
+  const sync = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Запас в 1px: при дробной ширине плиток scrollLeft не дотягивает до
+    // максимума ровно, и стрелка «вперёд» оставалась бы активной в конце.
+    const max = el.scrollWidth - el.clientWidth;
+    setEdges({ start: el.scrollLeft <= 1, end: el.scrollLeft >= max - 1 });
+  }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    sync();
+    el.addEventListener('scroll', sync, { passive: true });
+    // Ширина ленты меняется при повороте экрана и на границах брейкпоинтов —
+    // без наблюдателя стрелки застревали бы в состоянии от прошлой раскладки.
+    const observer = new ResizeObserver(sync);
+    observer.observe(el);
+    return () => {
+      el.removeEventListener('scroll', sync);
+      observer.disconnect();
+    };
+  }, [sync]);
+
+  const step = (direction: 1 | -1) => {
+    const el = ref.current;
+    if (!el) return;
+    const tile = el.querySelector('figure');
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const distance = tile ? tile.getBoundingClientRect().width + gap : el.clientWidth;
+    el.scrollBy({
+      left: direction * distance,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  };
+
+  // Обе границы сразу — плитки поместились целиком, листать нечего.
+  const scrollable = !(edges.start && edges.end);
+  const arrowClass =
+    'flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 transition-colors hover:border-zinc-900 hover:bg-zinc-900 hover:text-white disabled:pointer-events-none disabled:opacity-30';
+
+  return (
+    <div className="mt-3 border-t border-black/[0.05] pt-5">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <p className="eyebrow text-zinc-500">Сертификаты</p>
+        {scrollable && (
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => step(-1)}
+              disabled={edges.start}
+              aria-label="Предыдущий сертификат"
+              className={arrowClass}
+            >
+              <ArrowLeft size={16} />
+            </button>
+            <button
+              type="button"
+              onClick={() => step(1)}
+              disabled={edges.end}
+              aria-label="Следующий сертификат"
+              className={arrowClass}
+            >
+              <ArrowRight size={16} />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Отрицательный margin гасит padding карточки, чтобы лента уезжала под
+          её край, а не обрывалась отступом. scroll-pl обязателен: при
+          snap-mandatory браузер ровняет плитку по краю скроллпорта, игнорируя
+          padding, и первая прилипала к краю вместо строк образования. */}
+      <div
+        ref={ref}
+        className="-mx-6 md:-mx-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 md:px-8 scroll-pl-6 md:scroll-pl-8 pb-2 [scrollbar-width:thin]"
+        role="group"
+        aria-label="Сертификаты врача"
+      >
+        {items.map((c, i) => (
+          <figure key={i} className="w-[9.5rem] sm:w-[11rem] shrink-0 snap-start">
+            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-white border border-black/[0.04] flex items-center justify-center">
+              {c.src ? (
+                <img
+                  src={c.src}
+                  alt={c.title ?? `Сертификат — ${doctorName}`}
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Award size={28} className="text-zinc-300" strokeWidth={1.5} />
+              )}
+            </div>
+            {c.title && (
+              <figcaption className="mt-2 text-sm text-zinc-500 leading-snug">{c.title}</figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function DoctorPage() {
   const { id } = useParams();
@@ -221,11 +336,11 @@ export function DoctorPage() {
               утаскивая за собой все секции. */}
           <div className="flex flex-col gap-12 min-w-0">
             {/* Образование */}
-            {doctor.educationList?.length ? (
+            {doctor.educationList?.length || doctor.certificates?.length ? (
               <section>
                 <SectionHeading id="education">Образование</SectionHeading>
                 <div className={cn(cardClass, 'flex flex-col gap-3')}>
-                  {doctor.educationList.map((e, i) => (
+                  {doctor.educationList?.map((e, i) => (
                     <div
                       key={i}
                       className="flex items-start gap-4 rounded-2xl bg-white border border-black/[0.04] px-5 py-4"
@@ -239,28 +354,28 @@ export function DoctorPage() {
                       </div>
                     </div>
                   ))}
+
+                  {doctor.certificates?.length ? (
+                    <CertificatesStrip items={doctor.certificates} doctorName={doctor.name} />
+                  ) : null}
                 </div>
               </section>
             ) : null}
 
-            {/* Кейсы — горизонтальная лента карточек «до/после».
-                Прокрутка нативная (overflow-x + scroll-snap), без JS. */}
+            {/* Кейсы — сетка карточек «до/после». Ленты с прокруткой здесь нет
+                намеренно: карточки должны стоять по ширине колонки вровень с
+                остальными секциями, а не уезжать за её край. Лишние кейсы
+                переносятся на следующий ряд. */}
             {doctor.cases?.length ? (
               <section>
                 <SectionHeading id="cases">Кейсы</SectionHeading>
                 <div
-                  className="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 pb-4 [scrollbar-width:thin]"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
                   role="group"
                   aria-label="Работы врача до и после"
                 >
                   {doctor.cases.map((c, i) => (
-                    <figure
-                      key={i}
-                      className={cn(
-                        cardClass,
-                        'w-[85%] sm:w-[19rem] shrink-0 snap-start !p-4 flex flex-col gap-3',
-                      )}
-                    >
+                    <figure key={i} className={cn(cardClass, '!p-4 flex flex-col gap-3')}>
                       <BeforeAfterSlider
                         beforeSrc={c.before}
                         afterSrc={c.after}
