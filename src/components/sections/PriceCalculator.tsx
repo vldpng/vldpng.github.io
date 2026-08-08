@@ -351,9 +351,9 @@ function StepIndicator({
                 className={cn(
                   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold border-2 transition-all',
                   done || active
-                    ? 'bg-[#041B39] border-[#041B39] text-white'
+                    ? 'bg-[#3B3B3D] border-[#3B3B3D] text-white'
                     : 'bg-white border-zinc-300 text-zinc-500',
-                  active && 'ring-4 ring-[#041B39]/15',
+                  active && 'ring-4 ring-[#3B3B3D]/15',
                   n > maxStep && 'cursor-not-allowed',
                 )}
               >
@@ -363,7 +363,7 @@ function StepIndicator({
                 <div
                   className={cn(
                     'h-[2px] flex-1 transition-colors',
-                    n < step ? 'bg-[#041B39]' : 'bg-zinc-300',
+                    n < step ? 'bg-[#3B3B3D]' : 'bg-zinc-300',
                   )}
                 />
               )}
@@ -568,9 +568,9 @@ export function PriceCalculator() {
                         disabled={totalTeeth === 0}
                         aria-hidden={totalTeeth === 0}
                         className={cn(
-                          'w-full inline-flex items-center justify-center gap-3 rounded-full border-2 border-[#041B39] px-8 py-4 text-[#041B39] font-semibold transition-all duration-300 active:scale-95',
+                          'w-full inline-flex items-center justify-center gap-3 rounded-full border-2 border-[#3B3B3D] px-8 py-4 text-[#3B3B3D] font-semibold transition-all duration-300 active:scale-95',
                           totalTeeth > 0
-                            ? 'opacity-100 translate-y-0 hover:bg-[#041B39] hover:text-white'
+                            ? 'opacity-100 translate-y-0 hover:bg-[#3B3B3D] hover:text-white'
                             : 'opacity-0 translate-y-2 pointer-events-none',
                         )}
                       >

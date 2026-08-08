@@ -1,8 +1,9 @@
 import React from 'react';
-import { MoveRight } from 'lucide-react';
+import { MoveRight, Syringe, Activity, HeartPulse, Stethoscope } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FadeIn } from '../ui/fade-in';
 import { BlackPlaceholder } from '../ui/Placeholder';
+import { MaskIcon } from '../ui/MaskIcon';
 
 /**
  * Сетка направлений на странице /services: тёмные карточки
@@ -72,6 +73,25 @@ export const serviceCards: {
   },
 ];
 
+/**
+ * Иконки направлений. Ключ — путь услуги (`to` из serviceCards).
+ * Где есть фирменный SVG — MaskIcon, остальным — подходящая иконка lucide.
+ *
+ * Живёт рядом с данными карточек, а не в MainServices: блок услуг на главной
+ * уже импортирует отсюда serviceCards, и обратный импорт замкнул бы модули.
+ */
+export const serviceIcons: Record<string, React.ReactNode> = {
+  '/services/ceramic': <MaskIcon src="/icons/dental-crown.svg" className="w-6 h-6" />,
+  '/services/aligners': <MaskIcon src="/icons/braces.svg" className="w-6 h-6" />,
+  '/services/surgery': <Syringe size={24} />,
+  '/services/implants': <MaskIcon src="/icons/implant.svg" className="w-6 h-6" />,
+  '/services/microscope': <MaskIcon src="/icons/decay.svg" className="w-6 h-6" />,
+  '/services/hygiene': <MaskIcon src="/icons/higien.svg" className="w-6 h-6" />,
+  '/services/tmj': <Activity size={24} />,
+  '/services/parodontology': <HeartPulse size={24} />,
+  '/services/whitening': <MaskIcon src="/icons/whitening.svg" className="w-6 h-6" />,
+};
+
 export function ServiceCards() {
   return (
     <section className="py-12 lg:py-16">
@@ -79,17 +99,24 @@ export function ServiceCards() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {serviceCards.map((card, idx) => (
             <FadeIn key={card.title} delay={0.06 * idx} direction="up" className="h-full">
+              {/* Оформление то же, что у карточек услуг на главной (MainServices):
+                  тёмно-синий градиент, серифный заголовок и иконка в белом
+                  квадрате. Тень смещена вниз с отрицательным spread — светится
+                  только под карточкой, а не ореолом вокруг. */}
               <Link
                 to={card.to}
-                className="group flex flex-col h-full rounded-2xl overflow-hidden bg-card dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-[0_4px_20px_rgb(58,58,58,0.03)] hover:border-zinc-200 dark:hover:border-zinc-700 hover:shadow-[0_10px_30px_rgb(58,58,58,0.08)] transition-all"
+                className="group flex flex-col h-full rounded-[1.5rem] overflow-hidden bg-gradient-to-br from-[#4D4D4F] via-[#3B3B3D] to-[#2C2C2D] shadow-[0_18px_30px_-14px_rgba(59,59,61,0.45)] hover:shadow-[0_26px_38px_-14px_rgba(59,59,61,0.55)] hover:-translate-y-1 transition-all duration-300"
               >
                 {/* Текст */}
-                <div className="p-7 pb-6 flex flex-col gap-4">
-                  <h3 className="font-serif text-xl leading-snug text-zinc-900 dark:text-zinc-50 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                <div className="flex items-start justify-between gap-4 p-6 pb-3">
+                  <h3 className="font-serif text-xl leading-snug text-white">
                     {card.title}
                   </h3>
-                  <p className="text-base leading-snug text-zinc-500 dark:text-zinc-400">{card.desc}</p>
+                  <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-amber-600 shrink-0 shadow-sm">
+                    {serviceIcons[card.to] ?? <Stethoscope size={24} />}
+                  </div>
                 </div>
+                <p className="px-6 pb-4 text-base leading-snug text-white/70">{card.desc}</p>
 
                 {/* Фото прижато к низу карточки; поверх — ссылка на услугу */}
                 <div className="relative mt-auto h-52 overflow-hidden">

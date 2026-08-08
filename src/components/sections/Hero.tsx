@@ -71,7 +71,7 @@ export function Hero() {
                 белое стекло с равномерным размытием фона по всей площади. */}
             <div
               aria-hidden="true"
-              className="hidden lg:block absolute -left-20 -top-14 -bottom-14 -right-[18%] rounded-[2rem] border border-white/60 bg-white/55 backdrop-blur-2xl shadow-[0_40px_100px_-40px_rgba(4,27,57,0.4)]"
+              className="hidden lg:block absolute -left-20 -top-14 -bottom-14 -right-[18%] rounded-[2rem] border border-white/60 bg-white/55 backdrop-blur-2xl shadow-[0_40px_100px_-40px_rgba(59,59,61,0.4)]"
             />
           <motion.div
             initial="hidden"

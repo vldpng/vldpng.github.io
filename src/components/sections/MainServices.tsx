@@ -1,31 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-import {
-  ChevronRight,
-  ChevronLeft,
-  Syringe,
-  Activity,
-  HeartPulse,
-  Stethoscope,
-  Check,
-} from 'lucide-react';
+import { ChevronRight, ChevronLeft, Stethoscope, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SectionBadge } from '../ui/section-badge';
-import { MaskIcon } from '../ui/MaskIcon';
-import { serviceCards } from './ServiceCards';
-
-// Иконки направлений. Ключ — путь услуги (`to` из serviceCards).
-// Где есть фирменный SVG — MaskIcon, остальным — подходящая иконка lucide.
-const serviceIcons: Record<string, React.ReactNode> = {
-  '/services/ceramic': <MaskIcon src="/icons/dental-crown.svg" className="w-6 h-6" />,
-  '/services/aligners': <MaskIcon src="/icons/braces.svg" className="w-6 h-6" />,
-  '/services/surgery': <Syringe size={24} />,
-  '/services/implants': <MaskIcon src="/icons/implant.svg" className="w-6 h-6" />,
-  '/services/microscope': <MaskIcon src="/icons/decay.svg" className="w-6 h-6" />,
-  '/services/hygiene': <MaskIcon src="/icons/higien.svg" className="w-6 h-6" />,
-  '/services/tmj': <Activity size={24} />,
-  '/services/parodontology': <HeartPulse size={24} />,
-  '/services/whitening': <MaskIcon src="/icons/whitening.svg" className="w-6 h-6" />,
-};
+import { serviceCards, serviceIcons } from './ServiceCards';
 
 // Краткие описания направлений для карточек на главной (ключ — путь услуги).
 const homeDescriptions: Record<string, string> = {
@@ -55,7 +32,7 @@ function ServiceCard({ card }: { card: (typeof serviceCards)[number] }) {
   return (
     <Link
       to={card.to}
-      className="group flex flex-col h-[400px] rounded-[1.5rem] overflow-hidden bg-gradient-to-b from-[#12345f] to-[#041B39] shadow-[0_18px_30px_-14px_rgba(4,27,57,0.45)] hover:shadow-[0_26px_38px_-14px_rgba(4,27,57,0.55)] hover:-translate-y-1 transition-all duration-300"
+      className="group flex flex-col h-[400px] rounded-[1.5rem] overflow-hidden bg-gradient-to-br from-[#4D4D4F] via-[#3B3B3D] to-[#2C2C2D] shadow-[0_18px_30px_-14px_rgba(59,59,61,0.45)] hover:shadow-[0_26px_38px_-14px_rgba(59,59,61,0.55)] hover:-translate-y-1 transition-all duration-300"
     >
       <div className="flex items-start justify-between gap-4 p-6 pb-3">
         <h3 className="font-serif text-xl leading-snug text-white">
@@ -293,7 +270,7 @@ export function MainServices() {
         </div>
 
         {/* ───────── Баннер «Записаться на консультацию» ───────── */}
-        <div className="mt-10 lg:mt-14 rounded-[2rem] bg-gradient-to-r from-[#0d2b52] to-[#041B39] p-8 lg:p-12 shadow-[0_20px_60px_-20px_rgba(4,27,57,0.5)]">
+        <div className="mt-10 lg:mt-14 rounded-[2rem] bg-gradient-to-br from-[#4D4D4F] via-[#3B3B3D] to-[#2C2C2D] p-8 lg:p-12 shadow-[0_20px_60px_-20px_rgba(59,59,61,0.5)]">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] items-center gap-8 lg:gap-14">
             <div>
               <h3 className="font-serif text-2xl lg:text-3xl text-white mb-3">

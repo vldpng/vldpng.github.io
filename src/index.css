@@ -25,7 +25,7 @@
   --color-zinc-700: #333333; /* Charcoal */
   --color-zinc-800: #2f3033; /* тёмные UI-элементы */
   --color-zinc-900: #2a2b2f; /* Ink — заголовки */
-  --color-zinc-950: #041B39; /* тёмные секции/блоки (глубокий синий) */
+  --color-zinc-950: #3B3B3D; /* тёмные секции/блоки (тёмно-серый) */
 
   --color-card: #F8FAFF; /* фон карточек/блоков (светло-голубой, светлее фона) */
 
@@ -173,7 +173,7 @@
   scrollbar-width: none;
 }
 
-/* Кнопки: при наведении тёмная заливка #2A2B2F выезжает слева направо.
+/* Кнопки: при наведении тёмная заливка #3B3B3D выезжает слева направо.
    Псевдоэлемент рисуется поверх фона кнопки, но под текстом (z-index: -1). */
 .btn-sweep {
   position: relative;
@@ -188,7 +188,7 @@
   left: 0;
   width: 150%;
   z-index: -1;
-  background-color: #041B39;
+  background-color: #3B3B3D;
   transform: skewX(-22deg) translateX(-120%);
   transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;

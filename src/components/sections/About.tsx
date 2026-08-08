@@ -20,7 +20,7 @@ export function About() {
         {/* Intro — слева тёмный блок, вертикальная линия, справа тег + статистика */}
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-12 lg:items-stretch">
           {/* Левая колонка: тёмный блок с заявлением (левый край — до края экрана) */}
-          <div className="lg:flex-1 lg:flex lg:flex-col bg-[#041B39] rounded-[2rem] p-8 lg:p-12 min-[1600px]:rounded-l-none min-[1600px]:ml-[calc((100vw_-_100rem)_*_-0.5_-_0.75rem)]">
+          <div className="lg:flex-1 lg:flex lg:flex-col bg-gradient-to-br from-[#4D4D4F] via-[#3B3B3D] to-[#2C2C2D] rounded-[2rem] p-8 lg:p-12 min-[1600px]:rounded-l-none min-[1600px]:ml-[calc((100vw_-_100rem)_*_-0.5_-_0.75rem)]">
             <FadeIn delay={0.1}>
               <p className="text-2xl md:text-3xl lg:text-[2.5rem] font-medium tracking-tight leading-snug text-white">
                 RoyalDent — это современная стоматологическая клиника, призванная дарить
