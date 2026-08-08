@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { X, ChevronLeft, Check, Loader2, Calendar, Clock, User, Phone, Instagram, Facebook, MessageCircle, Send, Stethoscope } from 'lucide-react';
+import { X, ChevronLeft, Check, Loader2, Calendar, Clock, User, Phone, Stethoscope } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { useBookingModal } from '../../context/BookingModalContext';
 import { clinic } from '../../data/clinic';
+import { socialLinks, externalLinkProps } from '../../data/social';
 import { BookingCalendar } from '../ui/booking-calendar';
 import { PhoneField } from '../ui/phone-field';
 
@@ -308,18 +309,17 @@ export function BookingModal() {
                       <Phone size={16} className="text-amber-500" /> {clinic.phoneDisplay}
                     </a>
                     <div className="flex gap-3">
-                      <a href={clinic.social.instagram} aria-label="Instagram" className="w-9 h-9 rounded-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition-colors">
-                        <Instagram size={16} />
-                      </a>
-                      <a href={clinic.social.facebook} aria-label="Facebook" className="w-9 h-9 rounded-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition-colors">
-                        <Facebook size={16} className="fill-current" />
-                      </a>
-                      <a href={clinic.social.whatsapp} aria-label="WhatsApp" className="w-9 h-9 rounded-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition-colors">
-                        <MessageCircle size={16} />
-                      </a>
-                      <a href={clinic.social.telegram} aria-label="Telegram" className="w-9 h-9 rounded-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition-colors">
-                        <Send size={16} />
-                      </a>
+                      {socialLinks.map(({ Icon, href, label, filled }) => (
+                        <a
+                          key={label}
+                          href={href}
+                          {...externalLinkProps}
+                          aria-label={label}
+                          className="w-9 h-9 rounded-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition-colors"
+                        >
+                          <Icon size={16} className={filled ? 'fill-current' : undefined} />
+                        </a>
+                      ))}
                     </div>
                   </div>
                 </div>

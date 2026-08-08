@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { Mail, MapPin, Phone, Instagram, Facebook, MessageCircle, X } from 'lucide-react';
+import { Mail, MapPin, Phone, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useContactModal } from '../../context/ContactModalContext';
 import { clinic } from '../../data/clinic';
+import { socialLinks, externalLinkProps } from '../../data/social';
 
 export function ContactModal() {
   const { isOpen, closeModal } = useContactModal();
@@ -74,15 +75,17 @@ export function ContactModal() {
                 </div>
 
                 <div className="flex gap-4 mt-16 relative z-10">
-                  <a href={clinic.social.facebook} aria-label="Facebook" className="w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center transition-colors text-zinc-950">
-                    <Facebook size={18} className="fill-current" />
-                  </a>
-                  <a href={clinic.social.instagram} aria-label="Instagram" className="w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center transition-colors text-zinc-950">
-                    <Instagram size={18} />
-                  </a>
-                  <a href={clinic.social.whatsapp} aria-label="WhatsApp" className="w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center transition-colors text-zinc-950">
-                    <MessageCircle size={18} />
-                  </a>
+                  {socialLinks.map(({ Icon, href, label, filled }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      {...externalLinkProps}
+                      aria-label={label}
+                      className="w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center transition-colors text-zinc-950"
+                    >
+                      <Icon size={18} className={filled ? 'fill-current' : undefined} />
+                    </a>
+                  ))}
                 </div>
               </div>
 

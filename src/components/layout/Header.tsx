@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Menu, X, Globe, MapPin, Phone, Clock, Instagram, Facebook, MessageCircle, Send, Moon, Sun, Search, AlignJustify } from 'lucide-react';
+import { ChevronDown, Menu, X, Globe, MapPin, Phone, Clock, Moon, Sun, Search, AlignJustify } from 'lucide-react';
 import { cn, handleHashClick } from '@/lib/utils';
 import { NavHeader } from '../ui/nav-header';
 import { Link } from 'react-router-dom';
 import { useBookingModal } from '../../context/BookingModalContext';
 import { clinic } from '../../data/clinic';
+import { socialLinks, externalLinkProps } from '../../data/social';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,7 +53,7 @@ export function Header() {
       )}
     >
       {/* Единая матовая панель-«пилюля»: логотип, меню, язык и CTA внутри */}
-      <div className="w-full flex items-center justify-between pointer-events-auto rounded-2xl border border-white/40 bg-white/15 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_60px_-25px_rgba(4,27,57,0.35)] px-4 md:px-8 py-2.5">
+      <div className="w-full flex items-center justify-between pointer-events-auto rounded-2xl border border-white/40 bg-white/15 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_60px_-25px_rgba(59,59,61,0.35)] px-4 md:px-8 py-2.5">
         
         {/* Logo */}
         <Link
@@ -60,10 +61,16 @@ export function Header() {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="flex items-center cursor-pointer group shrink-0"
         >
-          {/* shrink-0 обязателен: логотип — широкий wordmark (1144×205) без
+          {/* shrink-0 обязателен: логотип — широкий wordmark (374×67) без
               заданной ширины, и без него флекс сжимал его до нуля, как только
               содержимое шапки переставало помещаться. */}
-          <img src="/brand/logo.svg" alt="RoyalDent" className="h-12 md:h-14 w-auto object-contain" />
+          <img
+            src="/brand/logo.png"
+            alt="RoyalDent"
+            width={374}
+            height={67}
+            className="h-12 md:h-14 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -229,18 +236,17 @@ export function Header() {
             </a>
 
             <div className="flex items-center gap-4 pt-2">
-              <a href={clinic.social.instagram} aria-label="Instagram" className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
-                <Instagram size={18} />
-              </a>
-              <a href={clinic.social.facebook} aria-label="Facebook" className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
-                <Facebook size={18} className="fill-current" />
-              </a>
-              <a href={clinic.social.whatsapp} aria-label="WhatsApp" className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
-                <MessageCircle size={18} />
-              </a>
-              <a href={clinic.social.telegram} aria-label="Telegram" className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
-                <Send size={18} />
-              </a>
+              {socialLinks.map(({ Icon, href, label, filled }) => (
+                <a
+                  key={label}
+                  href={href}
+                  {...externalLinkProps}
+                  aria-label={label}
+                  className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+                >
+                  <Icon size={18} className={filled ? 'fill-current' : undefined} />
+                </a>
+              ))}
             </div>
           </div>
         </div>

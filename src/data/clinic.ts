@@ -40,12 +40,13 @@ export const clinic = {
     schemaOpeningHours: 'Mo-Fr 09:00-20:00',
   },
 
-  // Социальные сети (TODO: заменить на реальные профили клиники)
+  // Социальные сети. Пустая строка = аккаунта пока нет: иконка не рисуется
+  // (см. socialLinks в data/social.ts), чтобы на сайте не было мёртвых ссылок.
   social: {
-    instagram: '#',
-    facebook: '#',
-    whatsapp: '#',
-    telegram: '#',
+    instagram: 'https://www.instagram.com/royaldent.jurmala/',
+    facebook: 'https://www.facebook.com/royaldent.jurmala/',
+    whatsapp: '', // TODO: ссылка вида https://wa.me/371XXXXXXXX
+    telegram: '', // TODO: ссылка вида https://t.me/username
   },
 
   // Базовый URL сайта (используется для canonical / sitemap / og:url)

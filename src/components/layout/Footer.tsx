@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Instagram, Facebook, MessageCircle, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { clinic } from '../../data/clinic';
+import { socialLinks, externalLinkProps } from '../../data/social';
 import { handleHashClick } from '../../lib/utils';
 
 const columns = [
@@ -37,15 +37,8 @@ const columns = [
   },
 ];
 
-const socials = [
-  { Icon: Instagram, href: clinic.social.instagram, label: 'Instagram' },
-  { Icon: Facebook, href: clinic.social.facebook, label: 'Facebook' },
-  { Icon: MessageCircle, href: clinic.social.whatsapp, label: 'WhatsApp' },
-  { Icon: Send, href: clinic.social.telegram, label: 'Telegram' },
-];
-
 const linkClass =
-  'text-[13px] text-zinc-400 hover:text-amber-500 transition-colors';
+  'text-[13px] text-white/70 hover:text-amber-400 transition-colors';
 
 export function Footer() {
   const [name, setName] = useState('');
@@ -82,7 +75,7 @@ export function Footer() {
               key={col.title}
               className="lg:col-span-2 first:lg:col-span-3 border-t border-white/10 pt-6"
             >
-              <h4 className="text-amber-500 text-[15px] font-medium mb-5">{col.title}</h4>
+              <h4 className="text-amber-400 text-[15px] font-medium mb-5">{col.title}</h4>
               <ul className="flex flex-col gap-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
@@ -118,7 +111,7 @@ export function Footer() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ваше имя"
                 aria-label="Ваше имя"
-                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-zinc-500 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-white/60 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
               />
               <input
                 type="tel"
@@ -127,7 +120,7 @@ export function Footer() {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Номер телефона"
                 aria-label="Номер телефона"
-                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-zinc-500 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-white/60 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
               />
               <button
                 type="submit"
@@ -139,14 +132,15 @@ export function Footer() {
 
             {/* Соцсети */}
             <div className="flex items-center gap-3 mt-7">
-              {socials.map(({ Icon, href, label }) => (
+              {socialLinks.map(({ Icon, href, label, filled }) => (
                 <a
                   key={label}
                   href={href}
+                  {...externalLinkProps}
                   aria-label={label}
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/15 text-zinc-400 hover:text-amber-500 hover:border-amber-500 transition-colors"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/15 text-white/70 hover:text-amber-400 hover:border-amber-500 transition-colors"
                 >
-                  <Icon size={16} className={label === 'Facebook' ? 'fill-current' : ''} />
+                  <Icon size={16} className={filled ? 'fill-current' : undefined} />
                 </a>
               ))}
             </div>
@@ -155,11 +149,11 @@ export function Footer() {
             <div className="flex flex-col gap-1 mt-7">
               <a
                 href={clinic.phoneHref}
-                className="text-base font-semibold text-white hover:text-amber-500 transition-colors"
+                className="text-base font-semibold text-white hover:text-amber-400 transition-colors"
               >
                 {clinic.phoneDisplay}
               </a>
-              <span className="text-[13px] text-zinc-400">
+              <span className="text-[13px] text-white/70">
                 {clinic.address.full} · {clinic.hours.short}
               </span>
             </div>
@@ -186,7 +180,7 @@ export function Footer() {
         {/* Нижняя строка */}
         <div className="relative border-t border-white/10 py-6 lg:pr-16 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-zinc-500 leading-relaxed">
+            <span className="text-xs text-white/60 leading-relaxed">
               SIA «Royal Dent» · Reģ. Nr.: 40203129158
               <br />
               Veselības Inspekcijas atļauja Nr. 130000095
@@ -194,10 +188,10 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-6">
-            <Link to="/privacy" className="text-[13px] text-zinc-400 hover:text-amber-500 transition-colors">
+            <Link to="/privacy" className="text-[13px] text-white/70 hover:text-amber-400 transition-colors">
               Политика конфиденциальности
             </Link>
-            <Link to="/terms" className="text-[13px] text-zinc-400 hover:text-amber-500 transition-colors">
+            <Link to="/terms" className="text-[13px] text-white/70 hover:text-amber-400 transition-colors">
               Пользовательское соглашение
             </Link>
           </div>
