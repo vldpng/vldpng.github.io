@@ -1,27 +1,38 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
 import { SectionBadge } from '../ui/section-badge';
 import { ImageWithFallback } from '../ui/image-with-fallback';
 
+// TODO: заменить пустые строки на реальные снимки интерьера.
+// Пустой путь — ImageWithFallback нарисует подписанную заглушку.
 const interior = [
-  'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=1200',
-  'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=1200',
-  'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1200',
-  'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=1200',
-  'https://images.unsplash.com/photo-1600170311833-c2cf5280ce49?auto=format&fit=crop&q=80&w=1200',
-];
-
-// Раскладка bento: крупное фото слева на две строки, остальные — разными размерами.
-const bento = [
-  'col-span-2 sm:col-span-4 sm:row-span-2',
-  'col-span-1 sm:col-span-2',
-  'col-span-1 sm:col-span-2',
-  'col-span-1 sm:col-span-3',
-  'col-span-1 sm:col-span-3',
+  '/images/clinic/IMG_4273.jpg_2K_202607182302.webp',
+  '/images/clinic/IMG_4279.jpg_2K_202607182323.webp',
+  '/images/clinic/IMG_4281.jpg_2K_202607182323.webp',
+  '',
+  '',
+  '',
 ];
 
 export function AboutInterior() {
+  const [index, setIndex] = useState(0);
+  const total = interior.length;
+
+  const goTo = useCallback((next: number) => setIndex((next + total) % total), [total]);
+
+  // Сдвиг именно через функцию обновления: два быстрых клика по стрелке React
+  // объединяет в один рендер, и оба обработчика прочитали бы одно и то же
+  // старое значение index — карусель проматывала бы всего один кадр.
+  const step = useCallback(
+    (delta: number) => setIndex((i) => (i + delta + total) % total),
+    [total],
+  );
+
+  const navClass =
+    'flex h-12 w-12 items-center justify-center rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white transition-colors hover:bg-zinc-900 hover:text-white hover:border-zinc-900 dark:hover:bg-white dark:hover:text-zinc-900';
+
   return (
     <section className="py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-2 md:px-3">
@@ -32,16 +43,72 @@ export function AboutInterior() {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <div className="grid grid-cols-2 sm:grid-cols-6 auto-rows-[160px] sm:auto-rows-[190px] lg:auto-rows-[230px] gap-4 lg:gap-6">
+          {/* Высота повторяет прежнюю bento-сетку, чтобы блок не «прыгнул»
+              по вертикали относительно соседних секций. Кадры лежат стопкой
+              и переключаются прозрачностью — так нет сдвига разметки. */}
+          <div
+            className="relative h-[320px] sm:h-[404px] lg:h-[484px] rounded-[2rem] overflow-hidden bg-zinc-100 dark:bg-zinc-900"
+            role="group"
+            aria-roledescription="карусель"
+            aria-label="Интерьер клиники"
+          >
             {interior.map((src, i) => (
               <ImageWithFallback
                 key={i}
                 src={src}
                 alt={`Интерьер клиники RoyalDent ${i + 1}`}
                 label="Фото интерьера"
-                className={cn('h-full w-full rounded-[2rem]', bento[i] ?? '')}
+                className={cn(
+                  'absolute inset-0 h-full w-full transition-opacity duration-500 ease-out',
+                  i === index ? 'opacity-100' : 'opacity-0 pointer-events-none',
+                )}
               />
             ))}
+          </div>
+
+          {/* Стрелки по краям, точки между ними */}
+          <div className="mt-6 flex items-center justify-center gap-5">
+            <button
+              type="button"
+              onClick={() => step(-1)}
+              aria-label="Предыдущее фото"
+              className={navClass}
+            >
+              <ArrowLeft size={20} />
+            </button>
+
+            <div className="flex items-center gap-2.5">
+              {interior.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => goTo(i)}
+                  aria-label={`Фото ${i + 1} из ${total}`}
+                  aria-current={i === index}
+                  // Увеличенная область нажатия: сама точка 8px, но по такой
+                  // цели на телефоне не попасть, поэтому вокруг прозрачный отступ.
+                  className="p-2 -m-2"
+                >
+                  <span
+                    className={cn(
+                      'block h-2 w-2 rounded-full transition-all duration-300',
+                      i === index
+                        ? 'bg-zinc-900 dark:bg-white w-6'
+                        : 'bg-zinc-300 dark:bg-zinc-700 hover:bg-zinc-400',
+                    )}
+                  />
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => step(1)}
+              aria-label="Следующее фото"
+              className={navClass}
+            >
+              <ArrowRight size={20} />
+            </button>
           </div>
         </FadeIn>
       </div>

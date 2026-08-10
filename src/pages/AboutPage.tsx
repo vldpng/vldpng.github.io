@@ -3,8 +3,8 @@ import { Seo } from '../components/Seo';
 import { PageBanner } from '../components/ui/page-banner';
 import { AboutApproach } from '../components/sections/AboutApproach';
 import { AboutInterior } from '../components/sections/AboutInterior';
-import { AboutEquipment } from '../components/sections/AboutEquipment';
-import { Partners } from '../components/sections/Partners';
+import { Doctors } from '../components/sections/Doctors';
+import { Faq, aboutFaqs } from '../components/sections/Faq';
 
 export function AboutPage() {
   useEffect(() => {
@@ -25,8 +25,9 @@ export function AboutPage() {
 
       <AboutApproach />
       <AboutInterior />
-      <AboutEquipment />
-      <Partners />
+      <Doctors />
+      {/* Свой набор вопросов и свой якорь: на главной уже есть #faq */}
+      <Faq items={aboutFaqs} id="about-faq" />
     </main>
   );
 }
