@@ -94,7 +94,20 @@ export const doctorsData: Doctor[] = [
       '/services/tmj',
     ],
     photoLabel: "[Фото — Виталий Двуреченский, хирург-имплантолог]",
-    photoUrl: "", // TODO: новое фото ещё не снято
+    photoUrl: "/images/staff/Vitalij_Doctor.webp",
+  },
+  {
+    id: "13",
+    name: "Эдгар Берзе",
+    specialty: "Хирург-имплантолог",
+    experience: "15 лет",
+    educationList: [
+      { title: 'Рижский университет имени Паула Страдыня' },
+    ],
+    bio: "Проводит установку имплантов и хирургическое лечение: удаление зубов любой сложности, костную пластику и подготовку челюсти к протезированию.",
+    services: ['/services/surgery', '/services/implants'],
+    photoLabel: "[Фото — Эдгар Берзе, хирург-имплантолог]",
+    photoUrl: "/images/staff/Edgar_Doctor.webp",
   },
   {
     id: "2",
@@ -120,24 +133,15 @@ export const doctorsData: Doctor[] = [
     bio: "Лечит кариес и его осложнения, проводит реставрацию зубов и эндодонтическое лечение каналов под микроскопом с сохранением естественного вида зуба.",
     services: ['/services/microscope', '/services/hygiene'],
     photoLabel: "[Фото — Ирина Иванова, стоматолог-терапевт]",
-    photoUrl: "", // TODO: новое фото ещё не снято
-  },
-  {
-    id: "4",
-    name: "Юлия Циплякова",
-    specialty: "Гигиенист",
-    bio: "Выполняет профессиональную гигиену полости рта, ультразвуковую чистку и Air Flow, а также обучает пациентов правильному домашнему уходу.",
-    services: ['/services/hygiene', '/services/whitening'],
-    photoLabel: "[Фото — Юлия Циплякова, гигиенист]",
-    photoUrl: "",
+    photoUrl: "/images/staff/Irina_Doctor.webp",
   },
   {
     id: "5",
-    name: "Валерия Иванова",
+    name: "Валерия Кравчука",
     specialty: "Гигиенист",
     bio: "Проводит профессиональную чистку зубов, снятие налёта и зубного камня, профилактику кариеса и заболеваний дёсен.",
     services: ['/services/hygiene', '/services/whitening'],
-    photoLabel: "[Фото — Валерия Иванова, гигиенист]",
+    photoLabel: "[Фото — Валерия Кравчука, гигиенист]",
     photoUrl: "/images/staff/Valerija_higienist.webp",
   },
   {
@@ -147,7 +151,7 @@ export const doctorsData: Doctor[] = [
     bio: "Выполняет профессиональную гигиену полости рта, снятие зубных отложений и полировку, подбирает средства для домашнего ухода.",
     services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Алина Пурвиня, гигиенист]",
-    photoUrl: "", // TODO: фото ещё не снято
+    photoUrl: "/images/staff/Alina_higienist.webp",
   },
   {
     id: "10",
@@ -160,26 +164,23 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "6",
-    name: "Даниэла Иванова",
+    name: "Даниэла Рожинская",
     specialty: "Ассистент",
     bio: "Ассистирует врачам во время приёма, готовит кабинет и материалы, помогает пациентам чувствовать себя комфортно на каждом этапе лечения.",
     services: [],
-    photoLabel: "[Фото — Даниэла Иванова, ассистент]",
+    photoLabel: "[Фото — Даниэла Рожинская, ассистент]",
     photoUrl: "/images/staff/Daniela_asistent.webp",
     support: true,
   },
   {
     id: "8",
     name: "Владислав Двуреченский",
-    specialty: "CAD/CAM специалист",
-    experience: "6 лет", // TODO: реальный стаж
-    educationList: [
-      { title: 'Зубной техник / CAD-CAM', subtitle: 'Профильное образование' }, // TODO
-    ],
-    bio: "Отвечает за цифровое моделирование и изготовление реставраций по технологии CAD/CAM: коронки, виниры и каркасы с высокой точностью прилегания.",
-    services: ['/services/ceramic', '/services/implants'],
-    photoLabel: "[Фото — Владислав Двуреченский, CAD/CAM специалист]",
-    photoUrl: "", // TODO: новое фото ещё не снято
+    specialty: "Ассистент",
+    bio: "Ассистирует врачам на приёме, готовит кабинет и материалы, отвечает за стерильность инструментов и сопровождает пациента во время процедур.",
+    services: [],
+    photoLabel: "[Фото — Владислав Двуреченский, ассистент]",
+    photoUrl: "", // TODO: фото ещё не снято
+    support: true,
   },
   {
     id: "11",
