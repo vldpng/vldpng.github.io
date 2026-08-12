@@ -23,9 +23,13 @@ export function ImageWithFallback({
 }: ImageWithFallbackProps) {
   const [error, setError] = useState(false);
 
+  // Пустой src в <img> браузер трактует как ссылку на саму страницу и качает
+  // её повторно, поэтому «фото ещё нет» разбирается до рендера тега.
+  const missing = !src.trim() || error;
+
   return (
     <div className={cn('relative overflow-hidden bg-zinc-100 dark:bg-zinc-900', className)}>
-      {!error ? (
+      {!missing ? (
         <img
           src={src}
           alt={alt}

@@ -43,11 +43,12 @@ export function AboutInterior() {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          {/* Высота повторяет прежнюю bento-сетку, чтобы блок не «прыгнул»
-              по вертикали относительно соседних секций. Кадры лежат стопкой
+          {/* Высота подобрана под сами снимки: они сняты в 1.79 и 1.34, а при
+              прежних 484px блок выходил 2.93 по соотношению и object-cover
+              срезал почти половину кадра сверху и снизу. Кадры лежат стопкой
               и переключаются прозрачностью — так нет сдвига разметки. */}
           <div
-            className="relative h-[320px] sm:h-[404px] lg:h-[484px] rounded-[2rem] overflow-hidden bg-zinc-100 dark:bg-zinc-900"
+            className="relative h-[340px] sm:h-[480px] lg:h-[660px] rounded-[2rem] overflow-hidden bg-zinc-100 dark:bg-zinc-900"
             role="group"
             aria-roledescription="карусель"
             aria-label="Интерьер клиники"

@@ -8,6 +8,9 @@ import { doctorsData, type Doctor } from '../../data/doctors';
 import { useBookingModal } from '../../context/BookingModalContext';
 import { cn } from '@/lib/utils';
 
+/** Пауза между автоматическими перелистываниями карусели врачей. */
+const AUTOPLAY_MS = 3500;
+
 function DoctorCard({ doctor }: { doctor: Doctor }) {
   const { openModal } = useBookingModal();
 
@@ -122,33 +125,71 @@ export function Doctors() {
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
-  // Автопрокрутка: листает вперёд каждые 3.5 с, останавливается при наведении
-  // и уважает системную настройку «уменьшить движение».
+  /**
+   * Автопрокрутка листает вперёд каждые 3.5 с, но только когда это кому-то
+   * видно: карусель на экране, вкладка активна и курсор не над ней.
+   *
+   * Без проверки видимости таймер тикал бы и на других секциях, и на
+   * свёрнутой вкладке: браузер фоновые таймеры замедляет, но не выключает,
+   * поэтому вернувшийся пользователь заставал бы ленту промотанной
+   * в случайное место. Плюс это лишняя работа на главном потоке.
+   */
   useEffect(() => {
     if (!emblaApi) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    const root = emblaApi.rootNode();
     let timer: number | null = null;
+    let onScreen = false;
+    let hovered = false;
+
     const stop = () => {
       if (timer !== null) {
         window.clearInterval(timer);
         timer = null;
       }
     };
-    const play = () => {
-      stop();
-      timer = window.setInterval(() => emblaApi.scrollNext(), 3500);
+
+    // Единая точка решения: любое из условий изменилось — пересобираем таймер.
+    const sync = () => {
+      const shouldPlay = onScreen && !hovered && document.visibilityState === 'visible';
+      if (shouldPlay && timer === null) {
+        timer = window.setInterval(() => emblaApi.scrollNext(), AUTOPLAY_MS);
+      } else if (!shouldPlay) {
+        stop();
+      }
     };
 
-    const root = emblaApi.rootNode();
-    play();
-    root.addEventListener('pointerenter', stop);
-    root.addEventListener('pointerleave', play);
+    // 0.3 — карусель считается видимой, когда на экране треть её высоты:
+    // при пороге 0 она бы «оживала», едва задев край окна.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(root);
+
+    const onEnter = () => {
+      hovered = true;
+      sync();
+    };
+    const onLeave = () => {
+      hovered = false;
+      sync();
+    };
+
+    root.addEventListener('pointerenter', onEnter);
+    root.addEventListener('pointerleave', onLeave);
+    document.addEventListener('visibilitychange', sync);
 
     return () => {
       stop();
-      root.removeEventListener('pointerenter', stop);
-      root.removeEventListener('pointerleave', play);
+      observer.disconnect();
+      root.removeEventListener('pointerenter', onEnter);
+      root.removeEventListener('pointerleave', onLeave);
+      document.removeEventListener('visibilitychange', sync);
     };
   }, [emblaApi]);
 
