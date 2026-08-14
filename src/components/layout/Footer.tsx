@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { LockKeyhole } from 'lucide-react';
 import { clinic } from '../../data/clinic';
 import { socialLinks, externalLinkProps } from '../../data/social';
-import { handleHashClick } from '../../lib/utils';
+import { cn, handleHashClick } from '../../lib/utils';
+
+/**
+ * Адрес панели администратора. Пустая строка = панели ещё нет: в подвале
+ * рисуется неактивная иконка-заглушка. Вписать сюда путь или полный URL —
+ * и кнопка станет рабочей ссылкой.
+ */
+const ADMIN_URL = '';
+
+/** Кнопка админки повторяет вид соседних иконок соцсетей. */
+const adminButtonClass =
+  'inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/15 text-white/70 hover:text-amber-400 hover:border-amber-500 transition-colors';
 
 const columns = [
   {
@@ -143,6 +155,31 @@ export function Footer() {
                   <Icon size={16} className={filled ? 'fill-current' : undefined} />
                 </a>
               ))}
+
+              {/* Вход в панель администратора. Пока заглушка: адреса нет,
+                  поэтому кнопка неактивна и приглушена — иначе посетитель
+                  кликал бы по ней впустую. Когда панель появится, достаточно
+                  вписать путь в ADMIN_URL выше, и кнопка сама станет ссылкой. */}
+              {ADMIN_URL ? (
+                <a
+                  href={ADMIN_URL}
+                  aria-label="Панель администратора"
+                  title="Панель администратора"
+                  className={adminButtonClass}
+                >
+                  <LockKeyhole size={16} />
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  aria-label="Панель администратора (пока недоступна)"
+                  title="Панель администратора — скоро"
+                  className={cn(adminButtonClass, 'opacity-40 cursor-not-allowed')}
+                >
+                  <LockKeyhole size={16} />
+                </button>
+              )}
             </div>
 
             {/* Контакты */}
