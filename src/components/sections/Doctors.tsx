@@ -5,14 +5,14 @@ import { SectionBadge } from '../ui/section-badge';
 import { Link } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import { doctorsData, type Doctor } from '../../data/doctors';
-import { useBookingModal } from '../../context/BookingModalContext';
+import { useContactModal } from '../../context/ContactModalContext';
 import { cn } from '@/lib/utils';
 
 /** Пауза между автоматическими перелистываниями карусели врачей. */
 const AUTOPLAY_MS = 3500;
 
 function DoctorCard({ doctor }: { doctor: Doctor }) {
-  const { openModal } = useBookingModal();
+  const { openModal } = useContactModal();
 
   const handleBooking = (e: React.MouseEvent) => {
     // Не даём клику по кнопке перейти на страницу врача — открываем запись.
@@ -33,6 +33,7 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
           src={doctor.photoUrl}
           alt={doctor.name}
           loading="lazy"
+          style={{ objectPosition: doctor.photoPosition }}
           className={cn(
             'absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out',
             !doctor.support && 'group-hover:scale-105',

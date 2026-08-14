@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, GraduationCap, Award } from 'lucide-react';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
-import { useBookingModal } from '../context/BookingModalContext';
+import { useContactModal } from '../context/ContactModalContext';
 import { Seo } from '../components/Seo';
 
 /** Заголовок секции — серифный, в тёплом акценте (в стиле макета). */
@@ -140,7 +140,7 @@ function CertificatesStrip({ items, doctorName }: { items: Certificate[]; doctor
 export function DoctorPage() {
   const { id } = useParams();
   const doctor = doctorsData.find((d) => d.id === id);
-  const { openModal } = useBookingModal();
+  const { openModal } = useContactModal();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -236,7 +236,12 @@ export function DoctorPage() {
             className="w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none lg:w-[29%] aspect-[4/5] lg:aspect-auto min-h-[420px] relative rounded-[2rem] overflow-hidden shadow-xl shrink-0 bg-zinc-100"
           >
             {doctor.photoUrl ? (
-              <img src={doctor.photoUrl} alt={doctor.name} className="w-full h-full object-cover" />
+              <img
+                src={doctor.photoUrl}
+                alt={doctor.name}
+                style={{ objectPosition: doctor.photoPosition }}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <BlackPlaceholder label={doctor.photoLabel} className="w-full h-full object-cover" />
             )}
@@ -426,7 +431,12 @@ export function DoctorPage() {
                     >
                       <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-zinc-100">
                         {d.photoUrl ? (
-                          <img src={d.photoUrl} alt={d.name} className="w-full h-full object-cover" />
+                          <img
+                            src={d.photoUrl}
+                            alt={d.name}
+                            style={{ objectPosition: d.photoPosition }}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <BlackPlaceholder label={d.photoLabel} className="w-full h-full object-cover" />
                         )}

@@ -1,18 +1,50 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Mail, MapPin, Phone, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useContactModal } from '../../context/ContactModalContext';
 import { clinic } from '../../data/clinic';
 import { socialLinks, externalLinkProps } from '../../data/social';
 
+const EMPTY_FORM = { firstName: '', lastName: '', email: '', phone: '+371 ' };
+
+/** Простая проверка адреса: символы, «собака», домен с точкой. */
+const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+
+/**
+ * Номер считается заполненным, когда после кода страны набрано не меньше
+ * восьми цифр — столько в латвийском номере. Префикс 371 отбрасываем, чтобы
+ * поле, где остался только «+371 », не считалось заполненным.
+ */
+const isValidPhone = (v: string) => v.replace(/\D/g, '').replace(/^371/, '').length >= 8;
+
 export function ContactModal() {
   const { isOpen, closeModal } = useContactModal();
+  // Поля управляемые: без этого нельзя блокировать отправку до заполнения.
+  const [form, setForm] = useState(EMPTY_FORM);
+  // Согласие на обработку данных. Хранится в состоянии, потому что от него
+  // зависит доступность кнопки отправки.
+  const [consent, setConsent] = useState(false);
+
+  const setField = (key: keyof typeof EMPTY_FORM) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const canSubmit =
+    form.firstName.trim().length > 0 &&
+    form.lastName.trim().length > 0 &&
+    isValidEmail(form.email) &&
+    isValidPhone(form.phone) &&
+    consent;
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
+      // Сбрасываем форму и галочку при закрытии: следующий посетитель должен
+      // дать согласие сам, а не унаследовать его от прошлой отправки.
+      setForm(EMPTY_FORM);
+      setConsent(false);
     }
     return () => {
       document.body.style.overflow = 'unset';
@@ -99,26 +131,34 @@ export function ContactModal() {
                         type="text"
                         id="firstName"
                         required
+                        value={form.firstName}
+                        onChange={setField('firstName')}
                         className="w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-900 dark:focus:border-white transition-colors rounded-none"
-                      />
-                    </div>
-                    
-                    <div className="space-y-1 relative group">
-                      <label htmlFor="lastName" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Фамилия</label>
-                      <input 
-                        type="text" 
-                        id="lastName"
-                        className="w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-900 dark:focus:border-white transition-colors rounded-none" 
                       />
                     </div>
 
                     <div className="space-y-1 relative group">
-                      <label htmlFor="emailForm" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Email</label>
-                      <input 
-                        type="email" 
+                      <label htmlFor="lastName" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Фамилия <span className="text-amber-500">*</span></label>
+                      <input
+                        type="text"
+                        id="lastName"
+                        required
+                        value={form.lastName}
+                        onChange={setField('lastName')}
+                        className="w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-900 dark:focus:border-white transition-colors rounded-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1 relative group">
+                      <label htmlFor="emailForm" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Email <span className="text-amber-500">*</span></label>
+                      <input
+                        type="email"
                         id="emailForm"
+                        required
                         placeholder="youremail@gmail.com"
-                        className="w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:border-zinc-900 dark:focus:border-white transition-colors rounded-none" 
+                        value={form.email}
+                        onChange={setField('email')}
+                        className="w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:border-zinc-900 dark:focus:border-white transition-colors rounded-none"
                       />
                     </div>
 
@@ -128,7 +168,8 @@ export function ContactModal() {
                         type="tel"
                         id="phoneForm"
                         required
-                        defaultValue="+371 "
+                        value={form.phone}
+                        onChange={setField('phone')}
                         className="w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-900 dark:focus:border-white transition-colors rounded-none"
                       />
                     </div>
@@ -144,13 +185,44 @@ export function ContactModal() {
                     ></textarea>
                   </div>
 
-                  <div className="flex flex-col items-center justify-center mt-auto relative gap-4">
-                     <button type="submit" className="bg-amber-500 text-white rounded-xl px-10 py-4 font-semibold text-sm hover:bg-amber-600 transition-colors w-full sm:w-auto">
+                  <div className="flex flex-col items-center justify-center mt-auto relative gap-5">
+                     <button
+                       type="submit"
+                       disabled={!canSubmit}
+                       className="bg-amber-500 text-white rounded-xl px-10 py-4 font-semibold text-sm hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-500 transition-colors w-full sm:w-auto"
+                     >
                       Отправить сообщение
                      </button>
-                     <p className="text-xs text-zinc-500 text-center">
-                       Заполняя эту форму, вы соглашаетесь с <a href="#" className="underline underline-offset-2">политикой конфиденциальности</a>
-                     </p>
+                     {/* Согласие под кнопкой — так просил заказчик. Кнопка до
+                         галочки заблокирована, поэтому подпись к чекбоксу должна
+                         объяснять связь: иначе неактивная кнопка выглядит
+                         поломкой. required — вторая линия на случай Enter. */}
+                     <label
+                       htmlFor="consent"
+                       className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400 max-w-md cursor-pointer select-none"
+                     >
+                       <input
+                         id="consent"
+                         type="checkbox"
+                         required
+                         checked={consent}
+                         onChange={(e) => setConsent(e.target.checked)}
+                         className="h-4 w-4 shrink-0 cursor-pointer accent-amber-500"
+                       />
+                       <span className="text-center">
+                         Я согласен на обработку моих персональных данных в соответствии с{' '}
+                         {/* Открываем в новой вкладке: иначе переход по ссылке
+                             закрыл бы модалку и стёр уже заполненную форму. */}
+                         <Link
+                           to="/privacy"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           className="underline underline-offset-2"
+                         >
+                           политикой конфиденциальности
+                         </Link>
+                       </span>
+                     </label>
                   </div>
                 </form>
               </div>

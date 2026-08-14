@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
 import { BlackPlaceholder } from '../ui/Placeholder';
 import { SectionBadge } from '../ui/section-badge';
-import { useBookingModal } from '../../context/BookingModalContext';
+import { useContactModal } from '../../context/ContactModalContext';
 
 interface Option {
   title: string;
@@ -389,7 +389,7 @@ export function PriceCalculator() {
   // Шаг 3 — поля формы
   const [age, setAge] = useState(30);
 
-  const { openModal } = useBookingModal();
+  const { openModal } = useContactModal();
 
   const implant = implants[implantIdx];
   const crown = crowns[crownIdx];

@@ -10,8 +10,6 @@ import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { ContactModalProvider } from './context/ContactModalContext';
 import { ContactModal } from './components/modals/ContactModal';
-import { BookingModalProvider } from './context/BookingModalContext';
-import { BookingModal } from './components/modals/BookingModal';
 import { ScrollToTopButton } from './components/ui/scroll-to-top-button';
 
 // Каждая страница загружается отдельным чанком — только при переходе на неё,
@@ -26,6 +24,12 @@ const AboutPage = lazy(() => import('./pages/AboutPage').then((m) => ({ default:
 const PatientsPage = lazy(() => import('./pages/PatientsPage').then((m) => ({ default: m.PatientsPage })));
 const PatientRulesPage = lazy(() =>
   import('./pages/PatientRulesPage').then((m) => ({ default: m.PatientRulesPage })),
+);
+const PatientBookingPage = lazy(() =>
+  import('./pages/PatientBookingPage').then((m) => ({ default: m.PatientBookingPage })),
+);
+const PrivacyPage = lazy(() =>
+  import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })),
 );
 
 function PageLoader() {
@@ -67,7 +71,6 @@ function ScrollToTop() {
 export default function App() {
   return (
     <ContactModalProvider>
-      <BookingModalProvider>
       <div className="min-h-screen font-sans bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 selection:bg-zinc-200 dark:selection:bg-zinc-800 selection:text-zinc-900 dark:selection:text-zinc-100">
         <ScrollToTop />
         {/* Притемнение полосы под часами — только в standalone (см. index.css) */}
@@ -87,14 +90,14 @@ export default function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/patients" element={<PatientsPage />} />
             <Route path="/patients/rules" element={<PatientRulesPage />} />
+            <Route path="/patients/booking" element={<PatientBookingPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
           </Routes>
         </Suspense>
         <Footer />
         <ContactModal />
-        <BookingModal />
         <ScrollToTopButton />
       </div>
-      </BookingModalProvider>
     </ContactModalProvider>
   );
 }

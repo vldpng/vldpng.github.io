@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MapPin, Clock, Phone, ArrowUpRight } from 'lucide-react';
 import { clinic } from '../../data/clinic';
 import { SectionBadge } from '../ui/section-badge';
-import { useBookingModal } from '../../context/BookingModalContext';
+import { useContactModal } from '../../context/ContactModalContext';
 
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   `${clinic.address.street}, ${clinic.address.city}, Latvia`,
 )}`;
 
 export function MapSection() {
-  const { openModal } = useBookingModal();
+  const { openModal } = useContactModal();
   const mapRef = useRef<HTMLDivElement>(null);
   const [showMap, setShowMap] = useState(false);
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useBookingModal } from '../../context/BookingModalContext';
+import { useContactModal } from '../../context/ContactModalContext';
 
 // Фото клиники для карусели (лежат в public/images/clinic).
 // Текст hero статичный — меняются только снимки.
@@ -23,7 +23,7 @@ const AUTOPLAY_MS = 6500;
 
 export function Hero() {
   const [index, setIndex] = useState(0);
-  const { openModal } = useBookingModal();
+  const { openModal } = useContactModal();
   const total = images.length;
 
   const goTo = useCallback((next: number) => {

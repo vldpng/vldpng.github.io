@@ -3,7 +3,7 @@ import { ChevronDown, Menu, X, Globe, MapPin, Phone, Clock, Moon, Sun, Search, A
 import { cn, handleHashClick } from '@/lib/utils';
 import { NavHeader } from '../ui/nav-header';
 import { Link } from 'react-router-dom';
-import { useBookingModal } from '../../context/BookingModalContext';
+import { useContactModal } from '../../context/ContactModalContext';
 import { clinic } from '../../data/clinic';
 import { socialLinks, externalLinkProps } from '../../data/social';
 
@@ -12,7 +12,7 @@ export function Header() {
   const [langOpen, setLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('RU');
   const [isHidden, setIsHidden] = useState(false);
-  const { openModal: openBooking } = useBookingModal();
+  const { openModal: openBooking } = useContactModal();
 
   // Скрываем шапку при скролле вниз, показываем при скролле вверх.
   // На самом верху страницы шапка всегда видна.
