@@ -1,26 +1,12 @@
 import React, { useEffect } from 'react';
 import { Seo } from '../components/Seo';
 import { PageBanner } from '../components/ui/page-banner';
+import { LegalDocument, type DocumentSection } from '../components/ui/legal-document';
 import { clinic } from '../data/clinic';
-
-interface Clause {
-  /** Номер пункта, например «1.1». */
-  n?: string;
-  /** Текст пункта (может предварять список). */
-  text?: string;
-  /** Маркированный список внутри пункта. */
-  bullets?: string[];
-}
-
-interface RuleSection {
-  num: string;
-  title: string;
-  clauses: Clause[];
-}
 
 const site = clinic.siteUrl.replace(/^https?:\/\//, '');
 
-const sections: RuleSection[] = [
+const sections: DocumentSection[] = [
   {
     num: '1',
     title: 'Общие положения',
@@ -131,7 +117,7 @@ const sections: RuleSection[] = [
         bullets: [
           'соблюдать настоящие Правила и общепринятые нормы поведения в общественных местах;',
           'соблюдать режим работы Клиники;',
-          'являться на приём вовремя. При опоздании более чем на 10 минут (или более чем на 25 % от запланированного времени приёма) приём может не состояться;',
+          'являться на приём вовремя. При опоздании более чем на 20 минут приём может не состояться либо быть перенесён при наличии свободного времени;',
           'при невозможности явиться на приём уведомить Клинику не менее чем за 24 часа до записи;',
           'соблюдать санитарно-гигиенические требования: верхнюю одежду оставлять в гардеробе;',
           'соблюдать требования пожарной безопасности;',
@@ -211,7 +197,7 @@ const sections: RuleSection[] = [
       {
         n: '7.1',
         text:
-          'Гарантийные обязательства на оказанные стоматологические услуги и работы регулируются отдельным «Положением о гарантийных сроках», доступным для ознакомления на информационном стенде и на сайте Клиники. Права пациента как потребителя дополнительно защищаются законом «О защите прав потребителей» (Patērētāju tiesību aizsardzības likums).',
+          'Гарантийные обязательства на оказанные стоматологические услуги и работы регулируются отдельным «Положением о гарантийных сроках». Ознакомиться с ним можно в Клинике: документ доступен на информационном стенде, копию по запросу предоставит администратор. Права пациента как потребителя дополнительно защищаются законом «О защите прав потребителей» (Patērētāju tiesību aizsardzības likums).',
       },
     ],
   },
@@ -222,20 +208,15 @@ const sections: RuleSection[] = [
       {
         n: '8.1',
         text:
-          'В целях обеспечения безопасности на территории Клиники ведётся видеонаблюдение. Обработка данных видеонаблюдения осуществляется в соответствии с GDPR; о видеонаблюдении пациенты информируются соответствующими указателями.',
-      },
-      {
-        n: '8.2',
-        text:
           'Лечащий врач по согласованию с руководством Клиники вправе отказать в наблюдении и лечении пациенту в случае грубого или неоднократного нарушения настоящих Правил, если это не угрожает жизни пациента и здоровью окружающих.',
       },
-      { n: '8.3', text: 'Условия доступа в Клинику и парковки можно уточнить у администратора.' },
+      { n: '8.2', text: 'Для пациентов Клиники доступна бесплатная парковка. Условия доступа можно уточнить у администратора.' },
       {
-        n: '8.4',
+        n: '8.3',
         text: 'Лица, нарушившие настоящие Правила, несут ответственность в соответствии с законодательством Латвийской Республики.',
       },
       {
-        n: '8.5',
+        n: '8.4',
         text:
           'Жалобы на качество медицинской помощи и соблюдение прав пациента могут быть поданы руководству Клиники, а также в Инспекцию здоровья (Veselības inspekcija).',
       },
@@ -260,48 +241,10 @@ export function PatientRulesPage() {
         <PageBanner title="Правила внутреннего распорядка клиники RoyalDent" />
       </div>
 
-      <article className="max-w-[1000px] mx-auto px-2 md:px-3 mt-10 lg:mt-14 bg-card dark:bg-zinc-900 rounded-3xl border border-black/[0.04] dark:border-white/[0.06] shadow-[0_4px_20px_rgb(58,58,58,0.03)] p-6 md:p-12">
-        <p className="text-lg md:text-xl font-medium text-zinc-900 dark:text-zinc-50 leading-snug mb-10">
-          Правила внутреннего распорядка для пациентов стоматологической клиники «RoyalDent»
-        </p>
-
-        <div className="space-y-12">
-          {sections.map((section) => (
-            <section key={section.num}>
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-5">
-                <span className="text-amber-500">{section.num}.</span> {section.title}
-              </h2>
-
-              <div className="space-y-5">
-                {section.clauses.map((clause) => (
-                  <div key={clause.n}>
-                    {clause.text && (
-                      <p className="text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300">
-                        {clause.n && (
-                          <span className="font-semibold text-zinc-900 dark:text-zinc-100 mr-1.5">{clause.n}.</span>
-                        )}
-                        {clause.text}
-                      </p>
-                    )}
-                    {clause.bullets && (
-                      <ul className="mt-3 space-y-2 pl-4">
-                        {clause.bullets.map((b, i) => (
-                          <li
-                            key={i}
-                            className="relative pl-4 text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300 before:absolute before:left-0 before:top-[0.6em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-amber-500"
-                          >
-                            {b}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      </article>
+      <LegalDocument
+        heading="Правила внутреннего распорядка для пациентов стоматологической клиники «RoyalDent»"
+        sections={sections}
+      />
     </main>
   );
 }

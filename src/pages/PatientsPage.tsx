@@ -20,22 +20,10 @@ interface PatientSection {
 
 const sections: PatientSection[] = [
   {
-    title: 'Документы для оформления услуг',
-    items: [
-      { label: 'Анкета о состоянии здоровья пациента (дети)', type: 'doc', href: '#' },
-      { label: 'Анкета о состоянии здоровья пациента (взрослые)', type: 'doc', href: '#' },
-      { label: 'Доверенность на ребёнка', type: 'doc', href: '#' },
-      { label: 'Договор на оказание медицинских услуг', type: 'doc', href: '#' },
-      { label: 'Согласие на обработку персональных данных (GDPR)', type: 'doc', href: '#' },
-      { label: 'Заявление на выдачу справки для налогового вычета', type: 'doc', href: '#' },
-      { label: 'Гарантийные обязательства', type: 'doc', href: '#' },
-    ],
-  },
-  {
     title: 'Правила приёма и распорядка',
     items: [
       { label: 'Правила внутреннего распорядка для пациентов', type: 'link', href: '/patients/rules' },
-      { label: 'Правила записи на первичный приём', type: 'link', href: '#' },
+      { label: 'Правила записи на первичный приём', type: 'link', href: '/patients/booking' },
       { label: 'Правила подготовки к диагностическим исследованиям', type: 'link', href: '#' },
     ],
   },
@@ -108,7 +96,7 @@ export function PatientsPage() {
     <main className="pt-20 lg:pt-24 min-h-screen pb-20 bg-zinc-50 dark:bg-zinc-950">
       <Seo
         title="Пациентам"
-        description="Документы, правила приёма и правовая информация для пациентов клиники RoyalDent в Юрмале: анкеты, договоры, согласия и нормативные акты."
+        description="Правила приёма и правовая информация для пациентов клиники RoyalDent в Юрмале: порядок записи, подготовка к исследованиям и нормативные акты."
         path="/patients"
       />
 
