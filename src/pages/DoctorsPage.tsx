@@ -37,6 +37,7 @@ export function DoctorsPage() {
                   <img
                     src={doctor.photoUrl}
                     alt={doctor.name}
+                    style={{ objectPosition: doctor.photoPosition }}
                     className={cn(
                       'absolute inset-0 w-full h-full object-cover transition-transform duration-700',
                       linked && 'group-hover:scale-105',
