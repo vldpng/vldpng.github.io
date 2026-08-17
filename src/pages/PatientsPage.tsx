@@ -100,10 +100,7 @@ export function PatientsPage() {
         path="/patients"
       />
 
-      {/* Banner */}
-      <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner title="Информация для посетителей клиники RoyalDent" />
-      </div>
+      <PageBanner title="Информация для посетителей клиники RoyalDent" />
 
       <div className="max-w-7xl mx-auto px-2 md:px-3 mt-10 lg:mt-14">
         <div className="space-y-14">

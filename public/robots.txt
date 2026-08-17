@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /ru/admin
+Disallow: /en/admin
 
 Sitemap: https://royaldent.lv/sitemap.xml

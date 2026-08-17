@@ -197,6 +197,16 @@
 .btn-sweep:focus-visible::after {
   transform: skewX(-22deg) translateX(-15%);
 }
+/* Пока шторка закрывает кнопку, подпись обязана быть светлой: на оранжевом
+   в покое текст тёмный (так он проходит по контрасту), но на #3B3B3D тёмная
+   подпись сливается с фоном и кнопка выглядит пустой.
+   Правило здесь, а не в классах кнопок: цвет шторки один на всех, и любая
+   новая кнопка с btn-sweep получит верное поведение сама. Селектор с
+   псевдоклассом весомее utility-класса text-*, поэтому !important не нужен. */
+.btn-sweep:hover,
+.btn-sweep:focus-visible {
+  color: #ffffff;
+}
 @media (prefers-reduced-motion: reduce) {
   .btn-sweep::after {
     transition: none;

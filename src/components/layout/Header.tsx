@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Menu, X, Globe, MapPin, Phone, Clock, Moon, Sun, Search, AlignJustify } from 'lucide-react';
+import { Menu, X, MapPin, Phone, Clock, Moon, Sun, Search, AlignJustify } from 'lucide-react';
 import { cn, handleHashClick } from '@/lib/utils';
 import { NavHeader } from '../ui/nav-header';
 import { Link } from 'react-router-dom';
 import { useContactModal } from '../../context/ContactModalContext';
 import { clinic } from '../../data/clinic';
+import { LanguageSwitcher } from '../ui/language-switcher';
 import { socialLinks, externalLinkProps } from '../../data/social';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState('RU');
+  // Состояние языка живёт в LanguageSwitcher и читается из адреса страницы.
   const [isHidden, setIsHidden] = useState(false);
   const { openModal: openBooking } = useContactModal();
 
@@ -81,34 +81,10 @@ export function Header() {
             уходят в выдвижную панель, а в шапке остаются кнопка записи и бургер.
             Переключатель языка там же, в панели. */}
         <div className="flex items-center gap-4 md:gap-6 shrink-0">
-          <div className="relative hidden xl:block">
-            <button 
-              className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 uppercase tracking-widest transition-colors"
-              onClick={() => setLangOpen(!langOpen)}
-            >
-              <Globe size={14} /> {currentLang} <ChevronDown size={14} className={cn("transition-transform", langOpen && "rotate-180")} />
-            </button>
-            {langOpen && (
-              <div className="absolute top-full right-0 mt-4 bg-card border border-zinc-200 shadow-xl rounded-xl py-2 flex flex-col min-w-[80px] animate-in fade-in slide-in-from-top-2">
-                {['RU', 'EN', 'LV'].map((lang) => (
-                  <button 
-                    key={lang} 
-                    className={cn(
-                      "px-4 py-2 text-xs font-semibold text-left transition-colors",
-                      currentLang === lang ? "text-zinc-900 bg-zinc-50" : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
-                    )}
-                    onClick={() => {
-                      setCurrentLang(lang);
-                      setLangOpen(false);
-                    }}
-                  >
-                    {lang}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="hidden xl:block">
+            <LanguageSwitcher direction="down" size="sm" />
           </div>
-          <button onClick={(e) => { e.preventDefault(); openBooking(); }} className="hidden md:block btn-sweep bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap">
+          <button onClick={(e) => { e.preventDefault(); openBooking(); }} className="hidden md:block btn-sweep bg-amber-500 hover:bg-amber-400 text-zinc-900 px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap">
             Записаться на приём
           </button>
 
@@ -173,8 +149,8 @@ export function Header() {
 
           <Link to="/patients" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Пациентам</Link>
 
-          <a
-            href="/#reviews"
+          <Link
+            to="/#reviews"
             onClick={(e) => {
               handleHashClick('#reviews')(e);
               setMobileMenuOpen(false);
@@ -182,41 +158,15 @@ export function Header() {
             className="text-lg font-medium text-zinc-900 dark:text-zinc-100"
           >
             Отзывы
-          </a>
-          
+          </Link>
+
           <hr className="border-zinc-100 dark:border-zinc-800 shrink-0" />
           
           <div className="flex items-center justify-between shrink-0">
             <div className="flex items-center gap-4">
-              <div className="relative">
-                <button 
-                  className="flex items-center gap-1.5 text-sm font-semibold text-zinc-500 uppercase tracking-widest"
-                  onClick={() => setLangOpen(!langOpen)}
-                >
-                  <Globe size={16} /> {currentLang} <ChevronDown size={14} className={cn("transition-transform", langOpen && "rotate-180")} />
-                </button>
-                {langOpen && (
-                  <div className="absolute bottom-full left-0 mb-4 bg-card border border-zinc-200 shadow-xl rounded-xl py-2 flex flex-col min-w-[80px] animate-in fade-in slide-in-from-bottom-2 z-50">
-                    {['RU', 'EN', 'LV'].map((lang) => (
-                      <button 
-                        key={lang} 
-                        className={cn(
-                          "px-4 py-2 text-xs font-semibold text-left transition-colors",
-                          currentLang === lang ? "text-zinc-900 bg-zinc-50" : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
-                        )}
-                        onClick={() => {
-                          setCurrentLang(lang);
-                          setLangOpen(false);
-                        }}
-                      >
-                        {lang}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <LanguageSwitcher direction="up" size="md" />
             </div>
-            <button onClick={() => { setMobileMenuOpen(false); openBooking(); }} className="btn-sweep bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors">
+            <button onClick={() => { setMobileMenuOpen(false); openBooking(); }} className="btn-sweep bg-amber-500 hover:bg-amber-400 text-zinc-900 px-6 py-2.5 rounded-full text-sm font-medium transition-colors">
               Записаться
             </button>
           </div>

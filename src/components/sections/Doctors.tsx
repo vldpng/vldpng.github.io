@@ -4,7 +4,8 @@ import { FadeIn } from '../ui/fade-in';
 import { SectionBadge } from '../ui/section-badge';
 import { Link } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
-import { doctorsData, type Doctor } from '../../data/doctors';
+import { type Doctor } from '../../data/doctors';
+import { useDoctors } from '../../lib/useDoctors';
 import { useContactModal } from '../../context/ContactModalContext';
 import { cn } from '@/lib/utils';
 
@@ -98,7 +99,7 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
             <button
               type="button"
               onClick={handleBooking}
-              className="btn-sweep pointer-events-auto flex flex-1 items-center justify-center gap-2 rounded-full bg-amber-500 px-3 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-amber-600 active:scale-95"
+              className="btn-sweep pointer-events-auto flex flex-1 items-center justify-center gap-2 rounded-full bg-amber-500 px-3 py-2.5 text-sm font-semibold text-zinc-900 shadow-md transition-colors hover:bg-amber-400 active:scale-95"
             >
               Записаться
             </button>
@@ -118,6 +119,8 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
 }
 
 export function Doctors() {
+  // С сервера (правки из админки), со статическим списком как запасным.
+  const doctorsData = useDoctors();
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
     loop: true,

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { clinic } from '../data/clinic';
+import { getLanguage, parseLangFromPath } from '../data/languages';
 
 interface SeoProps {
   /** Заголовок страницы (без названия клиники — оно добавится автоматически). */
@@ -57,8 +58,23 @@ export function Seo({ title, description, path, image, noindex }: SeoProps) {
     ? title
     : `${title} | ${clinic.name}`;
   const desc = description ?? DEFAULT_DESCRIPTION;
-  const url = clinic.siteUrl + (path ?? '');
+
+  /**
+   * Языковой префикс обязателен в canonical и og:url.
+   *
+   * Страницы принимают path без префикса («/prices»), потому что для роутера
+   * его снимает basename. Но канонический адрес должен указывать на реальную
+   * страницу: без префикса /ru/prices объявлял бы каноническим /prices —
+   * адрес основного, латышского языка, — и Google счёл бы русскую версию
+   * дублем латышской.
+   *
+   * Язык берём из адреса: сменить его без перезагрузки страницы нельзя,
+   * поэтому значение не может устареть между рендерами.
+   */
+  const { lang, prefix } = parseLangFromPath(window.location.pathname);
+  const url = `${clinic.siteUrl}${prefix}${path || '/'}`;
   const ogImage = image ?? `${clinic.siteUrl}/brand/favicon.png`;
+  const ogLocale = getLanguage(lang).hreflang;
 
   useEffect(() => {
     document.title = fullTitle;
@@ -73,7 +89,7 @@ export function Seo({ title, description, path, image, noindex }: SeoProps) {
     upsertMeta('property', 'og:url', url);
     upsertMeta('property', 'og:image', ogImage);
     upsertMeta('property', 'og:site_name', clinic.name);
-    upsertMeta('property', 'og:locale', 'ru_RU');
+    upsertMeta('property', 'og:locale', ogLocale);
 
     // Twitter
     upsertMeta('name', 'twitter:card', 'summary_large_image');
@@ -87,7 +103,7 @@ export function Seo({ title, description, path, image, noindex }: SeoProps) {
     // при оттягивании страницы за края была того же цвета, что и панели.
     upsertMeta('name', 'theme-color', THEME_COLOR);
     document.documentElement.style.backgroundColor = THEME_COLOR;
-  }, [fullTitle, desc, url, ogImage, noindex]);
+  }, [fullTitle, desc, url, ogImage, ogLocale, noindex]);
 
   return null;
 }

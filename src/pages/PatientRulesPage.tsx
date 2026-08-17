@@ -237,9 +237,7 @@ export function PatientRulesPage() {
         path="/patients/rules"
       />
 
-      <div className="max-w-[1000px] mx-auto px-2 md:px-3 pt-8">
-        <PageBanner title="Правила внутреннего распорядка клиники RoyalDent" />
-      </div>
+      <PageBanner title="Правила внутреннего распорядка клиники RoyalDent" />
 
       <LegalDocument
         heading="Правила внутреннего распорядка для пациентов стоматологической клиники «RoyalDent»"

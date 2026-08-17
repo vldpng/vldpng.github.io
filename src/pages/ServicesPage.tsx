@@ -16,10 +16,7 @@ export function ServicesPage() {
         path="/services"
       />
 
-      {/* Banner */}
-      <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner title="Услуги в клинике RoyalDent" />
-      </div>
+      <PageBanner title="Услуги в клинике RoyalDent" />
 
       <ServiceCards />
     </main>

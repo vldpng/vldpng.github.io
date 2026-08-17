@@ -169,9 +169,7 @@ export function PrivacyPage() {
         path="/privacy"
       />
 
-      <div className="max-w-[1000px] mx-auto px-2 md:px-3 pt-8">
-        <PageBanner title="Политика конфиденциальности" />
-      </div>
+      <PageBanner title="Политика конфиденциальности" />
 
       <LegalDocument
         heading="Политика конфиденциальности и защиты персональных данных сайта стоматологической клиники «RoyalDent»"

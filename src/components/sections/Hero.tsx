@@ -123,7 +123,7 @@ export function Hero() {
                   transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                   className="flex items-center gap-3 text-[15px] font-medium text-[#FEF9EF] lg:text-zinc-900"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500 text-white shadow-sm">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500 text-zinc-900 shadow-sm">
                     <Check size={14} strokeWidth={3} />
                   </span>
                   {label}
@@ -139,7 +139,7 @@ export function Hero() {
               }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => openModal()}
-              className="lg:hidden btn-sweep mt-10 w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white px-8 py-3.5 rounded-full text-base font-medium shadow-md hover:shadow-lg active:scale-95 transition-all"
+              className="lg:hidden btn-sweep mt-10 w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-zinc-900 px-8 py-3.5 rounded-full text-base font-medium shadow-md hover:shadow-lg active:scale-95 transition-all"
             >
               Записаться на приём
             </motion.button>

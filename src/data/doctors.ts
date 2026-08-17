@@ -145,11 +145,11 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "5",
-    name: "Валерия Кравчука",
+    name: "Валерия Кравчук",
     specialty: "Гигиенист",
     bio: "Проводит профессиональную чистку зубов, снятие налёта и зубного камня, профилактику кариеса и заболеваний дёсен.",
     services: ['/services/hygiene', '/services/whitening'],
-    photoLabel: "[Фото — Валерия Кравчука, гигиенист]",
+    photoLabel: "[Фото — Валерия Кравчук, гигиенист]",
     photoUrl: "/images/staff/Valerija_higienist.webp",
   },
   {

@@ -34,7 +34,7 @@ export function ScrollToTopButton() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 16 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="fixed right-5 bottom-[calc(1.25rem_+_env(safe-area-inset-bottom))] z-50 w-12 h-12 rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 flex items-center justify-center hover:bg-amber-600 active:scale-95 transition-colors"
+          className="fixed right-5 bottom-[calc(1.25rem_+_env(safe-area-inset-bottom))] z-50 w-12 h-12 rounded-full bg-amber-500 text-zinc-900 shadow-lg shadow-amber-500/30 flex items-center justify-center hover:bg-amber-600 active:scale-95 transition-colors"
         >
           <ArrowUp size={20} strokeWidth={2} />
         </motion.button>

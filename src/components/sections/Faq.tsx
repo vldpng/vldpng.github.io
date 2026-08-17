@@ -116,7 +116,7 @@ export function Faq({ items = faqs, id = 'faq' }: FaqProps = {}) {
               </p>
               <button
                 onClick={openModal}
-                className="mt-6 inline-flex items-center justify-center btn-sweep bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-full text-sm font-semibold transition-colors shadow-md hover:shadow-lg active:scale-95"
+                className="mt-6 inline-flex items-center justify-center btn-sweep bg-amber-500 hover:bg-amber-400 text-zinc-900 px-6 py-3 rounded-full text-sm font-semibold transition-colors shadow-md hover:shadow-lg active:scale-95"
               >
                 Задать свой вопрос
               </button>
@@ -145,7 +145,7 @@ export function Faq({ items = faqs, id = 'faq' }: FaqProps = {}) {
                       className={cn(
                         'w-9 h-9 shrink-0 rounded-full flex items-center justify-center transition-all duration-300',
                         isOpen
-                          ? 'bg-amber-500 text-white rotate-180'
+                          ? 'bg-amber-500 text-zinc-900 rotate-180'
                           : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500',
                       )}
                     >

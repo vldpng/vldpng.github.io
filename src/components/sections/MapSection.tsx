@@ -91,7 +91,7 @@ export function MapSection() {
             <div className="flex flex-col sm:flex-row gap-3 mt-auto">
               <button
                 onClick={() => openModal()}
-                className="inline-flex items-center justify-center whitespace-nowrap btn-sweep bg-amber-500 hover:bg-amber-600 text-white px-6 py-3.5 rounded-full text-sm font-semibold transition-colors shadow-md hover:shadow-lg active:scale-95"
+                className="inline-flex items-center justify-center whitespace-nowrap btn-sweep bg-amber-500 hover:bg-amber-400 text-zinc-900 px-6 py-3.5 rounded-full text-sm font-semibold transition-colors shadow-md hover:shadow-lg active:scale-95"
               >
                 Записаться на приём
               </button>

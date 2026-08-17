@@ -33,13 +33,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Карта сайта собирается из данных проекта, а не правится руками —
+      # иначе она снова разойдётся со списком реальных страниц.
+      - name: Generate sitemap
+        run: npm run sitemap
+
       - name: Build frontend
         run: npx vite build
 
-      # SPA-фолбэк: GitHub Pages отдаёт 404.html для неизвестных путей,
-      # копия index.html позволяет react-router обрабатывать прямые ссылки.
-      - name: Add SPA fallback (404.html)
-        run: cp dist/index.html dist/404.html
+      # 404.html для прямых ссылок + настоящий index.html в каталоге каждого
+      # языка. Без второго корень языковой версии (/ru/) отдавался бы со
+      # статусом 404: сайт выглядел бы рабочим, а поисковик считал бы, что
+      # страницы нет. Список языков берётся из src/data/languages.ts.
+      - name: Add SPA fallback and language roots
+        run: npm run spa:fallback
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { doctorsData, type Certificate } from '../data/doctors';
+import { type Certificate } from '../data/doctors';
+import { useDoctors } from '../lib/useDoctors';
 import { BeforeAfterSlider } from '../components/ui/before-after-slider';
 import { serviceCards } from '../components/sections/ServiceCards';
 import { ArrowLeft, ArrowRight, GraduationCap, Award } from 'lucide-react';
@@ -139,6 +140,8 @@ function CertificatesStrip({ items, doctorName }: { items: Certificate[]; doctor
 
 export function DoctorPage() {
   const { id } = useParams();
+  // С сервера (правки из админки), со статическим списком как запасным.
+  const doctorsData = useDoctors();
   const doctor = doctorsData.find((d) => d.id === id);
   const { openModal } = useContactModal();
 
@@ -150,7 +153,7 @@ export function DoctorPage() {
   // ссылка вела бы на редирект обратно в список.
   const others = useMemo(
     () => doctorsData.filter((d) => d.id !== id && !d.support).slice(0, 4),
-    [id],
+    [doctorsData, id],
   );
 
   // Услуги врача разворачиваются из общего каталога направлений по маршруту:
@@ -252,7 +255,7 @@ export function DoctorPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="w-full lg:flex-1 rounded-[2rem] bg-amber-500 text-white p-8 md:p-12 lg:p-14 flex flex-col"
+            className="w-full lg:flex-1 rounded-[2rem] bg-amber-500 text-zinc-900 p-8 md:p-12 lg:p-14 flex flex-col"
           >
             <nav
               aria-label="Хлебные крошки"
@@ -295,7 +298,7 @@ export function DoctorPage() {
                 className="group inline-flex items-center gap-3 bg-white text-zinc-900 pl-7 pr-2.5 py-2.5 rounded-full text-sm md:text-base font-semibold transition-all hover:shadow-lg active:scale-95 cursor-pointer"
               >
                 Записаться на приём
-                <span className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-amber-500 text-white flex items-center justify-center transition-transform group-hover:translate-x-0.5">
+                <span className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-amber-500 text-zinc-900 flex items-center justify-center transition-transform group-hover:translate-x-0.5">
                   <ArrowRight size={18} />
                 </span>
               </button>

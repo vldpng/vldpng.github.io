@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { doctorsData } from '../data/doctors';
+import { useDoctors } from '../lib/useDoctors';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar } from 'lucide-react';
@@ -9,6 +9,9 @@ import { PageBanner } from '../components/ui/page-banner';
 import { cn } from '@/lib/utils';
 
 export function DoctorsPage() {
+  // С сервера (правки из админки), со статическим списком как запасным.
+  const doctorsData = useDoctors();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -23,9 +26,7 @@ export function DoctorsPage() {
       <main className="flex-grow">
         <section className="pt-8 pb-16">
           <div className="max-w-7xl mx-auto px-2 md:px-3">
-            <div className="mb-16">
-              <PageBanner title="Врачи в клинике RoyalDent" />
-            </div>
+            <PageBanner title="Врачи в клинике RoyalDent" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {doctorsData.map((doctor, index) => {

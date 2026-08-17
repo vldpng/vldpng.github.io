@@ -15,11 +15,8 @@ export function PricesPage() {
         description="Цены на стоматологические услуги в клинике RoyalDent в Юрмале: лечение, имплантация, гигиена, отбеливание, ортодонтия. Прозрачное ценообразование."
         path="/prices"
       />
-      {/* Banner */}
-      <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner title="Цены в клинике RoyalDent" />
-      </div>
-      
+      <PageBanner title="Цены в клинике RoyalDent" />
+
       <Prices />
     </main>
   );

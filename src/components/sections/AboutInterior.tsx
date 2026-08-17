@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
-import { SectionBadge } from '../ui/section-badge';
 import { ImageWithFallback } from '../ui/image-with-fallback';
 
 // TODO: заменить пустые строки на реальные снимки интерьера.
@@ -34,15 +33,11 @@ export function AboutInterior() {
     'flex h-12 w-12 items-center justify-center rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white transition-colors hover:bg-zinc-900 hover:text-white hover:border-zinc-900 dark:hover:bg-white dark:hover:text-zinc-900';
 
   return (
-    <section className="py-16 lg:py-24">
+    // Карусель открывает страницу, поэтому сверху только небольшой отступ —
+    // как у контента на остальных внутренних страницах.
+    <section className="pt-8 pb-8 lg:pb-24">
       <div className="max-w-7xl mx-auto px-2 md:px-3">
         <FadeIn>
-          <div className="mb-10 lg:mb-14">
-            <SectionBadge>Интерьер</SectionBadge>
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={0.1}>
           {/* Высота подобрана под сами снимки: они сняты в 1.79 и 1.34, а при
               прежних 484px блок выходил 2.93 по соотношению и object-cover
               срезал почти половину кадра сверху и снизу. Кадры лежат стопкой

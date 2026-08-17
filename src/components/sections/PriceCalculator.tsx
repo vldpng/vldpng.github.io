@@ -643,7 +643,7 @@ export function PriceCalculator() {
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <button
                     onClick={advance}
-                    className="btn-sweep inline-flex items-center gap-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 font-semibold transition-colors active:scale-95"
+                    className="btn-sweep inline-flex items-center gap-2 rounded-full bg-amber-500 hover:bg-amber-400 text-zinc-900 px-8 py-4 font-semibold transition-colors active:scale-95"
                   >
                     Записаться на приём
                     <ArrowRight size={18} />
@@ -843,7 +843,7 @@ export function PriceCalculator() {
                   className={cn(
                     'px-4 md:px-6 py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-95',
                     stageIdx === idx
-                      ? 'bg-amber-500 text-white shadow-md'
+                      ? 'bg-amber-500 text-zinc-900 shadow-md'
                       : 'bg-card dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border border-black/[0.04] dark:border-white/[0.06] hover:text-zinc-900 dark:hover:text-white',
                   )}
                 >

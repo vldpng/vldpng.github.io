@@ -64,9 +64,14 @@ function ServiceCard({ card }: { card: (typeof serviceCards)[number] }) {
   );
 }
 
-/** Заявка на консультацию: имя + телефон, отправка на /api/booking/callback. */
+/** Поля формы одинаковы — держим класс в одном месте, а не копией на каждом. */
+const consultInputClass =
+  'min-w-0 rounded-xl border-2 border-amber-500/80 bg-white px-5 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 transition-all';
+
+/** Заявка на консультацию: имя, фамилия, телефон — на /api/leads/callback. */
 function ConsultForm() {
   const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
   const [phone, setPhone] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -77,17 +82,23 @@ function ConsultForm() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
-    if (name.trim().length < 2 || !phoneValid) {
-      setError('Пожалуйста, укажите имя и корректный номер телефона.');
+    if (name.trim().length < 2 || surname.trim().length < 2 || !phoneValid) {
+      setError('Пожалуйста, укажите имя, фамилию и корректный номер телефона.');
       return;
     }
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch('/api/booking/callback', {
+      const res = await fetch('/api/leads/callback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), surname: '', phone: phone.trim() }),
+        body: JSON.stringify({
+          name: name.trim(),
+          surname: surname.trim(),
+          phone: phone.trim(),
+          // Страница нужна администратору: по ней видно, чем интересовался клиент.
+          page: window.location.pathname,
+        }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || data?.success === false) throw new Error('callback_failed');
@@ -115,14 +126,25 @@ function ConsultForm() {
 
   return (
     <form onSubmit={submit} noValidate>
-      <div className="flex flex-col sm:flex-row gap-3">
+      {/* Сетка, а не строка: с тремя полями и кнопкой в один ряд поля стали бы
+          слишком узкими на средних экранах. На телефоне всё столбиком,
+          с sm — попарно, и только с lg вытягивается в одну строку. */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto] gap-3">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Ваше имя"
-          autoComplete="name"
-          className="flex-1 min-w-0 rounded-xl border-2 border-amber-500/80 bg-white px-5 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 transition-all"
+          autoComplete="given-name"
+          className={consultInputClass}
+        />
+        <input
+          type="text"
+          value={surname}
+          onChange={(e) => setSurname(e.target.value)}
+          placeholder="Ваша фамилия"
+          autoComplete="family-name"
+          className={consultInputClass}
         />
         <input
           type="tel"
@@ -130,12 +152,12 @@ function ConsultForm() {
           onChange={(e) => setPhone(e.target.value)}
           placeholder="Ваш номер телефона"
           autoComplete="tel"
-          className="flex-1 min-w-0 rounded-xl border-2 border-amber-500/80 bg-white px-5 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 transition-all"
+          className={consultInputClass}
         />
         <button
           type="submit"
           disabled={submitting}
-          className="btn-sweep shrink-0 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-70 text-white px-8 py-3.5 text-sm font-semibold transition-all shadow-md active:scale-95"
+          className="btn-sweep rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-70 text-zinc-900 px-8 py-3.5 text-sm font-semibold transition-all shadow-md active:scale-95"
         >
           {submitting ? 'Отправка…' : 'Записаться'}
         </button>
@@ -261,7 +283,7 @@ export function MainServices() {
             </p>
             <Link
               to="/services"
-              className="btn-sweep inline-flex items-center bg-amber-500 hover:bg-amber-600 text-white px-8 py-3.5 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-lg active:scale-95"
+              className="btn-sweep inline-flex items-center bg-amber-500 hover:bg-amber-400 text-zinc-900 px-8 py-3.5 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-lg active:scale-95"
             >
               Все услуги
             </Link>

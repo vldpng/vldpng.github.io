@@ -190,9 +190,7 @@ export function PatientBookingPage() {
         path="/patients/booking"
       />
 
-      <div className="max-w-[1000px] mx-auto px-2 md:px-3 pt-8">
-        <PageBanner title="Порядок обращения и записи в клинику RoyalDent" />
-      </div>
+      <PageBanner title="Порядок обращения и записи в клинику RoyalDent" />
 
       <LegalDocument
         heading="Порядок обращения и записи на приём в стоматологическую клинику «RoyalDent»"

@@ -165,7 +165,7 @@ export function About() {
                  </h3>
                  <button 
                   onClick={openModal}
-                  className="btn-sweep bg-amber-500 hover:bg-amber-600 text-white py-3.5 px-6 rounded-[20px] font-medium transition-colors w-max text-base shadow-sm"
+                  className="btn-sweep bg-amber-500 hover:bg-amber-400 text-zinc-900 py-3.5 px-6 rounded-[20px] font-medium transition-colors w-max text-base shadow-sm"
                  >
                    Проконсультироваться
                  </button>

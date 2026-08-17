@@ -234,15 +234,6 @@ export function registerBookingRoutes(app: Express) {
     }
   });
 
-  // Callback request ("закажите звонок") — a lightweight lead, not a real booking.
-  // In mock mode it just succeeds; wire it to a CRM/notification when ready.
-  app.post("/api/booking/callback", async (req: Request, res: Response) => {
-    const { name, surname, phone } = req.body ?? {};
-    if (!name || !phone) {
-      return res.status(400).json({ success: false, error: "missing_required_fields" });
-    }
-    // TODO: forward to Altegio/CRM/email/Telegram. For now just acknowledge.
-    console.log(`[callback] ${name} ${surname ?? ""} — ${phone}`);
-    res.json({ success: true });
-  });
+  // Заявки с форм живут в src/server/leads.ts — это не запись в Altegio,
+  // а обычный лид, который уходит администраторам в Telegram.
 }

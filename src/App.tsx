@@ -31,6 +31,21 @@ const PatientBookingPage = lazy(() =>
 const PrivacyPage = lazy(() =>
   import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })),
 );
+const NotFoundPage = lazy(() =>
+  import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
+);
+const AdminLoginPage = lazy(() =>
+  import('./pages/admin/AdminLoginPage').then((m) => ({ default: m.AdminLoginPage })),
+);
+const AdminLayout = lazy(() =>
+  import('./pages/admin/AdminLayout').then((m) => ({ default: m.AdminLayout })),
+);
+const AdminLeadsPage = lazy(() =>
+  import('./pages/admin/AdminLeadsPage').then((m) => ({ default: m.AdminLeadsPage })),
+);
+const AdminDoctorsPage = lazy(() =>
+  import('./pages/admin/AdminDoctorsPage').then((m) => ({ default: m.AdminDoctorsPage })),
+);
 
 function PageLoader() {
   // 100svh, а не 60vh: при 60vh подвал попадал в первый кадр сразу под
@@ -69,16 +84,22 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  // Панель администратора живёт без сайтовой обвязки: шапка, подвал и кнопка
+  // «наверх» там только мешали бы. pathname здесь уже без языкового префикса.
+  const isAdmin = useLocation().pathname.startsWith('/admin');
+
   return (
     <ContactModalProvider>
       <div className="min-h-screen font-sans bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 selection:bg-zinc-200 dark:selection:bg-zinc-800 selection:text-zinc-900 dark:selection:text-zinc-100">
         <ScrollToTop />
         {/* Притемнение полосы под часами — только в standalone (см. index.css) */}
         <div className="safe-area-scrim" aria-hidden="true" />
-        <Topbar />
-        <div className="header-sticky sticky top-0 z-50 w-full h-0">
-          <Header />
-        </div>
+        {!isAdmin && <Topbar />}
+        {!isAdmin && (
+          <div className="header-sticky sticky top-0 z-50 w-full h-0">
+            <Header />
+          </div>
+        )}
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -92,11 +113,20 @@ export default function App() {
             <Route path="/patients/rules" element={<PatientRulesPage />} />
             <Route path="/patients/booking" element={<PatientBookingPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            {/* Панель администратора: /admin — вход, вкладки — внутри каркаса
+                с боковым меню. Доступ проверяет сервер на каждом запросе. */}
+            <Route path="/admin" element={<AdminLoginPage />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="leads" element={<AdminLeadsPage />} />
+              <Route path="doctors" element={<AdminDoctorsPage />} />
+            </Route>
+            {/* Должен идти последним: ловит всё, что не совпало выше. */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
-        <Footer />
+        {!isAdmin && <Footer />}
         <ContactModal />
-        <ScrollToTopButton />
+        {!isAdmin && <ScrollToTopButton />}
       </div>
     </ContactModalProvider>
   );

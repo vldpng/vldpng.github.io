@@ -1,0 +1,177 @@
+/**
+ * API панели администратора + публичный список врачей.
+ *
+ * Публичный только GET /api/doctors (его читают страницы сайта, и он отдаёт
+ * лишь видимых врачей). Всё остальное — за requireAdmin.
+ */
+import express, { type Express, type Request, type Response } from 'express';
+import { writeFileSync, mkdirSync } from 'node:fs';
+import path from 'node:path';
+import type { Doctor } from '../data/doctors';
+import {
+  createDoctor,
+  deleteDoctor,
+  getDoctor,
+  listDoctors,
+  listLeadsPage,
+  reorderDoctors,
+  setDoctorVisibility,
+  updateDoctor,
+} from './db';
+import { loginHandler, logoutHandler, requireAdmin } from './auth';
+
+const clean = (v: unknown, max = 200): string => String(v ?? '').trim().slice(0, max);
+
+/**
+ * Поля врача принимаем только по списку — иначе через админ-API в JSON можно
+ * было бы дописать что угодно. Массивы и вложенные структуры проверяем
+ * поэлементно по той же причине.
+ */
+function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
+  const services = Array.isArray(body.services)
+    ? body.services.map((s) => clean(s, 100)).filter((s) => s.startsWith('/services/'))
+    : [];
+  const educationList = Array.isArray(body.educationList)
+    ? body.educationList
+        .map((e: any) => ({
+          title: clean(e?.title, 200),
+          subtitle: clean(e?.subtitle, 200) || undefined,
+        }))
+        .filter((e) => e.title)
+    : undefined;
+
+  const name = clean(body.name, 120) || 'Новый сотрудник';
+  return {
+    id,
+    name,
+    specialty: clean(body.specialty, 160),
+    experience: clean(body.experience, 80) || undefined,
+    bio: clean(body.bio, 2000),
+    services,
+    educationList,
+    photoUrl: clean(body.photoUrl, 300) || undefined,
+    photoPosition: clean(body.photoPosition, 40) || undefined,
+    photoLabel: `[Фото — ${name}]`,
+    support: body.support === true || undefined,
+  };
+}
+
+export function registerAdminRoutes(app: Express) {
+  // --- вход/выход -----------------------------------------------------------
+  app.post('/api/admin/login', loginHandler);
+  app.post('/api/admin/logout', logoutHandler);
+  // Проверка «жива ли сессия» для фронтенда админки.
+  app.get('/api/admin/me', requireAdmin, (_req, res) => res.json({ success: true }));
+
+  // --- заявки ---------------------------------------------------------------
+  app.get('/api/admin/leads', requireAdmin, (req, res) => {
+    // Границы жёсткие: limit из запроса иначе позволил бы вытянуть всю
+    // таблицу разом и вернул бы ту же проблему, ради которой сделана страница.
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(200, Math.max(10, Number(req.query.limit) || 50));
+    const search = clean(req.query.q, 100);
+
+    const { rows, total } = listLeadsPage({ limit, offset: (page - 1) * limit, search });
+    res.json({
+      success: true,
+      data: rows,
+      total,
+      page,
+      pages: Math.max(1, Math.ceil(total / limit)),
+    });
+  });
+
+  // --- врачи: публичное чтение ---------------------------------------------
+  app.get('/api/doctors', (_req, res) => {
+    res.json({ success: true, data: listDoctors(true) });
+  });
+
+  // --- врачи: управление ----------------------------------------------------
+  app.get('/api/admin/doctors', requireAdmin, (_req, res) => {
+    res.json({ success: true, data: listDoctors(false) });
+  });
+
+  app.post('/api/admin/doctors', requireAdmin, (req, res) => {
+    // Метка времени как id: у затравки из doctors.ts id «1»–«13», коллизий нет.
+    const doc = sanitizeDoctor(String(Date.now()), req.body ?? {});
+    createDoctor(doc);
+    res.json({ success: true, data: { ...doc, visible: true } });
+  });
+
+  // Раньше маршрутов с :id — иначе «order» имеет шанс уйти в них как id.
+  app.patch('/api/admin/doctors/order', requireAdmin, (req, res) => {
+    const ids = Array.isArray(req.body?.ids) ? req.body.ids.map((v: unknown) => String(v)) : null;
+    if (!ids || ids.length === 0) {
+      return res.status(400).json({ success: false, error: 'ids_required' });
+    }
+    // Присылать нужно весь список: позиция — это индекс, и по частичному
+    // набору её не восстановить.
+    const known = new Set(listDoctors(false).map((d) => d.id));
+    if (ids.length !== known.size || ids.some((id) => !known.has(id))) {
+      return res.status(400).json({ success: false, error: 'ids_mismatch' });
+    }
+    reorderDoctors(ids);
+    res.json({ success: true });
+  });
+
+  app.put('/api/admin/doctors/:id', requireAdmin, (req, res) => {
+    const existing = getDoctor(req.params.id);
+    if (!existing) return res.status(404).json({ success: false, error: 'not_found' });
+    const doc = sanitizeDoctor(existing.id, req.body ?? {});
+    updateDoctor(existing.id, doc);
+    res.json({ success: true, data: { ...doc, visible: existing.visible } });
+  });
+
+  app.patch('/api/admin/doctors/:id/visibility', requireAdmin, (req, res) => {
+    const visible = req.body?.visible === true;
+    if (!setDoctorVisibility(req.params.id, visible)) {
+      return res.status(404).json({ success: false, error: 'not_found' });
+    }
+    res.json({ success: true });
+  });
+
+  app.delete('/api/admin/doctors/:id', requireAdmin, (req, res) => {
+    if (!deleteDoctor(req.params.id)) {
+      return res.status(404).json({ success: false, error: 'not_found' });
+    }
+    res.json({ success: true });
+  });
+
+  // --- фото врача -----------------------------------------------------------
+  // Файл приходит сырым телом запроса (не multipart): для одного файла до
+  // 100 КБ так проще и не нужна зависимость вроде multer.
+  app.post(
+    '/api/admin/doctors/photo',
+    requireAdmin,
+    express.raw({ type: 'application/octet-stream', limit: '120kb' }),
+    (req: Request, res: Response) => {
+      const buf: Buffer = req.body;
+      if (!Buffer.isBuffer(buf) || buf.length === 0) {
+        return res.status(400).json({ success: false, error: 'empty_body' });
+      }
+      if (buf.length > 100 * 1024) {
+        return res.status(413).json({ success: false, error: 'file_too_large' });
+      }
+      // Формат проверяем по сигнатуре, а не по расширению: контейнер RIFF
+      // с типом WEBP. Переименованный jpg сюда не пройдёт.
+      if (buf.subarray(0, 4).toString('ascii') !== 'RIFF' || buf.subarray(8, 12).toString('ascii') !== 'WEBP') {
+        return res.status(415).json({ success: false, error: 'not_webp' });
+      }
+
+      // Имя собираем сами из безопасных символов; метка времени спасает
+      // от перезаписи файла с тем же названием.
+      const original = clean(req.query.name, 100)
+        .replace(/\.webp$/i, '')
+        .replace(/[^a-zA-Z0-9_-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 40) || 'photo';
+      const filename = `${original}-${Date.now()}.webp`;
+
+      const dir = path.join(process.cwd(), 'public', 'images', 'staff');
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(path.join(dir, filename), buf);
+
+      res.json({ success: true, data: { url: `/images/staff/${filename}` } });
+    },
+  );
+}

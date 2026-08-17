@@ -207,7 +207,7 @@ export function ServicePage() {
             <ol className="space-y-6 relative border-l border-zinc-200 ml-3">
               {details.process.map((step, i) => (
                 <li key={i} className="pl-6 relative">
-                  <div className="absolute w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-sm font-bold -left-3 top-0 ring-4 ring-zinc-50">
+                  <div className="absolute w-6 h-6 bg-amber-500 text-zinc-900 rounded-full flex items-center justify-center text-sm font-bold -left-3 top-0 ring-4 ring-zinc-50">
                     {i + 1}
                   </div>
                   <p className="text-zinc-700 pt-0.5">{step}</p>

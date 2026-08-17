@@ -121,7 +121,7 @@ export function BookingCalendar({ availableDates, value, onSelect }: BookingCale
               className={cn(
                 'relative aspect-square rounded-xl text-sm font-medium flex items-center justify-center transition-colors',
                 isSelected
-                  ? 'bg-amber-500 text-white'
+                  ? 'bg-amber-500 text-zinc-900'
                   : isAvailable
                     ? 'text-zinc-900 dark:text-white hover:bg-amber-50 dark:hover:bg-amber-500/10'
                     : 'text-zinc-300 dark:text-zinc-700 cursor-not-allowed',

@@ -10,7 +10,7 @@ import { cn, handleHashClick } from '../../lib/utils';
  * рисуется неактивная иконка-заглушка. Вписать сюда путь или полный URL —
  * и кнопка станет рабочей ссылкой.
  */
-const ADMIN_URL = '';
+const ADMIN_URL = '/admin';
 
 /** Кнопка админки повторяет вид соседних иконок соцсетей. */
 const adminButtonClass =
@@ -44,7 +44,9 @@ const columns = [
       { label: 'Контакты', href: '/#contacts', type: 'hash' as const },
       { label: 'FAQ', href: '/#faq', type: 'hash' as const },
       { label: 'Политика конфиденциальности', href: '/privacy', type: 'route' as const },
-      { label: 'Пользовательское соглашение', href: '/terms', type: 'route' as const },
+      { label: 'Порядок записи', href: '/patients/booking', type: 'route' as const },
+      // Ссылка на /terms убрана: такой страницы нет и никогда не было,
+      // она вела в пустоту на каждой странице сайта. Вернуть, когда появится текст.
     ],
   },
 ];
@@ -91,19 +93,20 @@ export function Footer() {
               <ul className="flex flex-col gap-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    {link.type === 'route' ? (
-                      <Link to={link.href} className={linkClass}>
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={link.href}
-                        onClick={handleHashClick(link.href.replace('/', ''))}
-                        className={linkClass}
-                      >
-                        {link.label}
-                      </a>
-                    )}
+                    {/* Якорные ссылки тоже через Link: обычный <a href="/#reviews">
+                        ведёт в корень сайта, а корень — это основной язык.
+                        Русский посетитель попадал бы на латышскую главную. */}
+                    <Link
+                      to={link.href}
+                      onClick={
+                        link.type === 'hash'
+                          ? handleHashClick(link.href.replace('/', ''))
+                          : undefined
+                      }
+                      className={linkClass}
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -136,7 +139,7 @@ export function Footer() {
               />
               <button
                 type="submit"
-                className="btn-sweep self-start bg-amber-500 hover:bg-amber-600 text-white px-7 py-3 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95"
+                className="btn-sweep self-start bg-amber-500 hover:bg-amber-400 text-zinc-900 px-7 py-3 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95"
               >
                 Заказать звонок
               </button>
@@ -228,8 +231,10 @@ export function Footer() {
             <Link to="/privacy" className="text-[13px] text-white/70 hover:text-amber-400 transition-colors">
               Политика конфиденциальности
             </Link>
-            <Link to="/terms" className="text-[13px] text-white/70 hover:text-amber-400 transition-colors">
-              Пользовательское соглашение
+            {/* Вторая ссылка вела на /terms — страницы с таким адресом нет.
+                Вместо неё правила распорядка, они реально существуют. */}
+            <Link to="/patients/rules" className="text-[13px] text-white/70 hover:text-amber-400 transition-colors">
+              Правила распорядка
             </Link>
           </div>
         </div>

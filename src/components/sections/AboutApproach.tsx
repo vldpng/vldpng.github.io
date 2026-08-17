@@ -73,8 +73,12 @@ export function AboutApproach() {
                     src={item.image}
                     alt={item.title}
                     label={`Фото · ${item.title}`}
+                    // На телефоне фото во всю ширину — там высота от соотношения.
+                    // С md колонка узкая, и 4/3 давало кадр втрое выше текста
+                    // рядом, отсюда пустота в текстовой половине: высота
+                    // фиксированная и подобрана под текст.
                     className={cn(
-                      'aspect-[4/3] rounded-[1.5rem] w-full',
+                      'aspect-[16/10] md:aspect-auto md:h-52 lg:h-56 rounded-[1.5rem] w-full',
                       i % 2 === 1 && 'md:order-1',
                     )}
                   />

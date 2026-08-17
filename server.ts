@@ -1,6 +1,8 @@
 import express from "express";
 import path from "path";
 import { registerBookingRoutes } from "./src/server/booking";
+import { registerLeadRoutes } from "./src/server/leads";
+import { registerAdminRoutes } from "./src/server/admin";
 
 async function startServer() {
   // Load .env if present (dotenv is optional — never crash if it's missing).
@@ -21,7 +23,14 @@ async function startServer() {
   });
 
   registerBookingRoutes(app);
+  registerLeadRoutes(app);
+  registerAdminRoutes(app);
   // API routes end
+
+  // Фото сотрудников отдаём напрямую из public/: загруженные через админку
+  // файлы появляются там во время работы, а прод-статика (dist/) собирается
+  // один раз при деплое и новых файлов не содержит.
+  app.use("/images/staff", express.static(path.join(process.cwd(), "public/images/staff")));
 
   // Vite middleware for development.
   // Динамический импорт: в продакшен-сборку (dist/server.cjs) vite не попадает

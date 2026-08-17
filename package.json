@@ -5,11 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "sitemap": "tsx scripts/generate-sitemap.ts",
+    "build": "npm run sitemap && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "start": "node dist/server.cjs",
     "preview": "vite preview",
     "clean": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\"",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "spa:fallback": "tsx scripts/spa-fallback.ts",
+    "telegram:chat-id": "tsx scripts/telegram-chat-id.ts",
+    "telegram:test": "tsx scripts/telegram-test-lead.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.3.0",

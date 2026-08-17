@@ -3,6 +3,7 @@ import { Seo } from '../components/Seo';
 import { PageBanner } from '../components/ui/page-banner';
 import { AboutApproach } from '../components/sections/AboutApproach';
 import { AboutInterior } from '../components/sections/AboutInterior';
+import { TreatmentProcess } from '../components/sections/TreatmentProcess';
 import { Doctors } from '../components/sections/Doctors';
 import { Faq, aboutFaqs } from '../components/sections/Faq';
 
@@ -19,12 +20,13 @@ export function AboutPage() {
         path="/about"
       />
 
-      <div className="max-w-7xl mx-auto px-2 md:px-3 pt-8">
-        <PageBanner title="Больше о клинике RoyalDent" />
-      </div>
+      <PageBanner title="Больше о клинике RoyalDent" />
 
-      <AboutApproach />
+      {/* Порядок: сначала показываем клинику, затем объясняем процесс лечения,
+          и только после этого — подход и команда. */}
       <AboutInterior />
+      <TreatmentProcess />
+      <AboutApproach />
       <Doctors />
       {/* Свой набор вопросов и свой якорь: на главной уже есть #faq */}
       <Faq items={aboutFaqs} id="about-faq" />

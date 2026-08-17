@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { MouseEvent } from "react";
+import { stripLangPrefix } from "../data/languages";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,7 +16,8 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function handleHashClick(hash: string) {
   return (e: MouseEvent) => {
-    if (window.location.pathname === '/') {
+    // Сравниваем путь без языкового префикса: главная — это и «/», и «/ru/».
+    if (stripLangPrefix(window.location.pathname) === '/') {
       const id = hash.replace(/^#/, '');
       const el = document.getElementById(id);
       if (el) {
