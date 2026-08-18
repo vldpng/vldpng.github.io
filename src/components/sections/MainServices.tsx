@@ -6,7 +6,7 @@ import { serviceCards, serviceIcons } from './ServiceCards';
 
 // Краткие описания направлений для карточек на главной (ключ — путь услуги).
 const homeDescriptions: Record<string, string> = {
-  '/services/ceramic':
+  '/services/prosthetics':
     'Восстанавливаем улыбку с помощью керамических виниров, накладок и коронок.',
   '/services/aligners':
     'Исправляем прикус и неправильное положение зубов с помощью элайнеров.',

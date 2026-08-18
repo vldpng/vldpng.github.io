@@ -27,6 +27,7 @@ const STATIC_ROUTES: RouteEntry[] = [
   { path: '/patients/rules', priority: 0.3, changefreq: 'yearly' },
   { path: '/patients/booking', priority: 0.3, changefreq: 'yearly' },
   { path: '/privacy', priority: 0.3, changefreq: 'yearly' },
+  { path: '/cookies', priority: 0.3, changefreq: 'yearly' },
 ];
 
 /**

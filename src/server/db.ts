@@ -13,6 +13,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { doctorsData, type Doctor } from '../data/doctors';
+import { priceCategories, type PriceCategory } from '../data/prices';
 
 const DB_DIR = process.env.DB_DIR || path.join(process.cwd(), 'storage');
 mkdirSync(DB_DIR, { recursive: true });
@@ -44,6 +45,12 @@ db.exec(`
     position INTEGER NOT NULL DEFAULT 0  -- порядок в списке
   );
 
+  CREATE TABLE IF NOT EXISTS price_categories (
+    id       TEXT PRIMARY KEY,
+    data     TEXT NOT NULL,              -- PriceCategory целиком, вместе с позициями
+    position INTEGER NOT NULL DEFAULT 0  -- порядок категорий на странице
+  );
+
   CREATE TABLE IF NOT EXISTS sessions (
     token      TEXT PRIMARY KEY,
     created_at INTEGER NOT NULL          -- unix ms; живут в БД, чтобы
@@ -56,6 +63,15 @@ const doctorCount = (db.prepare('SELECT COUNT(*) AS c FROM doctors').get() as { 
 if (doctorCount === 0) {
   const ins = db.prepare('INSERT INTO doctors (id, data, visible, position) VALUES (?, ?, 1, ?)');
   doctorsData.forEach((doc, i) => ins.run(doc.id, JSON.stringify(doc), i));
+}
+
+// Первый запуск: наполняем прайс из статического каталога. Позиции лежат
+// внутри категории одним JSON — их всего 85 на девять категорий, отдельная
+// таблица дала бы лишние соединения ради перестановки внутри списка.
+const priceCount = (db.prepare('SELECT COUNT(*) AS c FROM price_categories').get() as { c: number }).c;
+if (priceCount === 0) {
+  const ins = db.prepare('INSERT INTO price_categories (id, data, position) VALUES (?, ?, ?)');
+  priceCategories.forEach((cat, i) => ins.run(`cat-${i}`, JSON.stringify(cat), i));
 }
 
 // ---------------------------------------------------------------------------
@@ -214,10 +230,70 @@ export function reorderDoctors(ids: string[]): void {
 }
 
 // ---------------------------------------------------------------------------
+// Прайс-лист
+// ---------------------------------------------------------------------------
+
+export interface PriceCategoryRecord extends PriceCategory {
+  id: string;
+}
+
+export function listPriceCategories(): PriceCategoryRecord[] {
+  const rows = db
+    .prepare('SELECT id, data FROM price_categories ORDER BY position')
+    .all() as unknown as Array<{ id: string; data: string }>;
+  return rows.map((r) => ({ id: r.id, ...(JSON.parse(r.data) as PriceCategory) }));
+}
+
+export function createPriceCategory(id: string, cat: PriceCategory): void {
+  const pos = (
+    db.prepare('SELECT COALESCE(MAX(position), -1) + 1 AS p FROM price_categories').get() as {
+      p: number;
+    }
+  ).p;
+  db.prepare('INSERT INTO price_categories (id, data, position) VALUES (?, ?, ?)').run(
+    id,
+    JSON.stringify(cat),
+    pos,
+  );
+}
+
+/** Сохраняет категорию целиком — вместе со всем списком позиций и их порядком. */
+export function updatePriceCategory(id: string, cat: PriceCategory): boolean {
+  return (
+    db.prepare('UPDATE price_categories SET data = ? WHERE id = ?').run(JSON.stringify(cat), id)
+      .changes > 0
+  );
+}
+
+export function deletePriceCategory(id: string): boolean {
+  return db.prepare('DELETE FROM price_categories WHERE id = ?').run(id).changes > 0;
+}
+
+/** Переставляет категории: позиция = место в переданном списке. */
+export function reorderPriceCategories(ids: string[]): void {
+  const upd = db.prepare('UPDATE price_categories SET position = ? WHERE id = ?');
+  db.exec('BEGIN');
+  try {
+    ids.forEach((id, i) => upd.run(i, id));
+    db.exec('COMMIT');
+  } catch (e) {
+    db.exec('ROLLBACK');
+    throw e;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Сессии администратора
 // ---------------------------------------------------------------------------
 
-const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // неделя
+/**
+ * Сколько панель живёт без действий администратора.
+ *
+ * Это время БЕЗДЕЙСТВИЯ, а не время с момента входа: каждый запрос к рабочим
+ * маршрутам сдвигает отметку вперёд (см. touchSession). Иначе при таком
+ * коротком сроке администратора выбрасывало бы прямо посреди работы.
+ */
+const SESSION_TTL_MS = 10 * 60 * 1000; // 10 минут
 
 export function createSession(token: string): void {
   // Заодно чистим протухшие: отдельного планировщика для этого не нужно.
@@ -230,6 +306,20 @@ export function isSessionValid(token: string): boolean {
     | { created_at: number }
     | undefined;
   return row !== undefined && Date.now() - row.created_at < SESSION_TTL_MS;
+}
+
+/** Отмечает действие администратора и отодвигает истечение сессии. */
+export function touchSession(token: string): void {
+  db.prepare('UPDATE sessions SET created_at = ? WHERE token = ?').run(Date.now(), token);
+}
+
+/** Сколько миллисекунд осталось до истечения — для обратного отсчёта в панели. */
+export function sessionTimeLeft(token: string): number {
+  const row = db.prepare('SELECT created_at FROM sessions WHERE token = ?').get(token) as
+    | { created_at: number }
+    | undefined;
+  if (!row) return 0;
+  return Math.max(0, SESSION_TTL_MS - (Date.now() - row.created_at));
 }
 
 export function deleteSession(token: string): void {

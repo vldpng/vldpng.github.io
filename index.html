@@ -21,6 +21,26 @@
          в index.css), иначе часы на #F0F4FF были бы нечитаемы. -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
+    <!-- Google Consent Mode v2: значения по умолчанию.
+         Должны выставляться ДО загрузки любого тега Google, поэтому лежат
+         прямо здесь, а не в React — иначе тег успел бы поставить куки раньше,
+         чем посетитель ответит на баннер.
+         Всё запрещено до явного согласия; после выбора src/lib/consent.ts
+         шлёт 'consent' 'update'. Сами теги подключаются отдельно. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500
+      });
+    </script>
+
     <title>RoyalDent — Стоматология в Юрмале | Имплантация и лечение под микроскопом</title>
     <meta
       name="description"

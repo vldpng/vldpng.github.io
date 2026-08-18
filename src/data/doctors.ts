@@ -46,7 +46,7 @@ export interface Doctor {
   /**
    * Услуги врача — маршруты из каталога направлений (serviceCards
    * в components/sections/ServiceCards). Названия подставляются оттуда,
-   * поэтому здесь только ссылки: '/services/ceramic' и т.п.
+   * поэтому здесь только ссылки: '/services/prosthetics' и т.п.
    */
   services: string[];
   photoLabel: string;
@@ -93,7 +93,7 @@ export const doctorsData: Doctor[] = [
     ],
     bio: "Проводит дентальную имплантацию и хирургическое восстановление зубов, а также ортопедическое протезирование — от планирования до фиксации постоянных конструкций.",
     services: [
-      '/services/ceramic',
+      '/services/prosthetics',
       '/services/surgery',
       '/services/implants',
       '/services/microscope',
@@ -124,7 +124,7 @@ export const doctorsData: Doctor[] = [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
     bio: "Занимается протезированием и восстановлением зубов: коронки, виниры, мостовидные и съёмные конструкции с акцентом на эстетику и долговечность результата.",
-    services: ['/services/ceramic', '/services/implants'],
+    services: ['/services/prosthetics', '/services/implants'],
     photoLabel: "[Фото — Элина Хейфец, стоматолог-ортопед]",
     photoUrl: "/images/staff/Elina_doctor.webp",
   },

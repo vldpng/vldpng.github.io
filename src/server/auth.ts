@@ -11,10 +11,13 @@
  */
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import type { NextFunction, Request, Response } from 'express';
-import { createSession, deleteSession, isSessionValid } from './db';
+import { createSession, deleteSession, isSessionValid, sessionTimeLeft, touchSession } from './db';
 
 const COOKIE_NAME = 'rd_admin';
-const COOKIE_MAX_AGE_S = 7 * 24 * 60 * 60;
+// Столько же, сколько живёт сессия на сервере (10 минут бездействия).
+// Кука переставляется на каждом действии, иначе браузер выбросил бы её
+// раньше, чем истечёт сама сессия.
+const COOKIE_MAX_AGE_S = 10 * 60;
 
 // Env читаем лениво: dotenv загружается в startServer, уже после импорта модуля.
 function getCreds() {
@@ -114,12 +117,33 @@ export function logoutHandler(req: Request, res: Response): void {
   res.json({ success: true });
 }
 
-/** Страж админских маршрутов: без живой сессии — 401, дальше не пускаем. */
+/**
+ * Страж админских маршрутов: без живой сессии — 401, дальше не пускаем.
+ * Каждый успешный проход считается действием и отодвигает истечение,
+ * а кука переставляется, чтобы не протухла в браузере раньше сессии.
+ */
 export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
   const token = readSessionToken(req);
   if (!token || !isSessionValid(token)) {
     res.status(401).json({ success: false, error: 'unauthorized' });
     return;
   }
+  touchSession(token);
+  setSessionCookie(req, res, token, COOKIE_MAX_AGE_S);
+  next();
+}
+
+/**
+ * То же, но БЕЗ продления. Нужен для проверки «жива ли ещё сессия»:
+ * панель опрашивает её по таймеру, и если бы опрос считался действием,
+ * открытая вкладка держала бы вход вечно и таймаут не наступал бы никогда.
+ */
+export function requireAdminProbe(req: Request, res: Response, next: NextFunction): void {
+  const token = readSessionToken(req);
+  if (!token || !isSessionValid(token)) {
+    res.status(401).json({ success: false, error: 'unauthorized' });
+    return;
+  }
+  res.locals.sessionTimeLeft = sessionTimeLeft(token);
   next();
 }

@@ -167,7 +167,7 @@ function DoctorEditor({
             onClick={() => onMove(index, -1)}
             disabled={index === 0}
             aria-label={`Переместить «${doctor.name}» выше`}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-300 text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-30 disabled:hover:border-zinc-300 disabled:cursor-not-allowed transition-colors"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-300 text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-30 disabled:hover:border-zinc-300 disabled:cursor-not-allowed transition-colors"
           >
             <ArrowUp size={15} />
           </button>
@@ -176,7 +176,7 @@ function DoctorEditor({
             onClick={() => onMove(index, 1)}
             disabled={index === total - 1}
             aria-label={`Переместить «${doctor.name}» ниже`}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-300 text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-30 disabled:hover:border-zinc-300 disabled:cursor-not-allowed transition-colors"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-300 text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-30 disabled:hover:border-zinc-300 disabled:cursor-not-allowed transition-colors"
           >
             <ArrowDown size={15} />
           </button>
@@ -185,7 +185,7 @@ function DoctorEditor({
 
       <div className="flex flex-col md:flex-row gap-6">
         {/* Фото + загрузка */}
-        <div className="w-full md:w-44 shrink-0">
+        <div className="w-40 mx-auto md:mx-0 md:w-44 shrink-0">
           <div className="aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 mb-3">
             {form.photoUrl ? (
               <img src={form.photoUrl} alt={form.name} className="w-full h-full object-cover" />
@@ -210,7 +210,7 @@ function DoctorEditor({
             type="button"
             disabled={busy}
             onClick={() => fileRef.current?.click()}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-zinc-300 hover:border-zinc-900 px-3 py-2 text-xs font-medium transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-zinc-300 hover:border-zinc-900 px-3 py-2.5 text-xs font-medium transition-colors disabled:opacity-50"
           >
             <Upload size={14} /> Загрузить фото
           </button>

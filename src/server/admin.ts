@@ -8,17 +8,23 @@ import express, { type Express, type Request, type Response } from 'express';
 import { writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import type { Doctor } from '../data/doctors';
+import type { PriceCategory } from '../data/prices';
 import {
   createDoctor,
+  createPriceCategory,
   deleteDoctor,
+  deletePriceCategory,
   getDoctor,
   listDoctors,
   listLeadsPage,
+  listPriceCategories,
   reorderDoctors,
+  reorderPriceCategories,
   setDoctorVisibility,
   updateDoctor,
+  updatePriceCategory,
 } from './db';
-import { loginHandler, logoutHandler, requireAdmin } from './auth';
+import { loginHandler, logoutHandler, requireAdmin, requireAdminProbe } from './auth';
 
 const clean = (v: unknown, max = 200): string => String(v ?? '').trim().slice(0, max);
 
@@ -56,12 +62,34 @@ function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
   };
 }
 
+/**
+ * Категория прайса принимается только по известным полям — как и врач.
+ * Позиции чистим поэлементно и выбрасываем безымянные: пустая строка в
+ * таблице цен выглядела бы как сбой вёрстки.
+ */
+function sanitizePriceCategory(body: Record<string, unknown>): PriceCategory {
+  const items = Array.isArray(body.items)
+    ? body.items
+        .map((i: any) => ({ name: clean(i?.name, 300), price: clean(i?.price, 40) }))
+        .filter((i) => i.name)
+    : [];
+  return {
+    title: clean(body.title, 120) || 'Новая категория',
+    icon: clean(body.icon, 40) || 'Stethoscope',
+    iconSrc: clean(body.iconSrc, 200) || undefined,
+    items,
+  };
+}
+
 export function registerAdminRoutes(app: Express) {
   // --- вход/выход -----------------------------------------------------------
   app.post('/api/admin/login', loginHandler);
   app.post('/api/admin/logout', logoutHandler);
-  // Проверка «жива ли сессия» для фронтенда админки.
-  app.get('/api/admin/me', requireAdmin, (_req, res) => res.json({ success: true }));
+  // Проверка «жива ли сессия» для фронтенда админки. Намеренно через probe:
+  // опрос по таймеру не должен считаться работой и продлевать вход.
+  app.get('/api/admin/me', requireAdminProbe, (_req, res) =>
+    res.json({ success: true, timeLeftMs: res.locals.sessionTimeLeft }),
+  );
 
   // --- заявки ---------------------------------------------------------------
   app.get('/api/admin/leads', requireAdmin, (req, res) => {
@@ -132,6 +160,53 @@ export function registerAdminRoutes(app: Express) {
 
   app.delete('/api/admin/doctors/:id', requireAdmin, (req, res) => {
     if (!deleteDoctor(req.params.id)) {
+      return res.status(404).json({ success: false, error: 'not_found' });
+    }
+    res.json({ success: true });
+  });
+
+  // --- прайс-лист -----------------------------------------------------------
+  app.get('/api/prices', (_req, res) => {
+    res.json({ success: true, data: listPriceCategories() });
+  });
+
+  app.get('/api/admin/prices', requireAdmin, (_req, res) => {
+    res.json({ success: true, data: listPriceCategories() });
+  });
+
+  app.post('/api/admin/prices', requireAdmin, (req, res) => {
+    const id = `cat-${Date.now()}`;
+    const cat = sanitizePriceCategory(req.body ?? {});
+    createPriceCategory(id, cat);
+    res.json({ success: true, data: { id, ...cat } });
+  });
+
+  app.patch('/api/admin/prices/order', requireAdmin, (req, res) => {
+    const ids = Array.isArray(req.body?.ids) ? req.body.ids.map((v: unknown) => String(v)) : null;
+    if (!ids || ids.length === 0) {
+      return res.status(400).json({ success: false, error: 'ids_required' });
+    }
+    const known = new Set(listPriceCategories().map((c) => c.id));
+    if (ids.length !== known.size || ids.some((id) => !known.has(id))) {
+      return res.status(400).json({ success: false, error: 'ids_mismatch' });
+    }
+    reorderPriceCategories(ids);
+    res.json({ success: true });
+  });
+
+  // Категория сохраняется целиком: и поля, и весь список позиций в их порядке.
+  // Отдельных маршрутов на позицию нет — перестановка внутри категории это
+  // просто другой порядок массива, и сохранять его частями незачем.
+  app.put('/api/admin/prices/:id', requireAdmin, (req, res) => {
+    const cat = sanitizePriceCategory(req.body ?? {});
+    if (!updatePriceCategory(req.params.id, cat)) {
+      return res.status(404).json({ success: false, error: 'not_found' });
+    }
+    res.json({ success: true, data: { id: req.params.id, ...cat } });
+  });
+
+  app.delete('/api/admin/prices/:id', requireAdmin, (req, res) => {
+    if (!deletePriceCategory(req.params.id)) {
       return res.status(404).json({ success: false, error: 'not_found' });
     }
     res.json({ success: true });

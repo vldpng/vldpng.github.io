@@ -11,6 +11,7 @@ import { Footer } from './components/layout/Footer';
 import { ContactModalProvider } from './context/ContactModalContext';
 import { ContactModal } from './components/modals/ContactModal';
 import { ScrollToTopButton } from './components/ui/scroll-to-top-button';
+import { CookieBanner } from './components/CookieBanner';
 
 // Каждая страница загружается отдельным чанком — только при переходе на неё,
 // а не в момент первой загрузки сайта.
@@ -34,6 +35,9 @@ const PrivacyPage = lazy(() =>
 const NotFoundPage = lazy(() =>
   import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
 );
+const CookiesPage = lazy(() =>
+  import('./pages/CookiesPage').then((m) => ({ default: m.CookiesPage })),
+);
 const AdminLoginPage = lazy(() =>
   import('./pages/admin/AdminLoginPage').then((m) => ({ default: m.AdminLoginPage })),
 );
@@ -45,6 +49,9 @@ const AdminLeadsPage = lazy(() =>
 );
 const AdminDoctorsPage = lazy(() =>
   import('./pages/admin/AdminDoctorsPage').then((m) => ({ default: m.AdminDoctorsPage })),
+);
+const AdminPricesPage = lazy(() =>
+  import('./pages/admin/AdminPricesPage').then((m) => ({ default: m.AdminPricesPage })),
 );
 
 function PageLoader() {
@@ -113,12 +120,14 @@ export default function App() {
             <Route path="/patients/rules" element={<PatientRulesPage />} />
             <Route path="/patients/booking" element={<PatientBookingPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/cookies" element={<CookiesPage />} />
             {/* Панель администратора: /admin — вход, вкладки — внутри каркаса
                 с боковым меню. Доступ проверяет сервер на каждом запросе. */}
             <Route path="/admin" element={<AdminLoginPage />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="leads" element={<AdminLeadsPage />} />
               <Route path="doctors" element={<AdminDoctorsPage />} />
+              <Route path="prices" element={<AdminPricesPage />} />
             </Route>
             {/* Должен идти последним: ловит всё, что не совпало выше. */}
             <Route path="*" element={<NotFoundPage />} />
@@ -127,6 +136,9 @@ export default function App() {
         {!isAdmin && <Footer />}
         <ContactModal />
         {!isAdmin && <ScrollToTopButton />}
+        {/* Баннер только на публичной части: в панели администратора
+            рекламных и аналитических тегов нет, спрашивать не о чем. */}
+        {!isAdmin && <CookieBanner />}
       </div>
     </ContactModalProvider>
   );

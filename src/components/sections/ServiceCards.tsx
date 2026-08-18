@@ -18,9 +18,9 @@ export const serviceCards: {
   image?: string;
 }[] = [
   {
-    title: 'Керамические реставрации',
+    title: 'Протезирование зубов',
     desc: 'Восстанавливаем улыбку с помощью керамических виниров, накладок и коронок.',
-    to: '/services/ceramic',
+    to: '/services/prosthetics',
     image: '/images/banners/veneers.webp',
   },
   {
@@ -81,7 +81,7 @@ export const serviceCards: {
  * уже импортирует отсюда serviceCards, и обратный импорт замкнул бы модули.
  */
 export const serviceIcons: Record<string, React.ReactNode> = {
-  '/services/ceramic': <MaskIcon src="/icons/dental-crown.svg" className="w-6 h-6" />,
+  '/services/prosthetics': <MaskIcon src="/icons/dental-crown.svg" className="w-6 h-6" />,
   '/services/aligners': <MaskIcon src="/icons/braces.svg" className="w-6 h-6" />,
   '/services/surgery': <Syringe size={24} />,
   '/services/implants': <MaskIcon src="/icons/implant.svg" className="w-6 h-6" />,

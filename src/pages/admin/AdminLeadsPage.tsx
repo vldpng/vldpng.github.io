@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, MessageSquareText, RefreshCw, Search, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, MessageSquareText, Phone, RefreshCw, Search, X } from 'lucide-react';
 
 interface LeadRow {
   id: number;
@@ -95,8 +95,8 @@ export function AdminLeadsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <Search
               size={15}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
@@ -107,7 +107,7 @@ export function AdminLeadsPage() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Имя, телефон, почта"
               aria-label="Поиск по заявкам"
-              className="w-56 rounded-xl border border-zinc-300 bg-white pl-9 pr-9 py-2.5 text-sm outline-none focus:border-amber-500 transition-colors"
+              className="w-full sm:w-56 rounded-xl border border-zinc-300 bg-white pl-9 pr-9 py-2.5 text-sm outline-none focus:border-amber-500 transition-colors"
             />
             {input && (
               <button
@@ -134,7 +134,61 @@ export function AdminLeadsPage() {
 
       {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
-      <div className="bg-white rounded-2xl border border-zinc-200 overflow-x-auto">
+      {/* Телефон: карточками. Таблица шириной 900 точек на экране в 375
+          означала бы возню с горизонтальной прокруткой на каждую заявку. */}
+      <div className="lg:hidden space-y-3">
+        {leads.length === 0 && !loading && (
+          <p className="bg-white rounded-2xl border border-zinc-200 px-4 py-10 text-center text-sm text-zinc-400">
+            {query
+              ? `По запросу «${query}» ничего не найдено.`
+              : 'Заявок пока нет. Как только кто-то заполнит форму на сайте — появятся здесь.'}
+          </p>
+        )}
+        {leads.map((lead) => (
+          <article key={lead.id} className="bg-white rounded-2xl border border-zinc-200 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <p className="font-semibold">
+                {[lead.name, lead.surname].filter(Boolean).join(' ') || '—'}
+              </p>
+              <time className="text-xs text-zinc-400 shrink-0 mt-0.5">
+                {fmtTime.format(new Date(lead.created_at))}
+              </time>
+            </div>
+
+            {/* Ссылки, а не текст: с телефона по заявке сразу звонят. */}
+            <div className="mt-3 flex flex-col gap-2">
+              <a
+                href={`tel:${lead.phone.replace(/[^\d+]/g, '')}`}
+                className="flex items-center gap-2 text-sm font-medium text-amber-700"
+              >
+                <Phone size={14} /> {lead.phone}
+              </a>
+              {lead.email && (
+                <a
+                  href={`mailto:${lead.email}`}
+                  className="flex items-center gap-2 text-sm text-zinc-600 break-all"
+                >
+                  <Mail size={14} className="shrink-0" /> {lead.email}
+                </a>
+              )}
+            </div>
+
+            {lead.message && (
+              <p className="mt-3 rounded-xl bg-amber-50/60 px-3 py-2 text-sm text-zinc-700 whitespace-pre-wrap">
+                {lead.message}
+              </p>
+            )}
+
+            <p className="mt-3 pt-3 border-t border-zinc-100 text-xs text-zinc-400">
+              {[lead.source, lead.page].filter(Boolean).join(' · ')}
+              {lead.ip && <span className="font-mono"> · {lead.ip}</span>}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      {/* Широкий экран: таблица со всеми колонками сразу. */}
+      <div className="hidden lg:block bg-white rounded-2xl border border-zinc-200 overflow-x-auto">
         <table className="w-full min-w-[900px]">
           <thead className="border-b border-zinc-200 bg-zinc-50">
             <tr>

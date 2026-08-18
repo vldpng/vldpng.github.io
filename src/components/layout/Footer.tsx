@@ -21,7 +21,7 @@ const columns = [
     title: 'Услуги',
     links: [
       { label: 'Имплантация', href: '/services/implants', type: 'route' as const },
-      { label: 'Керамические реставрации', href: '/services/ceramic', type: 'route' as const },
+      { label: 'Протезирование зубов', href: '/services/prosthetics', type: 'route' as const },
       { label: 'Лечение под микроскопом', href: '/services/microscope', type: 'route' as const },
       { label: 'Профессиональная гигиена', href: '/services/hygiene', type: 'route' as const },
       { label: 'Отбеливание Flash', href: '/services/whitening', type: 'route' as const },
@@ -43,10 +43,14 @@ const columns = [
     links: [
       { label: 'Контакты', href: '/#contacts', type: 'hash' as const },
       { label: 'FAQ', href: '/#faq', type: 'hash' as const },
-      { label: 'Политика конфиденциальности', href: '/privacy', type: 'route' as const },
       { label: 'Порядок записи', href: '/patients/booking', type: 'route' as const },
-      // Ссылка на /terms убрана: такой страницы нет и никогда не было,
-      // она вела в пустоту на каждой странице сайта. Вернуть, когда появится текст.
+      // Правовые страницы держим здесь, а не отдельной строкой внизу:
+      // «Политика конфиденциальности» иначе выводилась дважды.
+      { label: 'Политика конфиденциальности', href: '/privacy', type: 'route' as const },
+      { label: 'Правила распорядка', href: '/patients/rules', type: 'route' as const },
+      // Постоянный доступ к настройкам cookie: по GDPR согласие нужно уметь
+      // отозвать так же легко, как дать.
+      { label: 'Cookie-файлы', href: '/cookies', type: 'route' as const },
     ],
   },
 ];
@@ -217,26 +221,15 @@ export function Footer() {
           </span>
         </div>
 
-        {/* Нижняя строка */}
-        <div className="relative border-t border-white/10 py-6 lg:pr-16 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-white/60 leading-relaxed">
-              SIA «Royal Dent» · Reģ. Nr.: 40203129158
-              <br />
-              Veselības Inspekcijas atļauja Nr. 130000095
-            </span>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <Link to="/privacy" className="text-[13px] text-white/70 hover:text-amber-400 transition-colors">
-              Политика конфиденциальности
-            </Link>
-            {/* Вторая ссылка вела на /terms — страницы с таким адресом нет.
-                Вместо неё правила распорядка, они реально существуют. */}
-            <Link to="/patients/rules" className="text-[13px] text-white/70 hover:text-amber-400 transition-colors">
-              Правила распорядка
-            </Link>
-          </div>
+        {/* Нижняя строка: только реквизиты. Правовые ссылки переехали
+            в колонку «Информация» — там они рядом с остальными разделами
+            и не дублируются. */}
+        <div className="relative border-t border-white/10 py-6 lg:pr-16">
+          <span className="text-xs text-white/60 leading-relaxed">
+            SIA «Royal Dent» · Reģ. Nr.: 40203129158
+            <br />
+            Veselības Inspekcijas atļauja Nr. 130000095
+          </span>
         </div>
       </div>
     </footer>
