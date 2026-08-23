@@ -12,7 +12,14 @@ import { cn } from '@/lib/utils';
 /** Пауза между автоматическими перелистываниями карусели врачей. */
 const AUTOPLAY_MS = 3500;
 
-function DoctorCard({ doctor }: { doctor: Doctor }) {
+/**
+ * Карточка врача: фото на всю плитку, имя и стаж поверх затемнения.
+ *
+ * Экспортируется, потому что тем же видом карточки пользуются страницы
+ * отдельных услуг (например, ортопеды на /services/prosthetics) — там своя
+ * подборка врачей, но вид должен совпадать с каруселью на главной.
+ */
+export function DoctorCard({ doctor }: { doctor: Doctor }) {
   const { openModal } = useContactModal();
 
   const handleBooking = (e: React.MouseEvent) => {

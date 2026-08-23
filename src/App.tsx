@@ -18,6 +18,15 @@ import { CookieBanner } from './components/CookieBanner';
 const HomePage = lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
 const ServicesPage = lazy(() => import('./pages/ServicesPage').then((m) => ({ default: m.ServicesPage })));
 const ServicePage = lazy(() => import('./pages/ServicePage').then((m) => ({ default: m.ServicePage })));
+const RootCanalPage = lazy(() =>
+  import('./pages/RootCanalPage').then((m) => ({ default: m.RootCanalPage })),
+);
+const ProstheticsPage = lazy(() =>
+  import('./pages/ProstheticsPage').then((m) => ({ default: m.ProstheticsPage })),
+);
+const AlignersPage = lazy(() =>
+  import('./pages/AlignersPage').then((m) => ({ default: m.AlignersPage })),
+);
 const DoctorPage = lazy(() => import('./pages/DoctorPage').then((m) => ({ default: m.DoctorPage })));
 const DoctorsPage = lazy(() => import('./pages/DoctorsPage').then((m) => ({ default: m.DoctorsPage })));
 const PricesPage = lazy(() => import('./pages/PricesPage').then((m) => ({ default: m.PricesPage })));
@@ -111,6 +120,10 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/services" element={<ServicesPage />} />
+            {/* Своя вёрстка вместо общего шаблона услуги. */}
+            <Route path="/services/microscope" element={<RootCanalPage />} />
+            <Route path="/services/prosthetics" element={<ProstheticsPage />} />
+            <Route path="/services/aligners" element={<AlignersPage />} />
             <Route path="/services/:id" element={<ServicePage />} />
             <Route path="/doctors/:id" element={<DoctorPage />} />
             <Route path="/doctors" element={<DoctorsPage />} />

@@ -24,8 +24,8 @@ export const serviceCards: {
     image: '/images/banners/veneers.webp',
   },
   {
-    title: 'Ортодонтия',
-    desc: 'Исправляем прикус и неправильное положение зубов с помощью брекет-систем и элайнеров.',
+    title: 'Элайнеры',
+    desc: 'Исправляем прикус и положение зубов прозрачными элайнерами Ordoline — незаметно для окружающих и без брекетов.',
     to: '/services/aligners',
     image: '/images/banners/aligners.webp',
   },
@@ -42,8 +42,8 @@ export const serviceCards: {
     image: '/images/banners/allonx.webp',
   },
   {
-    title: 'Терапия',
-    desc: 'Выполняем художественные реставрации и лечим корневые каналы с помощью операционного микроскопа.',
+    title: 'Лечение каналов',
+    desc: 'Лечим пульпит и периодонтит под операционным микроскопом и восстанавливаем зуб после лечения.',
     to: '/services/microscope',
     image: '/images/banners/terapy.webp',
   },
