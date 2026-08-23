@@ -66,8 +66,9 @@ if (doctorCount === 0) {
 }
 
 // Первый запуск: наполняем прайс из статического каталога. Позиции лежат
-// внутри категории одним JSON — их всего 85 на девять категорий, отдельная
+// внутри категории одним JSON — их меньше сотни на девять категорий, отдельная
 // таблица дала бы лишние соединения ради перестановки внутри списка.
+// Правку каталога на уже заполненной базе переносит `npm run prices:reset`.
 const priceCount = (db.prepare('SELECT COUNT(*) AS c FROM price_categories').get() as { c: number }).c;
 if (priceCount === 0) {
   const ins = db.prepare('INSERT INTO price_categories (id, data, position) VALUES (?, ?, ?)');
