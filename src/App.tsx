@@ -27,6 +27,9 @@ const ProstheticsPage = lazy(() =>
 const AlignersPage = lazy(() =>
   import('./pages/AlignersPage').then((m) => ({ default: m.AlignersPage })),
 );
+const WhiteningPage = lazy(() =>
+  import('./pages/WhiteningPage').then((m) => ({ default: m.WhiteningPage })),
+);
 const DoctorPage = lazy(() => import('./pages/DoctorPage').then((m) => ({ default: m.DoctorPage })));
 const DoctorsPage = lazy(() => import('./pages/DoctorsPage').then((m) => ({ default: m.DoctorsPage })));
 const PricesPage = lazy(() => import('./pages/PricesPage').then((m) => ({ default: m.PricesPage })));
@@ -124,6 +127,7 @@ export default function App() {
             <Route path="/services/microscope" element={<RootCanalPage />} />
             <Route path="/services/prosthetics" element={<ProstheticsPage />} />
             <Route path="/services/aligners" element={<AlignersPage />} />
+            <Route path="/services/whitening" element={<WhiteningPage />} />
             <Route path="/services/:id" element={<ServicePage />} />
             <Route path="/doctors/:id" element={<DoctorPage />} />
             <Route path="/doctors" element={<DoctorsPage />} />
