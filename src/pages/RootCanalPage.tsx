@@ -1,11 +1,12 @@
 import React from 'react';
-import { Check } from 'lucide-react';
 import { Seo } from '../components/Seo';
 import { Doctors } from '../components/sections/Doctors';
 import { Faq } from '../components/sections/Faq';
 import { FadeIn } from '../components/ui/fade-in';
 import { MaskIcon } from '../components/ui/MaskIcon';
 import { PriceList } from '../components/ui/price-list';
+import { ServiceHero } from '../components/ui/service-hero';
+import { serviceHeroes } from '../data/serviceHeroes';
 import { useContactModal } from '../context/ContactModalContext';
 import { usePriceRows, type PriceRef } from '../lib/usePriceRows';
 
@@ -219,54 +220,10 @@ export function RootCanalPage() {
         path="/services/microscope"
       />
 
-      {/* Шапка. Градиент идёт слева направо: фирменный оранжевый гаснет
-          в цвет фона страницы (#F0F4FF = zinc-50), поэтому баннер не
-          обрывается вертикальной линией, а растворяется в странице. */}
-      <section
-        className="relative overflow-hidden"
-        style={{ backgroundImage: 'linear-gradient(90deg, #F7A566 0%, #F0F4FF 100%)' }}
-      >
-        {/* Колонка шире читаемой сетки страницы (max-w-6xl): на широком экране
-            текст шапки должен стоять ближе к левому краю, чем текст статьи.
-            Микроскоп из сетки выходит вовсе — он позиционируется от края
-            экрана, а не от края контейнера. */}
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8 py-12 md:py-16">
-          <div className="max-w-xl">
-            <FadeIn direction="none">
-              <h1 className="h-display text-zinc-950 mb-8">Лечение каналов зуба в Юрмале</h1>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <p className="text-lg md:text-xl font-semibold text-zinc-950 mb-5">
-                Надёжное восстановление зубов на долгие годы
-              </p>
-              <ul className="space-y-2.5 mb-9">
-                {[
-                  'Избавляем от зубной боли',
-                  'Помогаем сохранить зуб даже при сильном воспалении',
-                  'Лечим каналы так, чтобы воспаление не вернулось',
-                  'Восстанавливаем зуб после лечения, чтобы он служил долгие годы',
-                ].map((line) => (
-                  <li key={line} className="flex gap-3 items-start text-zinc-950">
-                    <Check className="w-5 h-5 shrink-0 mt-0.5" strokeWidth={2.5} />
-                    <span className="text-body">{line}</span>
-                  </li>
-                ))}
-              </ul>
-              <BookButton />
-            </FadeIn>
-          </div>
-        </div>
-
-        {/* Микроскоп «стоит» на нижней границе баннера у правого края экрана.
-            Штатив уходит за правый край — так задумано в макете. */}
-        <img
-          src="/images/clinic/equipment/microscope-hero.webp"
-          alt="Операционный микроскоп Carl Zeiss OPMI pico для лечения корневых каналов"
-          className="hidden md:block pointer-events-none absolute bottom-0 -right-10 lg:-right-16 h-[150%] w-auto max-w-none object-contain object-bottom"
-          width={734}
-          height={912}
-        />
-      </section>
+      {/* Шапка — общий компонент, как у всех остальных услуг: раньше у каждой
+          посадочной страницы была своя вёрстка, и заголовки с тезисами были
+          набраны по-разному. Содержимое — в data/serviceHeroes. */}
+      <ServiceHero content={serviceHeroes.microscope} />
 
       {/* Та же ширина, что у шапки: иначе на широком экране заголовок баннера
           начинается заметно левее, чем текст статьи под ним. */}

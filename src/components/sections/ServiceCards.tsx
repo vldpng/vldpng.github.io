@@ -1,5 +1,5 @@
 import React from 'react';
-import { MoveRight, Syringe, Activity, HeartPulse, Stethoscope } from 'lucide-react';
+import { MoveRight, Syringe, HeartPulse, Stethoscope } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FadeIn } from '../ui/fade-in';
 import { BlackPlaceholder } from '../ui/Placeholder';
@@ -36,10 +36,38 @@ export const serviceCards: {
     image: '/images/banners/surgery.webp',
   },
   {
-    title: 'Имплантация All-on-X',
-    desc: 'Восстановление всего зубного ряда с помощью имплантатов для пациентов, которые утратили большинство или все зубы на одной из челюстей.',
-    to: '/services/implants',
+    // Прежняя карточка «Имплантация All-on-X» разделена на два протокола:
+    // у них разная цена и разные показания, и вести обе на /services/implants
+    // было неверно. Снимок общий — на нём как раз протез на имплантах.
+    title: 'Имплантация All-on-4',
+    desc: 'Полный зубной ряд на четырёх имплантах: несъёмный протез для пациентов, утративших все зубы на челюсти.',
+    to: '/services/all-on-4',
     image: '/images/banners/allonx.webp',
+  },
+  {
+    title: 'Имплантация All-on-6',
+    desc: 'Полный зубной ряд на шести имплантах — максимально стабильная опора протеза при полном отсутствии зубов.',
+    to: '/services/all-on-6',
+    image: '/images/banners/allonx.webp',
+  },
+  {
+    // TODO: заказчику нужен отдельный снимок для карточки — присланное фото
+    // с баннера это вырезка на прозрачном фоне, в object-cover она не годится.
+    title: 'Удаление зуба мудрости',
+    desc: 'Удаляем зубы мудрости любой сложности — бережно, по КТ-снимку и с сопровождением после операции.',
+    to: '/services/wisdom-tooth',
+  },
+  {
+    // TODO: нужен снимок для карточки.
+    title: 'Детская стоматология',
+    desc: 'Лечим детей бережно и внимательно: ребёнок чувствует себя в безопасности с первых минут приёма.',
+    to: '/services/kids',
+  },
+  {
+    // TODO: нужен снимок для карточки.
+    title: 'Лечение дёсен Vector',
+    desc: 'Аппаратное лечение пародонтальных карманов системой Vector: снимаем воспаление и кровоточивость дёсен.',
+    to: '/services/vector',
   },
   {
     title: 'Лечение каналов',
@@ -84,11 +112,18 @@ export const serviceIcons: Record<string, React.ReactNode> = {
   '/services/prosthetics': <MaskIcon src="/icons/dental-crown.svg" className="w-6 h-6" />,
   '/services/aligners': <MaskIcon src="/icons/braces.svg" className="w-6 h-6" />,
   '/services/surgery': <Syringe size={24} />,
+  '/services/wisdom-tooth': <MaskIcon src="/icons/tooth-extraction.webp" className="w-6 h-6" />,
   '/services/implants': <MaskIcon src="/icons/implant.svg" className="w-6 h-6" />,
-  '/services/microscope': <MaskIcon src="/icons/decay.svg" className="w-6 h-6" />,
+  '/services/all-on-4': <MaskIcon src="/icons/dentures.webp" className="w-6 h-6" />,
+  '/services/all-on-6': <MaskIcon src="/icons/dentures.webp" className="w-6 h-6" />,
+  '/services/microscope': <MaskIcon src="/icons/root-canal.webp" className="w-6 h-6" />,
   '/services/hygiene': <MaskIcon src="/icons/higien.svg" className="w-6 h-6" />,
-  '/services/tmj': <Activity size={24} />,
+  '/services/kids': <MaskIcon src="/icons/kids.svg" className="w-6 h-6" />,
+  // Направление называется «Лечение сустава», но лечит его гнатолог —
+  // отсюда иконка челюстного сустава, а не абстрактный пульс lucide.
+  '/services/tmj': <MaskIcon src="/icons/gnatology.webp" className="w-6 h-6" />,
   '/services/parodontology': <HeartPulse size={24} />,
+  '/services/vector': <MaskIcon src="/icons/vector.webp" className="w-6 h-6" />,
   '/services/whitening': <MaskIcon src="/icons/whitening.svg" className="w-6 h-6" />,
 };
 

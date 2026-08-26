@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, Mail, MapPin, Phone, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useContactModal } from '../../context/ContactModalContext';
 import { clinic } from '../../data/clinic';
 import { socialLinks, externalLinkProps } from '../../data/social';
+import { MaskIcon } from '../ui/MaskIcon';
 
 const EMPTY_FORM = { firstName: '', lastName: '', email: '', phone: '+371 ', message: '' };
 
@@ -202,32 +203,34 @@ export function ContactModal() {
                   
                   <div className="space-y-8 text-[15px]">
                     <div className="flex items-center gap-6">
-                      <Phone className="text-amber-500 shrink-0 w-6 h-6" />
+                      <MaskIcon src="/icons/phone-call.webp" className="text-amber-500 shrink-0 w-6 h-6" />
                       <a href={clinic.phoneHref} className="opacity-90 hover:opacity-100 transition-opacity font-light">{clinic.phoneDisplay}</a>
                     </div>
 
                     <div className="flex items-center gap-6">
-                      <Mail className="text-amber-500 shrink-0 w-6 h-6" />
+                      <MaskIcon src="/icons/mail.webp" className="text-amber-500 shrink-0 w-6 h-6" />
                       <a href={clinic.emailHref} className="opacity-90 hover:opacity-100 transition-opacity font-light">{clinic.email}</a>
                     </div>
 
                     <div className="flex items-start gap-6">
-                      <MapPin className="text-amber-500 mt-1 shrink-0 w-6 h-6" />
+                      <MaskIcon src="/icons/placeholder.webp" className="text-amber-500 mt-1 shrink-0 w-6 h-6" />
                       <p className="opacity-90 font-light leading-relaxed max-w-[200px]">{clinic.address.full}, Latvia</p>
                     </div>
                   </div>
                 </div>
 
+                {/* Логотипы цветные, поэтому подложка круга белая, а не янтарная:
+                    на янтарном фоне фирменные цвета соцсетей грязнятся. */}
                 <div className="flex gap-4 mt-16 relative z-10">
-                  {socialLinks.map(({ Icon, href, label, filled }) => (
+                  {socialLinks.map(({ src, href, label }) => (
                     <a
                       key={label}
                       href={href}
                       {...externalLinkProps}
                       aria-label={label}
-                      className="w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center transition-colors text-zinc-950"
+                      className="w-10 h-10 rounded-full bg-white hover:scale-105 flex items-center justify-center transition-transform"
                     >
-                      <Icon size={18} className={filled ? 'fill-current' : undefined} />
+                      <img src={src} alt="" width={24} height={24} className="w-6 h-6 rounded-lg" />
                     </a>
                   ))}
                 </div>

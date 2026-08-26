@@ -200,7 +200,8 @@ text-zinc-900 dark:text-white focus:outline-none focus:border-amber-500 transiti
 ## 6. Иконография
 
 - **Основной набор:** [`lucide-react`](https://lucide.dev) (stroke-иконки, `stroke-width: 2`), типовые размеры `14 / 16 / 18 / 20 / 24 / 28`.
-- **Кастомные SVG:** через компонент [`MaskIcon`](src/components/ui/MaskIcon.tsx) (CSS `mask-image`) — иконка перекрашивается в `currentColor`. Используется для категорий услуг (`/icons/*.svg`).
+- **Кастомные монохромные иконки:** через компонент [`MaskIcon`](src/components/ui/MaskIcon.tsx) (CSS `mask-image`) — иконка перекрашивается в `currentColor`. Годятся и `.svg`, и растровые `.webp` с прозрачным фоном: маска строится по альфа-каналу. Используется для категорий услуг и контактов (`/icons/*`).
+- **Цветные логотипы** (соцсети, флаги языков) — обычным `<img>`: перекрашивать фирменные цвета нельзя, а `MaskIcon` съел бы их до силуэта.
 
 ---
 

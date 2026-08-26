@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, Clock, Phone, ArrowUpRight } from 'lucide-react';
+import { MapPin, ArrowUpRight } from 'lucide-react';
 import { clinic } from '../../data/clinic';
 import { SectionBadge } from '../ui/section-badge';
+import { MaskIcon } from '../ui/MaskIcon';
 import { useContactModal } from '../../context/ContactModalContext';
 
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
@@ -40,7 +41,11 @@ export function MapSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <SectionBadge className="mb-4">Контакты</SectionBadge>
-            <h2 className="h-section text-zinc-900 dark:text-zinc-50">
+            <h2 className="h-section text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
+              <MaskIcon
+                src="/icons/placeholder.webp"
+                className="w-[0.9em] h-[0.9em] shrink-0 text-amber-500"
+              />
               Как нас найти
             </h2>
           </div>
@@ -51,14 +56,14 @@ export function MapSection() {
 
           {/* Contact card — left */}
           <div className="bg-card dark:bg-zinc-900 rounded-[2rem] p-8 lg:p-10 shadow-[0_12px_40px_rgb(58,58,58,0.10)] border border-black/[0.04] dark:border-white/[0.06] flex flex-col">
-            <h3 className="h-card text-zinc-900 dark:text-zinc-50 mb-6">
-              {clinic.name}
-            </h3>
-
-            <ul className="space-y-5 mb-8">
+            {/* Название клиники убрано: карточка стоит внутри секции «Контакты»
+                и повторяла заголовок сайта. Четыре строки контактов
+                распределены по высоте карточки (justify-between на растянутом
+                списке), чтобы блок не сбивался в верхний угол. */}
+            <ul className="flex-1 flex flex-col justify-between gap-6 mb-8">
               <li className="flex items-start gap-4">
                 <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                  <MapPin size={18} />
+                  <MaskIcon src="/icons/placeholder.webp" className="w-[18px] h-[18px]" />
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Адрес</p>
@@ -67,7 +72,7 @@ export function MapSection() {
               </li>
               <li className="flex items-start gap-4">
                 <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                  <Clock size={18} />
+                  <MaskIcon src="/icons/timing.webp" className="w-[18px] h-[18px]" />
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Часы работы</p>
@@ -77,7 +82,7 @@ export function MapSection() {
               </li>
               <li className="flex items-start gap-4">
                 <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                  <Phone size={18} />
+                  <MaskIcon src="/icons/phone-call.webp" className="w-[18px] h-[18px]" />
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Телефон</p>
@@ -86,9 +91,20 @@ export function MapSection() {
                   </a>
                 </div>
               </li>
+              <li className="flex items-start gap-4">
+                <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
+                  <MaskIcon src="/icons/mail.webp" className="w-[18px] h-[18px]" />
+                </span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Почта</p>
+                  <a href={clinic.emailHref} className="text-zinc-900 dark:text-zinc-100 font-medium hover:text-amber-500 transition-colors break-all">
+                    {clinic.email}
+                  </a>
+                </div>
+              </li>
             </ul>
 
-            <div className="flex flex-col sm:flex-row gap-3 mt-auto">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => openModal()}
                 className="inline-flex items-center justify-center whitespace-nowrap btn-sweep bg-amber-500 hover:bg-amber-400 text-zinc-900 px-6 py-3.5 rounded-full text-sm font-semibold transition-colors shadow-md hover:shadow-lg active:scale-95"

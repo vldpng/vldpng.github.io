@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LockKeyhole } from 'lucide-react';
 import { clinic } from '../../data/clinic';
 import { socialLinks, externalLinkProps } from '../../data/social';
 import { cn, handleHashClick } from '../../lib/utils';
+import { MaskIcon } from '../ui/MaskIcon';
 
 /**
  * Адрес панели администратора. Пустая строка = панели ещё нет: в подвале
@@ -151,15 +151,15 @@ export function Footer() {
 
             {/* Соцсети */}
             <div className="flex items-center gap-3 mt-7">
-              {socialLinks.map(({ Icon, href, label, filled }) => (
+              {socialLinks.map(({ src, href, label }) => (
                 <a
                   key={label}
                   href={href}
                   {...externalLinkProps}
                   aria-label={label}
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/15 text-white/70 hover:text-amber-400 hover:border-amber-500 transition-colors"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/15 hover:border-amber-500 transition-colors"
                 >
-                  <Icon size={16} className={filled ? 'fill-current' : undefined} />
+                  <img src={src} alt="" width={18} height={18} className="w-[18px] h-[18px] rounded-[5px]" />
                 </a>
               ))}
 
@@ -174,7 +174,7 @@ export function Footer() {
                   title="Панель администратора"
                   className={adminButtonClass}
                 >
-                  <LockKeyhole size={16} />
+                  <MaskIcon src="/icons/padlock.webp" className="w-4 h-4" />
                 </a>
               ) : (
                 <button
@@ -184,21 +184,34 @@ export function Footer() {
                   title="Панель администратора — скоро"
                   className={cn(adminButtonClass, 'opacity-40 cursor-not-allowed')}
                 >
-                  <LockKeyhole size={16} />
+                  <MaskIcon src="/icons/padlock.webp" className="w-4 h-4" />
                 </button>
               )}
             </div>
 
             {/* Контакты */}
-            <div className="flex flex-col gap-1 mt-7">
+            <div className="flex flex-col gap-2.5 mt-7">
               <a
                 href={clinic.phoneHref}
-                className="text-base font-semibold text-white hover:text-amber-400 transition-colors"
+                className="flex items-center gap-2.5 text-base font-semibold text-white hover:text-amber-400 transition-colors"
               >
+                <MaskIcon src="/icons/phone-call.webp" className="w-4 h-4 shrink-0 text-amber-400" />
                 {clinic.phoneDisplay}
               </a>
-              <span className="text-[13px] text-white/70">
-                {clinic.address.full} · {clinic.hours.short}
+              <a
+                href={clinic.emailHref}
+                className="flex items-center gap-2.5 text-[13px] text-white/70 hover:text-amber-400 transition-colors"
+              >
+                <MaskIcon src="/icons/mail.webp" className="w-4 h-4 shrink-0 text-amber-400" />
+                {clinic.email}
+              </a>
+              <span className="flex items-center gap-2.5 text-[13px] text-white/70">
+                <MaskIcon src="/icons/placeholder.webp" className="w-4 h-4 shrink-0 text-amber-400" />
+                {clinic.address.full}
+              </span>
+              <span className="flex items-center gap-2.5 text-[13px] text-white/70">
+                <MaskIcon src="/icons/timing.webp" className="w-4 h-4 shrink-0 text-amber-400" />
+                {clinic.hours.short}
               </span>
             </div>
           </div>

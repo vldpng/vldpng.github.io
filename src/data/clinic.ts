@@ -42,11 +42,16 @@ export const clinic = {
 
   // Социальные сети. Пустая строка = аккаунта пока нет: иконка не рисуется
   // (см. socialLinks в data/social.ts), чтобы на сайте не было мёртвых ссылок.
+  //
+  // WhatsApp и Telegram пока ведут на клинический номер, а не на именной
+  // аккаунт: своих ссылок клиника не дала. wa.me открывает чат по номеру,
+  // t.me/+<номер> — тоже, если на номере зарегистрирован Telegram.
+  // TODO: заменить на @username, когда появятся фирменные аккаунты.
   social: {
     instagram: 'https://www.instagram.com/royaldent.jurmala/',
     facebook: 'https://www.facebook.com/royaldent.jurmala/',
-    whatsapp: '', // TODO: ссылка вида https://wa.me/371XXXXXXXX
-    telegram: '', // TODO: ссылка вида https://t.me/username
+    whatsapp: 'https://wa.me/37127057783',
+    telegram: 'https://t.me/+37127057783',
   },
 
   // Базовый URL сайта (используется для canonical / sitemap / og:url)

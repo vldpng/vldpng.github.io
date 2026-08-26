@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, MapPin, Phone, Clock, Moon, Sun, Search, AlignJustify } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { cn, handleHashClick } from '@/lib/utils';
 import { NavHeader } from '../ui/nav-header';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { useContactModal } from '../../context/ContactModalContext';
 import { clinic } from '../../data/clinic';
 import { LanguageSwitcher } from '../ui/language-switcher';
 import { socialLinks, externalLinkProps } from '../../data/social';
+import { MaskIcon } from '../ui/MaskIcon';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -173,28 +174,32 @@ export function Header() {
 
           <div className="mt-auto pt-6 flex flex-col gap-3 shrink-0">
             <span className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-              <MapPin size={16} className="text-zinc-400 shrink-0" />
+              <MaskIcon src="/icons/placeholder.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
               <span className="truncate">{clinic.address.full}</span>
             </span>
             <span className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-              <Clock size={16} className="text-zinc-400 shrink-0" />
+              <MaskIcon src="/icons/timing.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
               {clinic.hours.short}
             </span>
-            <a href={clinic.phoneHref} className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white font-medium pb-2">
-              <Phone size={16} className="text-zinc-400 shrink-0" />
+            <a href={clinic.phoneHref} className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white font-medium">
+              <MaskIcon src="/icons/phone-call.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
               {clinic.phoneDisplay}
+            </a>
+            <a href={clinic.emailHref} className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white font-medium pb-2">
+              <MaskIcon src="/icons/mail.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
+              {clinic.email}
             </a>
 
             <div className="flex items-center gap-4 pt-2">
-              {socialLinks.map(({ Icon, href, label, filled }) => (
+              {socialLinks.map(({ src, href, label }) => (
                 <a
                   key={label}
                   href={href}
                   {...externalLinkProps}
                   aria-label={label}
-                  className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+                  className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-105 transition-transform"
                 >
-                  <Icon size={18} className={filled ? 'fill-current' : undefined} />
+                  <img src={src} alt="" width={28} height={28} className="w-7 h-7 rounded-lg" />
                 </a>
               ))}
             </div>

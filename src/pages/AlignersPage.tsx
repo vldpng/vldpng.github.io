@@ -4,6 +4,8 @@ import { Seo } from '../components/Seo';
 import { Faq } from '../components/sections/Faq';
 import { FadeIn } from '../components/ui/fade-in';
 import { PriceList } from '../components/ui/price-list';
+import { ServiceHero } from '../components/ui/service-hero';
+import { serviceHeroes } from '../data/serviceHeroes';
 import { useContactModal } from '../context/ContactModalContext';
 import { usePriceRows, type PriceRef } from '../lib/usePriceRows';
 
@@ -32,13 +34,6 @@ const PRICE_REFS: PriceRef[] = [
   { category: 'Ортодонтия', name: 'Ordoline Advanced — одна челюсть' },
   { category: 'Ортодонтия', name: 'Ordoline Advanced — две челюсти' },
   { category: 'Ортодонтия', name: 'Удерживающая капа после лечения на элайнерах' },
-];
-
-const HERO_LINES = [
-  'Выравниваем зубы без брекетов',
-  'Элайнеры почти незаметны для окружающих',
-  'Можно есть, улыбаться и жить без ограничений',
-  'Показываем будущую улыбку ещё на этапе диагностики',
 ];
 
 /** Пары строк сравнения: слева элайнеры, справа брекеты. */
@@ -312,43 +307,10 @@ export function AlignersPage() {
         path="/services/aligners"
       />
 
-      {/* Шапка. Градиент слева направо: фирменный тёмно-синий #344861 гаснет
-          в белый, поэтому светлый снимок руки справа читается без подложки. */}
-      <section
-        className="relative overflow-hidden"
-        style={{ backgroundImage: 'linear-gradient(90deg, #344861 0%, #47617F 30%, #FFFFFF 100%)' }}
-      >
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8 py-12 md:py-14 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-end">
-          <div className="max-w-xl">
-            <FadeIn direction="none">
-              <h1 className="h-display text-white mb-7">Лечение на элайнерах в Юрмале</h1>
-              <p className="text-xl md:text-2xl text-white mb-7">
-                Исправление прикуса элайнерами от 1200 €
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <ul className="space-y-2 mb-9 list-disc pl-5 marker:text-white/70">
-                {HERO_LINES.map((line) => (
-                  <li key={line} className="text-body text-white">
-                    {line}
-                  </li>
-                ))}
-              </ul>
-              <BookButton />
-            </FadeIn>
-          </div>
-
-          {/* Отрицательный нижний отступ гасит py контейнера, поэтому рука
-              стоит ровно на нижней кромке градиента, а не висит в воздухе. */}
-          <img
-            src="/images/aligners/hero-hand.webp"
-            alt="Рука держит прозрачный элайнер"
-            className="hidden md:block w-[300px] lg:w-[380px] h-auto justify-self-end self-end -mb-12 md:-mb-14"
-            width={734}
-            height={1102}
-          />
-        </div>
-      </section>
+      {/* Шапка — общий компонент, как у всех остальных услуг: раньше у каждой
+          посадочной страницы была своя вёрстка, и заголовки с тезисами были
+          набраны по-разному. Содержимое и заливка — в data/serviceHeroes. */}
+      <ServiceHero content={serviceHeroes.aligners} />
 
       {/* Ролик о многослойном материале кап — сразу под шапкой, во всю ширину.
           Звука в ролике нет, поэтому он идёт без органов управления: это

@@ -22,6 +22,8 @@ export interface Language {
   prefix: string;
   /** Значение hreflang и атрибута <html lang>. */
   hreflang: string;
+  /** Флаг для переключателя языка (файл в /public/icons). */
+  flag: string;
   /** Готов ли перевод. Незавершённые языки не попадают в sitemap. */
   ready: boolean;
 }
@@ -30,10 +32,12 @@ export const LANGUAGES: Language[] = [
   // TODO: перевести сайт на латышский и поставить ready: true —
   // после этого корень начнёт отдавать латышскую версию, а временный
   // редирект на /ru в src/main.tsx нужно будет убрать.
-  { code: 'lv', label: 'LV', prefix: '', hreflang: 'lv', ready: false },
-  { code: 'ru', label: 'RU', prefix: '/ru', hreflang: 'ru', ready: true },
+  { code: 'lv', label: 'LV', prefix: '', hreflang: 'lv', flag: '/icons/latvia.webp', ready: false },
+  { code: 'ru', label: 'RU', prefix: '/ru', hreflang: 'ru', flag: '/icons/russia.webp', ready: true },
   // TODO: перевести на английский и поставить ready: true.
-  { code: 'en', label: 'EN', prefix: '/en', hreflang: 'en', ready: false },
+  // Английскому соответствует флаг Великобритании — общепринятая замена,
+  // отдельного «английского» флага в наборе нет.
+  { code: 'en', label: 'EN', prefix: '/en', hreflang: 'en', flag: '/icons/united-kingdom.webp', ready: false },
 ];
 
 export const DEFAULT_LANG: LangCode = 'lv';

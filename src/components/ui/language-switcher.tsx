@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ChevronDown, Globe } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LANGUAGES, getLanguage, parseLangFromPath } from '../../data/languages';
+
+/** Флаг в переключателе: пропорции 4:3, поэтому ширина задаётся, высота — авто. */
+const flagClass = 'w-5 h-auto rounded-[3px] shrink-0 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]';
 
 interface LanguageSwitcherProps {
   /** Панель открывается вниз (шапка) или вверх (мобильное меню). */
@@ -35,7 +38,7 @@ export function LanguageSwitcher({
   // pathname уже без языкового префикса — его снимает basename роутера.
   const { lang: current } = parseLangFromPath(window.location.pathname);
 
-  const iconSize = size === 'sm' ? 14 : 16;
+  const currentLang = getLanguage(current);
 
   return (
     <div className={cn('relative', className)}>
@@ -43,14 +46,17 @@ export function LanguageSwitcher({
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-label={`Язык сайта: ${getLanguage(current).label}`}
+        aria-label={`Язык сайта: ${currentLang.label}`}
         onClick={() => setOpen(!open)}
         className={cn(
           'flex items-center gap-1.5 font-semibold text-zinc-500 hover:text-zinc-900 uppercase tracking-widest transition-colors',
           size === 'sm' ? 'text-xs' : 'text-sm',
         )}
       >
-        <Globe size={iconSize} /> {getLanguage(current).label}
+        {/* Флаг текущего языка вместо глобуса: сразу видно, на какой версии
+            сайта посетитель, ещё до того как он прочитает код языка. */}
+        <img src={currentLang.flag} alt="" className={flagClass} />
+        {currentLang.label}
         <ChevronDown size={14} className={cn('transition-transform', open && 'rotate-180')} />
       </button>
 
@@ -58,7 +64,9 @@ export function LanguageSwitcher({
         <div
           role="menu"
           className={cn(
-            'absolute bg-card border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-xl py-2 flex flex-col min-w-[110px] z-50',
+            // min-w вырос со 110px: флаг занял место, и подпись «— скоро»
+            // у непереведённых языков переносилась на вторую строку.
+            'absolute bg-card border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-xl py-2 flex flex-col min-w-[150px] whitespace-nowrap z-50',
             direction === 'down'
               ? 'top-full right-0 mt-4 animate-in fade-in slide-in-from-top-2'
               : 'bottom-full left-0 mb-4 animate-in fade-in slide-in-from-bottom-2',
@@ -72,8 +80,11 @@ export function LanguageSwitcher({
                 <span
                   key={lang.code}
                   aria-disabled="true"
-                  className="px-4 py-2 text-xs font-semibold text-left text-zinc-300 dark:text-zinc-700 cursor-not-allowed"
+                  className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-left text-zinc-300 dark:text-zinc-700 cursor-not-allowed"
                 >
+                  {/* Флаг приглушён вместе с подписью: иначе яркая картинка
+                      выглядит как активный пункт при неактивном тексте. */}
+                  <img src={lang.flag} alt="" className={cn(flagClass, 'opacity-40')} />
                   {lang.label} <span className="normal-case font-normal">— скоро</span>
                 </span>
               );
@@ -87,12 +98,13 @@ export function LanguageSwitcher({
                 hrefLang={lang.hreflang}
                 aria-current={isCurrent ? 'true' : undefined}
                 className={cn(
-                  'px-4 py-2 text-xs font-semibold text-left transition-colors',
+                  'flex items-center gap-2 px-4 py-2 text-xs font-semibold text-left transition-colors',
                   isCurrent
                     ? 'text-zinc-900 bg-zinc-50'
                     : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50',
                 )}
               >
+                <img src={lang.flag} alt="" className={flagClass} />
                 {lang.label}
               </a>
             );

@@ -8,6 +8,8 @@ import { Faq } from '../components/sections/Faq';
 import { FadeIn } from '../components/ui/fade-in';
 import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { PriceList } from '../components/ui/price-list';
+import { ServiceHero } from '../components/ui/service-hero';
+import { serviceHeroes } from '../data/serviceHeroes';
 import { useContactModal } from '../context/ContactModalContext';
 import { useDoctors } from '../lib/useDoctors';
 import { usePriceRows, type PriceRef } from '../lib/usePriceRows';
@@ -65,13 +67,6 @@ const PRICE_REFS: PriceRef[] = [
     name: 'Бюгельный протез',
     note: 'Съёмная конструкция на металлической дуге. Держится надёжнее акрилового и меньше ощущается во рту',
   },
-];
-
-const HERO_LINES = [
-  'Восстанавливаем разрушенные зубы и красивую улыбку',
-  'Работаем с собственной зуботехнической лабораторией',
-  'Результат выглядит естественно и гармонично',
-  'Даём гарантию на ортопедическое лечение на 3 года',
 ];
 
 const INDICATIONS = [
@@ -332,43 +327,10 @@ export function ProstheticsPage() {
         path="/services/prosthetics"
       />
 
-      {/* Шапка. Градиент слева направо: тёплый персиковый гаснет в фон
-          страницы (#F0F4FF = zinc-50) примерно к середине баннера. */}
-      <section
-        className="relative overflow-hidden"
-        style={{ backgroundImage: 'linear-gradient(90deg, #F0BE97 0%, #F5D8C0 22%, #F0F4FF 58%)' }}
-      >
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8 py-12 md:py-14 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-end">
-          <div className="max-w-xl">
-            <FadeIn direction="none">
-              <h1 className="h-display text-zinc-950 mb-7">Протезирование зубов в Юрмале</h1>
-              <p className="text-xl md:text-2xl text-zinc-950 mb-7">Цена от 600 за 1 коронку</p>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <ul className="space-y-2.5 mb-8">
-                {HERO_LINES.map((line) => (
-                  <li key={line} className="flex gap-3 items-start text-zinc-800">
-                    <Check className="w-5 h-5 shrink-0 mt-0.5" strokeWidth={2.5} />
-                    <span className="text-body">{line}</span>
-                  </li>
-                ))}
-              </ul>
-              <BookButton />
-            </FadeIn>
-          </div>
-
-          {/* Отрицательный нижний отступ гасит py контейнера, поэтому винир
-              стоит ровно на нижней кромке градиента, а не висит в воздухе.
-              Всё, что ниже, срезает overflow-hidden секции. */}
-          <img
-            src="/images/prosthetics/hero-veneer.webp"
-            alt="Керамический винир в стоматологическом пинцете"
-            className="hidden md:block w-[380px] lg:w-[480px] h-auto justify-self-end self-end -mb-12 md:-mb-14"
-            width={734}
-            height={734}
-          />
-        </div>
-      </section>
+      {/* Шапка — общий компонент, как у всех остальных услуг: раньше у каждой
+          посадочной страницы была своя вёрстка, и заголовки с тезисами были
+          набраны по-разному. Содержимое — в data/serviceHeroes. */}
+      <ServiceHero content={serviceHeroes.prosthetics} />
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         {/* --- Где пройти протезирование --- */}

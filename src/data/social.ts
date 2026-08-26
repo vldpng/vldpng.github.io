@@ -1,16 +1,19 @@
-import { Instagram, Facebook, MessageCircle, Send, type LucideIcon } from 'lucide-react';
 import { clinic } from './clinic';
 
 export interface SocialLink {
-  Icon: LucideIcon;
+  /** Цветной логотип из /public/icons — рисуется обычным <img>. */
+  src: string;
   href: string;
   label: string;
-  /** У логотипа Facebook контур почти не читается — нужна сплошная заливка. */
-  filled?: boolean;
 }
 
 /**
  * Соцсети клиники для шапки, подвала и модалок.
+ *
+ * Иконки — цветные растровые логотипы, а не контуры lucide: клиника прислала
+ * фирменный набор, и подменять его перекрашенными контурами нельзя — у
+ * WhatsApp и Telegram у lucide вообще нет логотипов, там стояли похожие по
+ * смыслу значки (MessageCircle и Send).
  *
  * Иконки без адреса отфильтрованы: раньше в них стоял `href="#"`, и клик
  * просто прыгал в начало страницы. Как только адрес появится в clinic.social,
@@ -18,10 +21,10 @@ export interface SocialLink {
  */
 export const socialLinks: SocialLink[] = (
   [
-    { Icon: Instagram, href: clinic.social.instagram, label: 'Instagram' },
-    { Icon: Facebook, href: clinic.social.facebook, label: 'Facebook', filled: true },
-    { Icon: MessageCircle, href: clinic.social.whatsapp, label: 'WhatsApp' },
-    { Icon: Send, href: clinic.social.telegram, label: 'Telegram' },
+    { src: '/icons/instagram.webp', href: clinic.social.instagram, label: 'Instagram' },
+    { src: '/icons/facebook.webp', href: clinic.social.facebook, label: 'Facebook' },
+    { src: '/icons/whatsapp.webp', href: clinic.social.whatsapp, label: 'WhatsApp' },
+    { src: '/icons/telegram.webp', href: clinic.social.telegram, label: 'Telegram' },
   ] satisfies SocialLink[]
 ).filter((s) => s.href.length > 0);
 
