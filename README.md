@@ -66,6 +66,37 @@ public/                 Статика: изображения, иконки, ш
 
 ## Деплой
 
-`npm run build` создаёт самодостаточную папку `dist/` + `dist/server.cjs`.
-На сервере нужны Node.js и продакшен-зависимости (`npm ci --omit=dev`), запуск:
-`NODE_ENV=production node dist/server.cjs` (порт — переменная `PORT`, по умолчанию 3000).
+`npm run build` создаёт клиент в `dist/` и серверный бандл `server.cjs`
+рядом с `package.json`. Бандл лежит **вне** `dist/` намеренно: на хостинге
+`dist/` назначается document root, и всё в нём качается по HTTP.
+
+Хостинг — GarmTech, панель Plesk. Node-приложение там запускает Phusion
+Passenger, а не `npm start`, поэтому раскладка каталогов задана жёстко:
+document root обязан быть подкаталогом application root.
+
+```
+~/royaldent/              Application Root
+├── package.json
+├── server.cjs            Application Startup File
+├── dist/                 Document Root — только клиент
+├── storage/              база SQLite, вне веб-доступа
+├── public/images/staff/  фото из админки, отдаются через Node
+└── tmp/restart.txt       touch — перезапуск приложения
+```
+
+Переменные окружения задаются в Plesk (Websites & Domains → Node.js →
+custom environment variables), а не файлом `.env`:
+
+| Переменная | Значение |
+| --- | --- |
+| `NODE_ENV` | `production` |
+| `PORT` | `0` — порт назначает Passenger |
+| `DB_DIR` | абсолютный путь к `storage/` |
+| `ADMIN_LOGIN`, `ADMIN_PASSWORD` | учётные данные админки |
+
+Первые четыре обязательны: без `ADMIN_*` и `DB_DIR` сервер осознанно не
+стартует (см. `src/server/env.ts`), иначе отказ был бы тихим — админка
+пустила бы по `admin/admin`, а заявки ушли бы в базу не в том каталоге.
+
+Зависимости на сервере — `npm ci --omit=dev`. Локально прод-сборка
+запускается через `npm start` с теми же переменными.

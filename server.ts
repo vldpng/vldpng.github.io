@@ -1,19 +1,28 @@
+// Первым импортом и не просто так: грузит .env и проверяет обязательные
+// переменные до того, как db.ts (через роуты ниже) откроет базу при импорте.
+import "./src/server/env";
 import express from "express";
 import path from "path";
+import { fileURLToPath } from "url";
 import { registerBookingRoutes } from "./src/server/booking";
 import { registerLeadRoutes } from "./src/server/leads";
 import { registerAdminRoutes } from "./src/server/admin";
 
-async function startServer() {
-  // Load .env if present (dotenv is optional — never crash if it's missing).
-  try {
-    (await import("dotenv")).config();
-  } catch {
-    /* dotenv not installed — rely on real environment variables */
-  }
+/**
+ * Каталог приложения — считаем от самого файла, а не от process.cwd().
+ * На проде Node запускает не человек, а Phusion Passenger (через него Plesk
+ * поднимает Node-приложения), и рабочий каталог задаёт он. Полагаться на
+ * cwd там нельзя: при несовпадении сайт отдавал бы пустоту без внятной
+ * ошибки в логе. В dev это корень проекта, в проде — каталог server.cjs.
+ */
+const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
+async function startServer() {
   const app = express();
-  const PORT = Number(process.env.PORT) || 3000;
+  // Пустая строка и «0» — разные вещи, поэтому проверяем именно наличие:
+  // под Phusion Passenger порт назначает он сам, и штатное значение PORT — 0.
+  // При записи `Number(...) || 3000` ноль откатился бы на 3000 и всё сломал.
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 
   app.use(express.json());
 
@@ -30,7 +39,7 @@ async function startServer() {
   // Фото сотрудников отдаём напрямую из public/: загруженные через админку
   // файлы появляются там во время работы, а прод-статика (dist/) собирается
   // один раз при деплое и новых файлов не содержит.
-  app.use("/images/staff", express.static(path.join(process.cwd(), "public/images/staff")));
+  app.use("/images/staff", express.static(path.join(APP_ROOT, "public/images/staff")));
 
   // Vite middleware for development.
   // Динамический импорт: в продакшен-сборку (dist/server.cjs) vite не попадает
@@ -45,7 +54,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    const distPath = path.join(APP_ROOT, "dist");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
@@ -57,4 +66,9 @@ async function startServer() {
   });
 }
 
-startServer();
+// Ошибку старта показываем строкой, а не стеком: в браузере логов Plesk
+// читать придётся именно её, и «что задать» там должно быть видно сразу.
+startServer().catch((err) => {
+  console.error(err instanceof Error ? err.message : err);
+  process.exit(1);
+});

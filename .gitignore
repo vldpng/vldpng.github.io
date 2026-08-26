@@ -3,6 +3,12 @@ build/
 dist/
 coverage/
 tmp/
+
+# Серверный бандл: лежит рядом с package.json, а не в dist/, потому что
+# на проде dist/ становится document root и качается по HTTP.
+server.cjs
+server.cjs.map
+
 .DS_Store
 *.log
 .env*

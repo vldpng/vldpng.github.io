@@ -19,10 +19,18 @@ interface Option {
   imgScale?: string;
 }
 
+/* Цены имплантов и коронок — разложение комплектов из прайса клиники
+   (src/data/prices.ts, раздел «Имплантация»). Комплект = имплант + коронка,
+   поэтому суммы обязаны совпадать с прайсом до евро:
+     Root 500 + металлокерамика 600 = 1100     + цирконий 950 = 1450
+     Megagen 650 + …               = 1250                    = 1600
+     Straumann 900 + …             = 1500                    = 1850
+   Меняя любое число здесь, проверьте все шесть сумм по прайсу.
+   Карточки идут по возрастанию цены. */
 const implants: Option[] = [
-  { title: 'ROOT®', subtitle: 'Швейцария', price: 490, logo: '/images/implants/brands/roott.png', img: '/images/implants/root.webp' },
+  { title: 'ROOT®', subtitle: 'Швейцария', price: 500, logo: '/images/implants/brands/roott.png', img: '/images/implants/root.webp' },
   // megagen.webp — квадратный кадр с большими полями, поэтому увеличиваем
-  { title: 'Megagen', subtitle: 'Южная Корея', price: 400, logo: '/images/implants/brands/megagen.svg', img: '/images/implants/megagen.webp', imgScale: 'scale-[2.2]' },
+  { title: 'Megagen', subtitle: 'Южная Корея', price: 650, logo: '/images/implants/brands/megagen.svg', img: '/images/implants/megagen.webp', imgScale: 'scale-[2.2]' },
   { title: 'Straumann', subtitle: 'Швейцария', price: 900, logo: '/images/implants/brands/straumann.svg', img: '/images/implants/straumann.webp' },
 ];
 
@@ -45,10 +53,12 @@ const ImplantGlyph = () => (
 
 const crowns: Option[] = [
   // Фото коронок с крупным белым полем — увеличиваем масштабом (лишнее обрежется).
-  { title: 'Металлическая коронка', price: 550, img: '/images/implants/crowns/metal.webp', imgScale: 'scale-[2.6]' },
-  // TODO: уточнить цену металлокерамической коронки (сейчас временная).
-  { title: 'Металлокерамическая коронка', price: 500, img: '/images/implants/crowns/metalceramic.webp', imgScale: 'scale-[2.6]' },
-  { title: 'Циркониевая коронка', price: 450, img: '/images/implants/crowns/zirconium.webp', imgScale: 'scale-[2.6]' },
+  { title: 'Металлокерамическая коронка', price: 600, img: '/images/implants/crowns/metalceramic.webp', imgScale: 'scale-[2.6]' },
+  // Цирконий на импланте дороже, чем на своём зубе (750 € в разделе «Ортопедия»):
+  // в комплект входит абатмент. Отсюда 950 — иначе итог разойдётся с прайсом.
+  { title: 'Циркониевая коронка', price: 950, img: '/images/implants/crowns/zirconium.webp', imgScale: 'scale-[2.6]' },
+  // TODO: своё фото — пока переиспользуем снимок обычной циркониевой коронки.
+  { title: 'Индивидуальная циркониевая коронка', price: 1100, img: '/images/implants/crowns/zirconium.webp', imgScale: 'scale-[2.6]' },
 ];
 
 interface TreatmentStage {
@@ -297,7 +307,7 @@ function OptionPill({
           {option.subtitle}
         </span>
       )}
-      <span className="mt-1 font-bold text-sm text-zinc-900">{option.price} EUR</span>
+      <span className="mt-1 font-bold text-sm text-zinc-900">{formatEUR(option.price)}</span>
     </button>
   );
 }
@@ -381,7 +391,8 @@ export function PriceCalculator() {
   const [step, setStep] = useState(1);
   const [maxStep, setMaxStep] = useState(1);
   const [implantIdx, setImplantIdx] = useState(0);
-  const [crownIdx, setCrownIdx] = useState(1);
+  // По умолчанию — металлокерамика: базовый вариант комплекта в прайсе.
+  const [crownIdx, setCrownIdx] = useState(0);
   const [teeth, setTeeth] = useState<Set<string>>(new Set());
   const [stageIdx, setStageIdx] = useState(0);
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
@@ -407,13 +418,33 @@ export function PriceCalculator() {
       return next;
     });
 
+  /* Шаги сильно разной высоты: первый — во весь экран, второй — короткая
+     таблица. Кнопка «Следующий шаг» живёт внизу первого шага, поэтому после
+     переключения экран остаётся на прежней прокрутке, а новый шаг оказывается
+     выше поля зрения — приходится листать назад. Возвращаем начало шагов. */
+  const stepsRef = React.useRef<HTMLDivElement>(null);
+  const scrollToSteps = () => {
+    // Ждём перерисовку: до неё в DOM ещё старый шаг со своей высотой.
+    requestAnimationFrame(() => {
+      stepsRef.current?.scrollIntoView({
+        block: 'start',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'auto'
+          : 'smooth',
+      });
+    });
+  };
+
   const goTo = (n: number) => {
-    if (n <= maxStep) setStep(n);
+    if (n > maxStep) return;
+    setStep(n);
+    scrollToSteps();
   };
   const advance = () => {
     const next = Math.min(step + 1, 3);
     setStep(next);
     setMaxStep((m) => Math.max(m, next));
+    scrollToSteps();
   };
 
   // Позиции сметы (шаг 2), кол-во = число выбранных зубов
@@ -445,7 +476,7 @@ export function PriceCalculator() {
           </p>
         </FadeIn>
 
-        <div className="mt-12">
+        <div ref={stepsRef} className="mt-12 scroll-mt-24">
           <StepIndicator step={step} maxStep={maxStep} onGo={goTo} />
 
           <AnimatePresence mode="wait">

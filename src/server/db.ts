@@ -15,6 +15,11 @@ import path from 'node:path';
 import { doctorsData, type Doctor } from '../data/doctors';
 import { priceCategories, type PriceCategory } from '../data/prices';
 
+// Путь от process.cwd() — осознанно. Считать от самого файла нельзя: сборка
+// склеивает модули в один server.cjs, и каталог у db.ts в dev и на проде
+// разный. Поэтому НА ПРОДЕ DB_DIR задаётся явно (в Plesk — переменная
+// окружения приложения): промах здесь означает пустую базу вместо заявок,
+// причём молча. Проверка на старте — в server.ts.
 const DB_DIR = process.env.DB_DIR || path.join(process.cwd(), 'storage');
 mkdirSync(DB_DIR, { recursive: true });
 
