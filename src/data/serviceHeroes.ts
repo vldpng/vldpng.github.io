@@ -122,9 +122,10 @@ export const serviceHeroes: Record<string, ServiceHeroContent> = {
     image: '/images/photos/zub_mudrosti.webp',
     imageAlt: 'Расположение зуба мудрости в нижней челюсти',
   },
-  // Три страницы ниже живут не через ServicePage, а своими компонентами
-  // (AlignersPage, ProstheticsPage, RootCanalPage) — но баннер берут отсюда
-  // же, чтобы шапки всех одиннадцати услуг были набраны одинаково.
+  // Часть услуг живёт не через ServicePage, а своими компонентами: all-on-6
+  // выше (AllOn6Page), четыре страницы ниже (AlignersPage, ProstheticsPage,
+  // RootCanalPage, WhiteningPage). Баннер все берут отсюда же, чтобы шапки
+  // всех одиннадцати услуг были набраны одинаково.
   aligners: {
     title: 'Лечение на элайнерах в Юрмале',
     lead: 'Исправление прикуса элайнерами от 1200 €',
