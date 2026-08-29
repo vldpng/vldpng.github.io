@@ -8,6 +8,7 @@ import {
   FALLBACK_LANG,
   getLanguage,
   parseLangFromPath,
+  stripLangPrefix,
 } from './data/languages.ts';
 
 const { lang, prefix } = parseLangFromPath(window.location.pathname);
@@ -31,13 +32,24 @@ if (needsFallback) {
   // Язык страницы: важен для скринридеров (произношение) и для поисковиков.
   document.documentElement.lang = getLanguage(lang).hreflang;
 
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      {/* basename снимает языковой префикс с путей, поэтому все <Link to="/prices">
-          в коде остаются без изменений и сами получают нужный префикс. */}
-      <BrowserRouter basename={prefix || undefined}>
-        <App />
-      </BrowserRouter>
-    </StrictMode>,
-  );
+  const render = async () => {
+    // Словарь большой, поэтому русская версия его не загружает. Админка тоже
+    // намеренно остаётся русской даже при ручном переходе на /en/admin.
+    if (lang === 'en' && !stripLangPrefix(window.location.pathname).startsWith('/admin')) {
+      const { installEnglishTranslation } = await import('./i18n/english.ts');
+      installEnglishTranslation();
+    }
+
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        {/* basename снимает языковой префикс с путей, поэтому все <Link to="/prices">
+            в коде остаются без изменений и сами получают нужный префикс. */}
+        <BrowserRouter basename={prefix || undefined}>
+          <App />
+        </BrowserRouter>
+      </StrictMode>,
+    );
+  };
+
+  void render();
 }

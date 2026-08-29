@@ -34,10 +34,9 @@ export const LANGUAGES: Language[] = [
   // редирект на /ru в src/main.tsx нужно будет убрать.
   { code: 'lv', label: 'LV', prefix: '', hreflang: 'lv', flag: '/icons/latvia.webp', ready: false },
   { code: 'ru', label: 'RU', prefix: '/ru', hreflang: 'ru', flag: '/icons/russia.webp', ready: true },
-  // TODO: перевести на английский и поставить ready: true.
   // Английскому соответствует флаг Великобритании — общепринятая замена,
   // отдельного «английского» флага в наборе нет.
-  { code: 'en', label: 'EN', prefix: '/en', hreflang: 'en', flag: '/icons/united-kingdom.webp', ready: false },
+  { code: 'en', label: 'EN', prefix: '/en', hreflang: 'en', flag: '/icons/united-kingdom.webp', ready: true },
 ];
 
 export const DEFAULT_LANG: LangCode = 'lv';
