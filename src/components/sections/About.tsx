@@ -102,7 +102,7 @@ export function About() {
                 <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Американские протоколы<br className="hidden lg:block"/>
                 </h3>
-                <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                <p className="text-base text-zinc-500 dark:text-zinc-400 leading-[1.65]">
                   В процессе всех процедур отбеливания и профессиональной гигиены мы работаем по Американским протоколам и стандартам, обеспечивая бережный подход без дискомфорта.
                 </p>
               </div>
@@ -115,7 +115,7 @@ export function About() {
                 <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Полный цифровой протокол<br className="hidden lg:block"/>
                 </h3>
-                <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                <p className="text-base text-zinc-500 dark:text-zinc-400 leading-[1.65]">
                   В нашем центре мы используем цифровой протокол, который применяется на всех этапах диагностики, профилактики и лечения.
                 </p>
               </div>
@@ -128,7 +128,7 @@ export function About() {
                 <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Работа проводится под микроскопом<br className="hidden lg:block"/>
                 </h3>
-                <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                <p className="text-base text-zinc-500 dark:text-zinc-400 leading-[1.65]">
                   Все наши специалисты работают строго с увеличением, потому что врач без микроскопа — это слепой врач.
                 </p>
               </div>
@@ -141,7 +141,7 @@ export function About() {
                 <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   SmileDesign
                 </h3>
-                <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                <p className="text-base text-zinc-500 dark:text-zinc-400 leading-[1.65]">
                   Перед началом лечения вы можете получить мотивационный дизайн вашей будущей улыбки, чтобы увидеть, как вы будете улыбаться после.
                 </p>
               </div>
@@ -154,7 +154,7 @@ export function About() {
                 <h3 className="h-card text-zinc-900 dark:text-zinc-100 mb-4">
                   Защищенность
                 </h3>
-                <p className="text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                <p className="text-base text-zinc-500 dark:text-zinc-400 leading-[1.65]">
                   Мы обеспечиваем максимальный контроль качества в ходе многофакторной стерилизации.
                 </p>
               </div>
