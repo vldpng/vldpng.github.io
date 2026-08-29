@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
 import { SectionBadge } from '../ui/section-badge';
 import { useContactModal } from '../../context/ContactModalContext';
+import { translateRuntimeString } from '../../i18n/runtime';
 
 export interface FaqItem {
   q: string;
@@ -88,8 +89,8 @@ export function Faq({ items = faqs, id = 'faq' }: FaqProps = {}) {
     '@type': 'FAQPage',
     mainEntity: items.map((f) => ({
       '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
+      name: translateRuntimeString(f.q),
+      acceptedAnswer: { '@type': 'Answer', text: translateRuntimeString(f.a) },
     })),
   };
 

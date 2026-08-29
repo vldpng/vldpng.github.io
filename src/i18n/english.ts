@@ -1,4 +1,5 @@
 import { generatedEnglishTranslations } from './english.generated';
+import { setRuntimeTranslator } from './runtime';
 
 /**
  * Human-reviewed corrections for brand language and dental terminology.
@@ -89,67 +90,15 @@ function translateTextValue(value: string): string {
   return `${leading}${translateCore(value)}${trailing}`;
 }
 
-const translatedAttributes = [
-  'alt',
-  'aria-label',
-  'aria-roledescription',
-  'content',
-  'placeholder',
-  'title',
-] as const;
-
-function translateNode(node: Node): void {
-  if (node.nodeType === Node.TEXT_NODE) {
-    const value = node.nodeValue;
-    if (value && cyrillicPattern.test(value)) {
-      node.nodeValue = translateTextValue(value);
-    }
-    return;
-  }
-
-  if (!(node instanceof Element)) return;
-
-  for (const attribute of translatedAttributes) {
-    const value = node.getAttribute(attribute);
-    if (value && cyrillicPattern.test(value)) {
-      node.setAttribute(attribute, translateTextValue(value));
-    }
-  }
-
-  for (const child of node.childNodes) translateNode(child);
-}
-
 /**
- * Installs translation before React mounts. MutationObserver callbacks run in
- * the same event-loop turn as each React commit, avoiding a Russian flash on
- * English routes and also covering lazy pages, modals and SEO metadata.
+ * Enables translation before React mounts, so translated values become part
+ * of React's own render tree and navigation remains fully client-side.
  */
 export function installEnglishTranslation(): void {
-  translateNode(document.documentElement);
-
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (mutation.type === 'characterData') {
-        translateNode(mutation.target);
-        continue;
-      }
-
-      if (mutation.type === 'attributes') {
-        translateNode(mutation.target);
-        continue;
-      }
-
-      for (const node of mutation.addedNodes) translateNode(node);
-    }
-  });
-
-  observer.observe(document.documentElement, {
-    subtree: true,
-    childList: true,
-    characterData: true,
-    attributes: true,
-    attributeFilter: [...translatedAttributes],
-  });
+  setRuntimeTranslator(
+    translateTextValue,
+    () => !/^\/en\/admin(?:\/|$)/.test(window.location.pathname),
+  );
 }
 
 /** Used by code that must provide translated text before it reaches the DOM. */
