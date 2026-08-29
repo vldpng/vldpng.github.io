@@ -53,6 +53,9 @@ const PatientRulesPage = lazy(() =>
 const PatientBookingPage = lazy(() =>
   import('./pages/PatientBookingPage').then((m) => ({ default: m.PatientBookingPage })),
 );
+const PatientDiagnosticsPage = lazy(() =>
+  import('./pages/PatientDiagnosticsPage').then((m) => ({ default: m.PatientDiagnosticsPage })),
+);
 const PrivacyPage = lazy(() =>
   import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })),
 );
@@ -166,6 +169,7 @@ export default function App() {
             <Route path="/patients" element={<PatientsPage />} />
             <Route path="/patients/rules" element={<PatientRulesPage />} />
             <Route path="/patients/booking" element={<PatientBookingPage />} />
+            <Route path="/patients/diagnostics" element={<PatientDiagnosticsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/cookies" element={<CookiesPage />} />
             {/* Панель администратора: /admin — вход, вкладки — внутри каркаса

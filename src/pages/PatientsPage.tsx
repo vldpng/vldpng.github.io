@@ -24,15 +24,33 @@ const sections: PatientSection[] = [
     items: [
       { label: 'Правила внутреннего распорядка для пациентов', type: 'link', href: '/patients/rules' },
       { label: 'Правила записи на первичный приём', type: 'link', href: '/patients/booking' },
-      { label: 'Правила подготовки к диагностическим исследованиям', type: 'link', href: '#' },
+      { label: 'Правила подготовки к диагностическим исследованиям', type: 'link', href: '/patients/diagnostics' },
     ],
   },
   {
+    /* Ссылки ведут на первоисточники, а не на пересказ у нас: закон — на
+       likumi.lv (официальный публикатор «Latvijas Vēstnesis»), разъяснение
+       прав — на Министерство здравоохранения, контакты — на сайт самой
+       инспекции. Адреса вида /ta/id/<номер> всегда открывают действующую
+       редакцию, поэтому после очередных поправок ссылка не протухнет.
+       Все три источника на латышском — русской версии у них нет. */
     title: 'Правовая информация и нормативные акты',
     items: [
-      { label: 'Закон ЛР «О правах пациентов» (Pacientu tiesību likums)', type: 'link', href: '#' },
-      { label: 'Права и обязанности пациента в сфере охраны здоровья', type: 'link', href: '#' },
-      { label: 'Контакты контролирующих организаций (Veselības inspekcija)', type: 'link', href: '#' },
+      {
+        label: 'Закон ЛР «О правах пациентов» (Pacientu tiesību likums)',
+        type: 'link',
+        href: 'https://likumi.lv/ta/id/203008',
+      },
+      {
+        label: 'Права и обязанности пациента в сфере охраны здоровья',
+        type: 'link',
+        href: 'https://www.vm.gov.lv/lv/pacienta-tiesibas-un-pienakumi',
+      },
+      {
+        label: 'Контакты контролирующих организаций (Veselības inspekcija)',
+        type: 'link',
+        href: 'https://www.vi.gov.lv/lv/jaunums/kontakti',
+      },
     ],
   },
 ];

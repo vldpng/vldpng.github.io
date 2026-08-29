@@ -35,10 +35,13 @@ const INNER_CORNER =
 export function Cosmetology() {
   const { openModal } = useContactModal();
 
+  // Фон задаём токеном, а не хардкодом: здесь стоял #EDF0FB, и секция на пару
+  // тонов отличалась от остальной страницы (#F0F4FF) — поперёк главной шла
+  // заметная полоса.
   return (
     <section
       id="cosmetology"
-      className="py-16 lg:py-24 bg-[#EDF0FB] dark:bg-zinc-950 scroll-mt-24"
+      className="py-16 lg:py-24 bg-zinc-50 dark:bg-zinc-950 scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-2 md:px-3">
         {/* Одна FadeIn на всё: с раздельными анимациями половины подложки
