@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Seo } from '../components/Seo';
 import { Faq } from '../components/sections/Faq';
 import { FadeIn } from '../components/ui/fade-in';
-import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { PriceList } from '../components/ui/price-list';
 import { ServiceHero } from '../components/ui/service-hero';
 import { serviceHeroes } from '../data/serviceHeroes';
@@ -295,9 +294,14 @@ export function AllOn4Page() {
           </FadeIn>
 
           <FadeIn delay={0.1}>
-            <BlackPlaceholder
-              label="Фото работы All-on-4"
-              className="w-full aspect-[4/5] rounded-2xl"
+            {/* Снимок общий с All-on-6 и лежит в его папке: на нём обезличенный
+                ход операции, по которому методику не различить. Кадр 500×730
+                уже слота 4:5, поэтому object-top — иначе срезает голову. */}
+            <img
+              src="/images/allon6/operaciya.webp"
+              alt="Хирург устанавливает импланты в ходе операции"
+              className="w-full aspect-[4/5] object-cover object-top rounded-2xl shadow-sm"
+              loading="lazy"
             />
           </FadeIn>
         </section>

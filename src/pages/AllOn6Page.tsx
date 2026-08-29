@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Seo } from '../components/Seo';
 import { Faq } from '../components/sections/Faq';
 import { FadeIn } from '../components/ui/fade-in';
-import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { PriceList } from '../components/ui/price-list';
 import { ServiceHero } from '../components/ui/service-hero';
 import { serviceHeroes } from '../data/serviceHeroes';
@@ -319,9 +318,14 @@ export function AllOn6Page() {
           </FadeIn>
 
           <FadeIn delay={0.1}>
-            <BlackPlaceholder
-              label="Фото работы All-on-6"
-              className="w-full aspect-[4/5] rounded-2xl"
+            {/* Снимок 500×730 уже, чем слот 4:5, поэтому object-cover режет по
+                высоте. При кадрировании от центра уходила голова хирурга —
+                object-top прижимает кадр к верху. */}
+            <img
+              src="/images/allon6/operaciya.webp"
+              alt="Хирург устанавливает импланты в ходе операции"
+              className="w-full aspect-[4/5] object-cover object-top rounded-2xl shadow-sm"
+              loading="lazy"
             />
           </FadeIn>
         </section>
