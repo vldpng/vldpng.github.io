@@ -4,15 +4,13 @@ import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
 import { ImageWithFallback } from '../ui/image-with-fallback';
 
-// TODO: заменить пустые строки на реальные снимки интерьера.
-// Пустой путь — ImageWithFallback нарисует подписанную заглушку.
 const interior = [
-  '/images/clinic/IMG_4273.jpg_2K_202607182302.webp',
-  '/images/clinic/IMG_4279.jpg_2K_202607182323.webp',
-  '/images/clinic/IMG_4281.jpg_2K_202607182323.webp',
-  '',
-  '',
-  '',
+  '/images/clinic/clinic1.webp',
+  '/images/clinic/clinic2.webp',
+  '/images/clinic/clinic3.webp',
+  '/images/clinic/clinic4.webp',
+  '/images/clinic/clinic5.webp',
+  '/images/clinic/clinic6.webp',
 ];
 
 export function AboutInterior() {

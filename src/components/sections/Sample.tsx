@@ -8,29 +8,19 @@ import { SectionBadge } from '../ui/section-badge';
 interface WorkCase {
   title: string;
   tags: string[];
-  /** Фото «до» и «после». Пусто — покажется тёмная заглушка. TODO: реальные снимки. */
+  /** Фото «до» и «после». Пусто — покажется тёмная заглушка. */
   before?: string;
   after?: string;
 }
 
+/** Только настоящие работы: стоковые заглушки убраны — на странице клиники
+    чужие снимки выдают себя за её результаты. */
 const cases: WorkCase[] = [
   {
-    title: 'Эстетическая реставрация',
-    tags: ['#эстетика', '#виниры', '#реставрация'],
-    before: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=900',
-    after: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=900',
-  },
-  {
-    title: 'Имплантация',
-    tags: ['#хирургия', '#имплантация', '#all-on-4'],
-    before: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=900',
-    after: 'https://images.unsplash.com/photo-1600170311833-c2cf5280ce49?auto=format&fit=crop&q=80&w=900',
-  },
-  {
-    title: 'Ортодонтическое лечение',
-    tags: ['#ортодонтия', '#элайнеры'],
-    before: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=900',
-    after: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=900',
+    title: 'Тотальная реабилитация',
+    tags: ['#элайнеры', '#виниры', '#функциональная реабилитация'],
+    before: '/images/cases/total_rehabilitation_before.webp',
+    after: '/images/cases/total_rehabilitation_after.webp',
   },
 ];
 
@@ -53,8 +43,8 @@ export function Sample() {
           </FadeIn>
           <FadeIn delay={0.1}>
             <p className="text-lead text-zinc-500 dark:text-zinc-400">
-              Результаты наших врачей и честные эмоции тех, кто уже доверил нам свою улыбку.
-              Потяните ползунок, чтобы увидеть, как было «до» и стало «после».
+              Результаты плодотворной работы врача и техника. Улыбки, которые прошли
+              долгий путь для достижения результата.
             </p>
           </FadeIn>
         </div>

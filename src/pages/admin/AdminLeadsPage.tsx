@@ -11,6 +11,9 @@ interface LeadRow {
   source: string;
   page: string;
   ip: string;
+  /** Заполняет только калькулятор имплантации — у прочих форм пусто. */
+  age: string;
+  atrophy: string;
   created_at: string;
 }
 
@@ -173,6 +176,25 @@ export function AdminLeadsPage() {
               )}
             </div>
 
+            {/* Данные калькулятора: у остальных форм их нет, поэтому строку
+                показываем только когда есть что показать. */}
+            {(lead.age || lead.atrophy) && (
+              <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+                {lead.age && (
+                  <div className="flex gap-1.5">
+                    <dt className="text-zinc-500">Возраст:</dt>
+                    <dd className="text-zinc-800">{lead.age}</dd>
+                  </div>
+                )}
+                {lead.atrophy && (
+                  <div className="flex gap-1.5">
+                    <dt className="text-zinc-500">Атрофия:</dt>
+                    <dd className="text-zinc-800">{lead.atrophy}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
             {lead.message && (
               <p className="mt-3 rounded-xl bg-amber-50/60 px-3 py-2 text-sm text-zinc-700 whitespace-pre-wrap">
                 {lead.message}
@@ -189,13 +211,17 @@ export function AdminLeadsPage() {
 
       {/* Широкий экран: таблица со всеми колонками сразу. */}
       <div className="hidden lg:block bg-white rounded-2xl border border-zinc-200 overflow-x-auto">
-        <table className="w-full min-w-[900px]">
+        <table className="w-full min-w-[1120px]">
           <thead className="border-b border-zinc-200 bg-zinc-50">
             <tr>
               <th className={th}>Имя</th>
               <th className={th}>Фамилия</th>
               <th className={th}>Телефон</th>
               <th className={th}>Почта</th>
+              {/* Возраст и атрофия приходят только из калькулятора имплантации:
+                  у остальных форм в этих клетках прочерк. */}
+              <th className={th}>Возраст</th>
+              <th className={th}>Атрофия костной ткани</th>
               <th className={th}>IP-адрес</th>
               <th className={th}>Время</th>
               <th className={th}>
@@ -206,7 +232,7 @@ export function AdminLeadsPage() {
           <tbody className="divide-y divide-zinc-100">
             {leads.length === 0 && !loading && (
               <tr>
-                <td colSpan={7} className="px-4 py-10 text-center text-sm text-zinc-400">
+                <td colSpan={9} className="px-4 py-10 text-center text-sm text-zinc-400">
                   {query
                     ? `По запросу «${query}» ничего не найдено.`
                     : 'Заявок пока нет. Как только кто-то заполнит форму на сайте — появятся здесь.'}
@@ -232,6 +258,8 @@ export function AdminLeadsPage() {
                       '—'
                     )}
                   </td>
+                  <td className={td}>{lead.age || '—'}</td>
+                  <td className={td}>{lead.atrophy || '—'}</td>
                   <td className={cnMono}>{lead.ip || '—'}</td>
                   <td className={td}>{fmtTime.format(new Date(lead.created_at))}</td>
                   <td className={td}>
@@ -250,7 +278,7 @@ export function AdminLeadsPage() {
                 </tr>
                 {openId === lead.id && (
                   <tr className="bg-amber-50/50">
-                    <td colSpan={7} className="px-4 py-3 text-sm text-zinc-700">
+                    <td colSpan={9} className="px-4 py-3 text-sm text-zinc-700">
                       {lead.message && (
                         <p className="mb-1 whitespace-pre-wrap">{lead.message}</p>
                       )}

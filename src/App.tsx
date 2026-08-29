@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect, lazy, Suspense } from 'react';
 import { Topbar } from './components/layout/Topbar';
 import { Header } from './components/layout/Header';
@@ -30,8 +30,17 @@ const AlignersPage = lazy(() =>
 const WhiteningPage = lazy(() =>
   import('./pages/WhiteningPage').then((m) => ({ default: m.WhiteningPage })),
 );
+const AllOn4Page = lazy(() =>
+  import('./pages/AllOn4Page').then((m) => ({ default: m.AllOn4Page })),
+);
 const AllOn6Page = lazy(() =>
   import('./pages/AllOn6Page').then((m) => ({ default: m.AllOn6Page })),
+);
+const VectorPage = lazy(() =>
+  import('./pages/VectorPage').then((m) => ({ default: m.VectorPage })),
+);
+const WisdomToothPage = lazy(() =>
+  import('./pages/WisdomToothPage').then((m) => ({ default: m.WisdomToothPage })),
 );
 const DoctorPage = lazy(() => import('./pages/DoctorPage').then((m) => ({ default: m.DoctorPage })));
 const DoctorsPage = lazy(() => import('./pages/DoctorsPage').then((m) => ({ default: m.DoctorsPage })));
@@ -131,9 +140,26 @@ export default function App() {
             <Route path="/services/prosthetics" element={<ProstheticsPage />} />
             <Route path="/services/aligners" element={<AlignersPage />} />
             <Route path="/services/whitening" element={<WhiteningPage />} />
+            <Route path="/services/all-on-4" element={<AllOn4Page />} />
             <Route path="/services/all-on-6" element={<AllOn6Page />} />
+            <Route path="/services/vector" element={<VectorPage />} />
+            <Route path="/services/wisdom-tooth" element={<WisdomToothPage />} />
+            {/* Направление «Пародонтология» закрыто, его заменило лечение
+                дёсен Vector. Адрес был в sitemap, поэтому не отдаём по нему
+                404, а переводим на страницу-преемника. */}
+            <Route
+              path="/services/parodontology"
+              element={<Navigate to="/services/vector" replace />}
+            />
+            {/* «Хирургия» закрыта. Прямого преемника у направления нет, но
+                вело оно прежде всего на имплантацию — туда и переводим, как
+                теперь ведут карточки обоих хирургов клиники. */}
+            <Route
+              path="/services/surgery"
+              element={<Navigate to="/services/implants" replace />}
+            />
             <Route path="/services/:id" element={<ServicePage />} />
-            <Route path="/doctors/:id" element={<DoctorPage />} />
+            <Route path="/doctors/:slug" element={<DoctorPage />} />
             <Route path="/doctors" element={<DoctorsPage />} />
             <Route path="/prices" element={<PricesPage />} />
             <Route path="/about" element={<AboutPage />} />

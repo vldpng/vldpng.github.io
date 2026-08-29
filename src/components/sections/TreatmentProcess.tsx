@@ -5,38 +5,39 @@ import { FadeIn } from '../ui/fade-in';
 import { SectionBadge } from '../ui/section-badge';
 import { ImageWithFallback } from '../ui/image-with-fallback';
 
-// TODO: снять свои кадры под этапы 04–06 (обсуждение плана, лечение, финал).
-// Пустой путь — ImageWithFallback рисует подписанную заглушку.
+// Свой кадр под каждый этап. Прежде первые три брали снимки интерьера из
+// карусели «О клинике», а последние три стояли пустыми — теперь у всех
+// шести собственные фотографии.
 const steps = [
   {
     title: 'Первичная консультация',
     text: 'Лечение начинается с консультации: врач выслушивает жалобы и пожелания, собирает медицинский анамнез и проводит осмотр полости рта.',
-    image: '/images/clinic/IMG_4273.jpg_2K_202607182302.webp',
+    image: '/images/clinic/konsultacia.webp',
   },
   {
     title: 'Диагностика',
     text: 'Компьютерная томография, внутриротовое сканирование и фотопротокол. Полная картина вместо догадок — только так план лечения получается точным.',
-    image: '/images/clinic/IMG_4279.jpg_2K_202607182323.webp',
+    image: '/images/clinic/diagnostika.webp',
   },
   {
     title: 'Составление плана лечения',
     text: 'На основе данных диагностики врач готовит индивидуальный план: последовательность этапов, сроки и стоимость каждого из них.',
-    image: '/images/clinic/IMG_4281.jpg_2K_202607182323.webp',
+    image: '/images/clinic/plan_lecheniya.webp',
   },
   {
     title: 'Обсуждение плана с пациентом',
     text: 'Разбираем план вместе: объясняем каждый этап, показываем альтернативы и отвечаем на вопросы. К лечению приступаем только после вашего согласия.',
-    image: '',
+    image: '/images/clinic/obsuzhdenie.webp',
   },
   {
     title: 'Лечение',
     text: 'Работаем поэтапно, в согласованном графике и с контролем результата на каждом шаге. Все манипуляции проводятся под увеличением.',
-    image: '',
+    image: '/images/clinic/lechenie.webp',
   },
   {
     title: 'Завершение и рекомендации',
     text: 'Оцениваем результат, даём персональные рекомендации по уходу и составляем график профилактических визитов, чтобы результат сохранился надолго.',
-    image: '',
+    image: '/images/clinic/zaveshenie.webp',
   },
 ];
 
@@ -149,12 +150,19 @@ export function TreatmentProcess() {
                   ровно до следующего номера. */}
               <FadeIn delay={0.05 * i} className={cn(i < steps.length - 1 && 'mb-6 lg:mb-8')}>
                 <div className="rounded-[2rem] bg-card dark:bg-zinc-900 border border-black/[0.05] dark:border-white/[0.06] shadow-[0_18px_50px_-30px_rgb(58,58,58,0.45)] p-5 md:p-7">
-                  <div className="grid md:grid-cols-2 gap-5 lg:gap-10 items-center">
+                  {/* Колонка под фото ограничена по ширине, а не поделена
+                      пополам: кадры сняты в 16:9, и при половине карточки
+                      (610px на 1440) их собственная высота ушла бы за 340px —
+                      втрое выше текста рядом. Текст забирает остаток. */}
+                  <div className="grid md:grid-cols-[1fr_minmax(0,420px)] gap-5 lg:gap-10 items-center">
+                    {/* Крупнее базовых .h-card и text-base на ступень: рядом
+                        стоит кадр в 236px, и текст прежнего размера смотрелся
+                        рядом с ним мелко. */}
                     <div>
-                      <h3 className="h-card text-zinc-900 dark:text-zinc-50 mb-3">
+                      <h3 className="h-card text-2xl md:text-3xl text-zinc-900 dark:text-zinc-50 mb-3">
                         {step.title}
                       </h3>
-                      <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                      <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
                         {step.text}
                       </p>
                     </div>
@@ -163,13 +171,11 @@ export function TreatmentProcess() {
                       src={step.image}
                       alt={step.title}
                       label={`Фото · ${step.title}`}
-                      // На телефоне фото во всю ширину, поэтому высота задаётся
-                      // соотношением. С md колонки узкие, и 4/3 давало кадр вдвое
-                      // выше текста рядом — там высота фиксированная, под текст.
-                      // Единая для md и lg: на широких экранах текст укладывается
-                      // в меньшее число строк, и более высокий кадр только усилил
-                      // бы перекос.
-                      className="aspect-[16/10] md:aspect-auto md:h-48 rounded-[1.5rem] w-full"
+                      // Ровно то соотношение, в котором сняты кадры, — тогда
+                      // object-cover ничего не срезает. Прежняя фиксированная
+                      // высота md:h-48 при ширине колонки давала рамку 3.18
+                      // против 1.78 у снимка и съедала 44% кадра по высоте.
+                      className="aspect-[16/9] rounded-[1.5rem] w-full"
                     />
                   </div>
                 </div>

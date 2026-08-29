@@ -1,5 +1,5 @@
 import React from 'react';
-import { MoveRight, Syringe, HeartPulse, Stethoscope } from 'lucide-react';
+import { MoveRight, Sparkles, Stethoscope } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FadeIn } from '../ui/fade-in';
 import { BlackPlaceholder } from '../ui/Placeholder';
@@ -30,15 +30,9 @@ export const serviceCards: {
     image: '/images/banners/aligners.webp',
   },
   {
-    title: 'Хирургия',
-    desc: 'Устанавливаем имплантаты для замены утраченных зубов, а также выполняем другие хирургические вмешательства: от простого удаления зубов до сложных операций с костной пластикой и пластикой десны.',
-    to: '/services/surgery',
-    image: '/images/banners/surgery.webp',
-  },
-  {
     // Прежняя карточка «Имплантация All-on-X» разделена на два протокола:
     // у них разная цена и разные показания, и вести обе на /services/implants
-    // было неверно. Снимок общий — на нём как раз протез на имплантах.
+    // было неверно.
     title: 'Имплантация All-on-4',
     desc: 'Полный зубной ряд на четырёх имплантах: несъёмный протез для пациентов, утративших все зубы на челюсти.',
     to: '/services/all-on-4',
@@ -48,26 +42,28 @@ export const serviceCards: {
     title: 'Имплантация All-on-6',
     desc: 'Полный зубной ряд на шести имплантах — максимально стабильная опора протеза при полном отсутствии зубов.',
     to: '/services/all-on-6',
-    image: '/images/banners/allonx.webp',
+    image: '/images/banners/all-on-6.webp',
   },
   {
-    // TODO: заказчику нужен отдельный снимок для карточки — присланное фото
-    // с баннера это вырезка на прозрачном фоне, в object-cover она не годится.
     title: 'Удаление зуба мудрости',
     desc: 'Удаляем зубы мудрости любой сложности — бережно, по КТ-снимку и с сопровождением после операции.',
     to: '/services/wisdom-tooth',
+    image: '/images/banners/udalenie-8.webp',
   },
   {
-    // TODO: нужен снимок для карточки.
     title: 'Детская стоматология',
     desc: 'Лечим детей бережно и внимательно: ребёнок чувствует себя в безопасности с первых минут приёма.',
     to: '/services/kids',
+    image: '/images/banners/detskaya_stom.webp',
   },
   {
-    // TODO: нужен снимок для карточки.
+    // Снимок достался от прежней карточки «Пародонтология»: направление
+    // закрыто, а на фото как раз обработка десневого края — то, чем занят
+    // Vector.
     title: 'Лечение дёсен Vector',
     desc: 'Аппаратное лечение пародонтальных карманов системой Vector: снимаем воспаление и кровоточивость дёсен.',
     to: '/services/vector',
+    image: '/images/banners/vector.webp',
   },
   {
     title: 'Лечение каналов',
@@ -88,16 +84,18 @@ export const serviceCards: {
     image: '/images/banners/gnatology.webp',
   },
   {
-    title: 'Пародонтология',
-    desc: 'Лечим заболевания дёсен: от кровоточивости до пародонтита. Регенеративные методики и шинирование подвижных зубов.',
-    to: '/services/parodontology',
-    image: '/images/banners/parodontology.webp',
-  },
-  {
     title: 'Отбеливание',
     desc: 'Клиническое отбеливание Flash — улыбка светлее на несколько тонов за один визит, безопасно для эмали.',
     to: '/services/whitening',
     image: '/images/banners/flash.webp',
+  },
+  {
+    // Своей страницы у направления пока нет — карточка ведёт на врача-косметолога.
+    // Снимок для неё заказчик ещё не прислал, поэтому image не задан:
+    // на его месте показывается заглушка.
+    title: 'Косметология',
+    desc: 'Эстетические процедуры для лица и зоны вокруг губ: лечение кожи и естественное омоложение у врача-косметолога с медицинским образованием.',
+    to: '/doctors/yakunchihina',
   },
 ];
 
@@ -111,7 +109,6 @@ export const serviceCards: {
 export const serviceIcons: Record<string, React.ReactNode> = {
   '/services/prosthetics': <MaskIcon src="/icons/dental-crown.svg" className="w-6 h-6" />,
   '/services/aligners': <MaskIcon src="/icons/braces.svg" className="w-6 h-6" />,
-  '/services/surgery': <Syringe size={24} />,
   '/services/wisdom-tooth': <MaskIcon src="/icons/tooth-extraction.webp" className="w-6 h-6" />,
   '/services/implants': <MaskIcon src="/icons/implant.svg" className="w-6 h-6" />,
   '/services/all-on-4': <MaskIcon src="/icons/dentures.webp" className="w-6 h-6" />,
@@ -122,9 +119,11 @@ export const serviceIcons: Record<string, React.ReactNode> = {
   // Направление называется «Лечение сустава», но лечит его гнатолог —
   // отсюда иконка челюстного сустава, а не абстрактный пульс lucide.
   '/services/tmj': <MaskIcon src="/icons/gnatology.webp" className="w-6 h-6" />,
-  '/services/parodontology': <HeartPulse size={24} />,
   '/services/vector': <MaskIcon src="/icons/vector.webp" className="w-6 h-6" />,
   '/services/whitening': <MaskIcon src="/icons/whitening.svg" className="w-6 h-6" />,
+  // Фирменной иконки у косметологии пока нет — до неё общий значок lucide,
+  // но не дежурный стетоскоп: направление не стоматологическое.
+  '/doctors/yakunchihina': <Sparkles size={24} />,
 };
 
 export function ServiceCards() {

@@ -72,7 +72,7 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
           У вспомогательного персонала страницы нет, карточка некликабельна. */}
       {!doctor.support && (
         <Link
-          to={`/doctors/${doctor.id}`}
+          to={`/doctors/${doctor.slug}`}
           aria-label={doctor.name}
           className="absolute inset-0 z-10"
         />
@@ -111,7 +111,7 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
               Записаться
             </button>
             <Link
-              to={`/doctors/${doctor.id}`}
+              to={`/doctors/${doctor.slug}`}
               aria-label={`Подробнее о враче: ${doctor.name}`}
               title="Подробнее о враче"
               className="pointer-events-auto flex shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/15 px-3 text-white backdrop-blur-sm transition-colors hover:bg-white/25 active:scale-95"
@@ -209,15 +209,12 @@ export function Doctors() {
       <div className="max-w-7xl mx-auto px-2 md:px-3">
         <div className="mb-12 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div>
+            {/* Без mb под заголовком: строка выровнена по нижнему краю
+                (md:items-end), и пустой отступ поднял бы заголовок над
+                стрелками. Раньше он отделял заголовок от абзаца под ним. */}
             <FadeIn>
               <SectionBadge className="mb-4">Команда</SectionBadge>
-              <h2 className="h-section text-zinc-900 dark:text-white mb-4">Наши специалисты</h2>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <p className="text-lead text-zinc-500 dark:text-zinc-400 max-w-2xl">
-                Врачи, чьи кейсы говорят громче слов. Команда профессионалов со стажем и
-                перфекционистским подходом к каждой детали.
-              </p>
+              <h2 className="h-section text-zinc-900 dark:text-white">Наши специалисты</h2>
             </FadeIn>
           </div>
 

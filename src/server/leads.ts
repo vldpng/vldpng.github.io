@@ -1,9 +1,10 @@
 /**
  * Заявки с сайта → база данных + уведомление в Telegram.
  *
- * Два источника:
- *   /api/leads/callback — короткая форма «обратный звонок» (имя + телефон)
- *   /api/leads/contact  — модалка записи (имя, фамилия, email, телефон, сообщение)
+ * Три источника:
+ *   /api/leads/callback   — короткая форма «обратный звонок» (имя + телефон)
+ *   /api/leads/contact    — модалка записи (имя, фамилия, email, телефон, сообщение)
+ *   /api/leads/calculator — калькулятор имплантации (+ возраст, атрофия, расчёт)
  *
  * Источник правды — таблица leads в SQLite: её показывает панель
  * администратора. Telegram — уведомление поверх: если он недоступен, заявка
@@ -24,10 +25,32 @@ export interface Lead {
   source: string;
   /** Путь страницы, с которой отправлена заявка. */
   page: string;
+  /** Возраст пациента. Спрашивает только калькулятор — у прочих форм пусто. */
+  age: string;
+  /** Атрофия костной ткани, уже в человекочитаемом виде. Оттуда же. */
+  atrophy: string;
 }
 
 // Формы публичные: обрезаем длину, иначе в чат улетит «простыня».
 const clean = (value: unknown, max = 100): string => String(value ?? "").trim().slice(0, max);
+
+/**
+ * Ответ про атрофию приходит кодом, а разворачиваем его в текст на сервере:
+ * админка и Telegram получают готовую подпись, а подделать значение из
+ * браузера нельзя — незнакомый код просто отбрасывается.
+ */
+const ATROPHY_LABELS: Record<string, string> = {
+  unknown: "Не знаю",
+  none: "Нет",
+  mild: "Незначительная",
+  severe: "Значительная",
+};
+
+/** Возраст — только целое в разумных пределах, иначе поле остаётся пустым. */
+function cleanAge(value: unknown): string {
+  const n = Number(value);
+  return Number.isInteger(n) && n > 0 && n <= 120 ? String(n) : "";
+}
 
 // ---------------------------------------------------------------------------
 // Простейшая защита от спама
@@ -71,6 +94,10 @@ export function buildMessage(lead: Lead): string {
     ["Фамилия", lead.surname],
     ["Телефон", lead.phone],
     ["Email", lead.email],
+    // Пустые строки monoTable отбрасывает сам — у форм без калькулятора
+    // этих двух в сообщении не будет.
+    ["Возраст", lead.age],
+    ["Атрофия", lead.atrophy],
   ]);
 
   const parts = [`📞 <b>Новая заявка с сайта</b>`, table];
@@ -104,6 +131,8 @@ async function handleLead(req: Request, res: Response, source: string, requireEm
     message: clean(body.message, 2000),
     source,
     page: clean(body.page, 200),
+    age: cleanAge(body.age),
+    atrophy: ATROPHY_LABELS[clean(body.atrophy, 20)] ?? "",
   };
 
   if (!lead.name || !lead.phone || (requireEmail && !lead.email)) {
@@ -139,4 +168,7 @@ async function handleLead(req: Request, res: Response, source: string, requireEm
 export function registerLeadRoutes(app: Express) {
   app.post("/api/leads/callback", (req, res) => handleLead(req, res, "Форма обратного звонка", false));
   app.post("/api/leads/contact", (req, res) => handleLead(req, res, "Модалка записи", true));
+  app.post("/api/leads/calculator", (req, res) =>
+    handleLead(req, res, "Калькулятор имплантации", false),
+  );
 }

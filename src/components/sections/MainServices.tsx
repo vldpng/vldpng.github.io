@@ -10,8 +10,6 @@ const homeDescriptions: Record<string, string> = {
     'Восстанавливаем улыбку с помощью керамических виниров, накладок и коронок.',
   '/services/aligners':
     'Исправляем прикус и неправильное положение зубов с помощью элайнеров.',
-  '/services/surgery':
-    'Устанавливаем импланты для замены утраченных зубов, а также выполняем другие хирургические вмешательства — от простого удаления до сложных операций.',
   '/services/implants':
     'Тотальная реабилитация всего зубного ряда с помощью имплантов для пациентов, которые утратили большинство или все зубы.',
   '/services/all-on-4':
@@ -30,11 +28,17 @@ const homeDescriptions: Record<string, string> = {
     'Комплекс профилактических процедур для предотвращения заболеваний зубов и дёсен, а также для поддержания здоровья полости рта.',
   '/services/tmj':
     'Диагностика и лечение дисфункции височно-нижнечелюстного сустава (ВНЧС): подбор терапии, капы при бруксизме и спортивные капы.',
-  '/services/parodontology':
-    'Лечим заболевания дёсен: от кровоточивости до пародонтита. Регенеративные методики и шинирование подвижных зубов.',
   '/services/whitening':
     'Отбеливание системой Flash — улыбка становится светлее за один визит.',
 };
+
+/**
+ * В карусель на главной попадают только направления со снимком: нижняя треть
+ * карточки здесь отдана фотографии, и без неё в ленте среди остальных зияет
+ * пустой тёмный прямоугольник. На /services такая карточка допустима — там
+ * вместо фото стоит явная заглушка.
+ */
+const homeCards = serviceCards.filter((card) => card.image);
 
 /** Тёмно-синяя карточка направления: заголовок + иконка, описание, фото снизу.
     Тень — только под карточкой (смещение вниз + отрицательный spread). */
@@ -83,6 +87,9 @@ function ConsultForm() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [phone, setPhone] = useState('');
+  // Согласие на обработку данных — как в модалке записи: форма собирает имя,
+  // фамилию и телефон, а это персональные данные.
+  const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,6 +101,10 @@ function ConsultForm() {
     if (submitting) return;
     if (name.trim().length < 2 || surname.trim().length < 2 || !phoneValid) {
       setError('Пожалуйста, укажите имя, фамилию и корректный номер телефона.');
+      return;
+    }
+    if (!consent) {
+      setError('Отметьте согласие на обработку персональных данных.');
       return;
     }
     setSubmitting(true);
@@ -166,12 +177,33 @@ function ConsultForm() {
         />
         <button
           type="submit"
-          disabled={submitting}
-          className="btn-sweep rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-70 text-zinc-900 px-8 py-3.5 text-sm font-semibold transition-all shadow-md active:scale-95"
+          disabled={submitting || !consent}
+          className="btn-sweep rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-70 disabled:cursor-not-allowed text-zinc-900 px-8 py-3.5 text-sm font-semibold transition-all shadow-md active:scale-95"
         >
           {submitting ? 'Отправка…' : 'Записаться'}
         </button>
       </div>
+      {/* Кнопка до галочки заблокирована, поэтому подпись обязана объяснять
+          связь — иначе неактивная кнопка выглядит поломкой. */}
+      <label
+        htmlFor="consult-consent"
+        className="mt-4 flex items-start gap-2.5 text-xs text-white/60 cursor-pointer select-none"
+      >
+        <input
+          id="consult-consent"
+          type="checkbox"
+          required
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+          className="h-4 w-4 shrink-0 mt-0.5 cursor-pointer accent-amber-500"
+        />
+        <span>
+          Я согласен на обработку моих персональных данных в соответствии с{' '}
+          <Link to="/privacy" className="underline underline-offset-2 hover:text-amber-400">
+            политикой конфиденциальности
+          </Link>
+        </span>
+      </label>
       {error && <p className="mt-3 text-sm text-red-300">{error}</p>}
     </form>
   );
@@ -184,7 +216,7 @@ export function MainServices() {
   const getSetWidth = () => {
     const el = scrollContainerRef.current;
     if (!el) return 0;
-    const boundary = el.children[serviceCards.length] as HTMLElement | undefined;
+    const boundary = el.children[homeCards.length] as HTMLElement | undefined;
     return boundary ? boundary.offsetLeft : el.scrollWidth / 3;
   };
 
@@ -243,7 +275,7 @@ export function MainServices() {
               className="flex gap-6 overflow-x-auto pt-6 pb-12 md:py-12 snap-x snap-mandatory hide-scrollbar"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {[0, 1, 2].flatMap((copy) => serviceCards.map((card, idx) => (
+              {[0, 1, 2].flatMap((copy) => homeCards.map((card, idx) => (
                 <div
                   key={`${copy}-${idx}`}
                   // На планшете показываем две карточки: половина ширины

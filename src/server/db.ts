@@ -10,20 +10,15 @@
  * а не SQL — при переезде на другую СУБД менять придётся один файл.
  */
 import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { doctorsData, type Doctor } from '../data/doctors';
 import { priceCategories, type PriceCategory } from '../data/prices';
+import { DATA_DIR } from './paths';
 
-// Путь от process.cwd() — осознанно. Считать от самого файла нельзя: сборка
-// склеивает модули в один server.cjs, и каталог у db.ts в dev и на проде
-// разный. Поэтому НА ПРОДЕ DB_DIR задаётся явно (в Plesk — переменная
-// окружения приложения): промах здесь означает пустую базу вместо заявок,
-// причём молча. Проверка на старте — в server.ts.
-const DB_DIR = process.env.DB_DIR || path.join(process.cwd(), 'storage');
-mkdirSync(DB_DIR, { recursive: true });
-
-const db = new DatabaseSync(path.join(DB_DIR, 'royaldent.db'));
+// Где лежит каталог и почему именно там — см. paths.ts. Промах с ним означает
+// пустую базу вместо заявок, причём молча, поэтому на проде DB_DIR обязателен;
+// проверка на старте — в env.ts.
+const db = new DatabaseSync(path.join(DATA_DIR, 'royaldent.db'));
 
 // WAL: читатели не блокируют писателя — заявка с сайта не будет ждать,
 // пока администратор листает таблицу.
@@ -40,6 +35,8 @@ db.exec(`
     source     TEXT NOT NULL DEFAULT '',
     page       TEXT NOT NULL DEFAULT '',
     ip         TEXT NOT NULL DEFAULT '',
+    age        TEXT NOT NULL DEFAULT '', -- заполняет только калькулятор
+    atrophy    TEXT NOT NULL DEFAULT '', -- атрофия костной ткани, оттуда же
     created_at TEXT NOT NULL
   );
 
@@ -61,6 +58,20 @@ db.exec(`
     created_at INTEGER NOT NULL          -- unix ms; живут в БД, чтобы
   );                                     -- рестарт сервера не разлогинивал
 `);
+
+// Столбцы age/atrophy появились позже самой таблицы, а CREATE TABLE IF NOT
+// EXISTS уже созданную базу не трогает: на боевом сервере она пережила бы
+// обновление без новых колонок, и вставка заявки падала бы на каждой форме.
+const leadColumns = new Set(
+  (db.prepare('PRAGMA table_info(leads)').all() as unknown as Array<{ name: string }>).map(
+    (c) => c.name,
+  ),
+);
+for (const column of ['age', 'atrophy']) {
+  if (!leadColumns.has(column)) {
+    db.exec(`ALTER TABLE leads ADD COLUMN ${column} TEXT NOT NULL DEFAULT ''`);
+  }
+}
 
 // Первый запуск: наполняем врачей из статического файла. Только когда таблица
 // пуста — иначе удалённый через админку врач воскресал бы на каждом старте.
@@ -94,14 +105,18 @@ export interface LeadRow {
   source: string;
   page: string;
   ip: string;
+  /** Возраст и атрофия костной ткани: их спрашивает только калькулятор
+      имплантации, у остальных форм эти поля пустые. */
+  age: string;
+  atrophy: string;
   created_at: string;
 }
 
 export function insertLead(lead: Omit<LeadRow, 'id' | 'created_at'>): number {
   const res = db
     .prepare(
-      `INSERT INTO leads (name, surname, email, phone, message, source, page, ip, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO leads (name, surname, email, phone, message, source, page, ip, age, atrophy, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       lead.name,
@@ -112,6 +127,8 @@ export function insertLead(lead: Omit<LeadRow, 'id' | 'created_at'>): number {
       lead.source,
       lead.page,
       lead.ip,
+      lead.age,
+      lead.atrophy,
       new Date().toISOString(),
     );
   return Number(res.lastInsertRowid);

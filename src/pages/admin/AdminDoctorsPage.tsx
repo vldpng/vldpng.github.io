@@ -49,6 +49,7 @@ function DoctorEditor({
 }) {
   const [form, setForm] = useState({
     name: doctor.name,
+    slug: doctor.slug,
     specialty: doctor.specialty,
     experience: doctor.experience ?? '',
     bio: doctor.bio,
@@ -82,6 +83,12 @@ function DoctorEditor({
         body: JSON.stringify({
           ...form,
           educationList: textToEducation(form.education),
+          // Панель их не редактирует, но обязана вернуть как есть: сервер
+          // собирает врача из присланного тела целиком, и отсутствие полей он
+          // читает как «стереть». Раньше так и было — сохранение карточки
+          // сносило врачу сертификаты и кейсы.
+          certificates: doctor.certificates,
+          cases: doctor.cases,
         }),
       });
       const json = await res.json();
@@ -232,6 +239,24 @@ function DoctorEditor({
           <div>
             <label className={labelCls}>Стаж (например, «12 лет»)</label>
             <input value={form.experience} onChange={(e) => set('experience', e.target.value)} className={inputCls} />
+          </div>
+          {/* Поле редактируемое, а не только для чтения: без него у нового
+              сотрудника адрес откатился бы на внутренний id — метку времени
+              вида /doctors/1787935427820. */}
+          <div className="sm:col-span-2">
+            <label className={labelCls}>Адрес страницы</label>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm text-zinc-400 shrink-0">/doctors/</span>
+              <input
+                value={form.slug}
+                onChange={(e) => set('slug', e.target.value)}
+                placeholder="familia"
+                className={inputCls}
+              />
+            </div>
+            <p className="mt-1.5 text-xs text-zinc-400">
+              Фамилия латиницей, строчными. У однофамильцев добавьте имя: «ivanova-anna».
+            </p>
           </div>
           <div className="flex items-end pb-2.5">
             <label className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer select-none">

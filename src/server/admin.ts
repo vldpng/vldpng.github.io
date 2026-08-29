@@ -5,7 +5,7 @@
  * лишь видимых врачей). Всё остальное — за requireAdmin.
  */
 import express, { type Express, type Request, type Response } from 'express';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import type { Doctor } from '../data/doctors';
 import type { PriceCategory } from '../data/prices';
@@ -25,6 +25,7 @@ import {
   updatePriceCategory,
 } from './db';
 import { loginHandler, logoutHandler, requireAdmin, requireAdminProbe } from './auth';
+import { UPLOADS_STAFF_DIR } from './paths';
 
 const clean = (v: unknown, max = 200): string => String(v ?? '').trim().slice(0, max);
 
@@ -46,15 +47,49 @@ function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
         .filter((e) => e.title)
     : undefined;
 
+  // Сертификаты и кейсы раньше в белый список не входили, и любое сохранение
+  // врача в админке молча стирало ему обе секции: на странице пропадали и
+  // лента сертификатов, и блок «до/после». Пустые записи отбрасываем — плитка
+  // без скана и подписи не несёт ничего, кроме дырки в ленте.
+  const certificates = Array.isArray(body.certificates)
+    ? body.certificates
+        .map((c: any) => ({
+          src: clean(c?.src, 300) || undefined,
+          title: clean(c?.title, 200) || undefined,
+        }))
+        .filter((c) => c.src || c.title)
+    : undefined;
+  // Кейс без подписи не показать — фильтруем по title, как educationList.
+  const cases = Array.isArray(body.cases)
+    ? body.cases
+        .map((c: any) => ({
+          title: clean(c?.title, 200),
+          before: clean(c?.before, 300) || undefined,
+          after: clean(c?.after, 300) || undefined,
+        }))
+        .filter((c) => c.title)
+    : undefined;
+
   const name = clean(body.name, 120) || 'Новый сотрудник';
+  // Адрес страницы врача. Оставляем только то, что законно смотрится в URL:
+  // строчная латиница, цифры и дефис. Пустой слаг откатывается на id — адрес
+  // получится некрасивый, но рабочий, а не битый.
+  const slug =
+    clean(body.slug, 80)
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/^-+|-+$/g, '') || id;
   return {
     id,
+    slug,
     name,
     specialty: clean(body.specialty, 160),
     experience: clean(body.experience, 80) || undefined,
     bio: clean(body.bio, 2000),
     services,
     educationList,
+    certificates,
+    cases,
     photoUrl: clean(body.photoUrl, 300) || undefined,
     photoPosition: clean(body.photoPosition, 40) || undefined,
     photoLabel: `[Фото — ${name}]`,
@@ -242,9 +277,11 @@ export function registerAdminRoutes(app: Express) {
         .slice(0, 40) || 'photo';
       const filename = `${original}-${Date.now()}.webp`;
 
-      const dir = path.join(process.cwd(), 'public', 'images', 'staff');
-      mkdirSync(dir, { recursive: true });
-      writeFileSync(path.join(dir, filename), buf);
+      // Пишем туда же, откуда server.ts раздаёт /images/staff. Каталог общий
+      // и вычисляется в одном месте — раньше он считался здесь от cwd,
+      // а в server.ts от каталога приложения, и на проде это могло разойтись:
+      // панель отвечала успехом, а фото на сайте не появлялось.
+      writeFileSync(path.join(UPLOADS_STAFF_DIR, filename), buf);
 
       res.json({ success: true, data: { url: `/images/staff/${filename}` } });
     },

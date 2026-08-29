@@ -1,6 +1,6 @@
 # Сборка фронтенда (vite build) и публикация dist/ в GitHub Pages.
 # Запускается на каждый пуш в main. Бэкенд (server.ts) на Pages не деплоится —
-# это статический хостинг; API /api/booking/* требует отдельного Node-хостинга.
+# это статический хостинг; API /api/* требует отдельного Node-хостинга.
 name: Deploy to GitHub Pages
 
 on:

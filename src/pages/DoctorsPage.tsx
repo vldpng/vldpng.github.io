@@ -68,7 +68,7 @@ export function DoctorsPage() {
                     )}
                   >
                     {linked ? (
-                      <Link to={`/doctors/${doctor.id}`} className="block relative aspect-[4/5] overflow-hidden">
+                      <Link to={`/doctors/${doctor.slug}`} className="block relative aspect-[4/5] overflow-hidden">
                         {photo}
                       </Link>
                     ) : (
@@ -78,7 +78,7 @@ export function DoctorsPage() {
                     <div className="p-8 flex-grow flex flex-col">
                       <div className="mb-4">
                         <h3 className={cn('h-card mb-1 transition-colors', linked && 'group-hover:text-amber-500')}>
-                          {linked ? <Link to={`/doctors/${doctor.id}`}>{doctor.name}</Link> : doctor.name}
+                          {linked ? <Link to={`/doctors/${doctor.slug}`}>{doctor.name}</Link> : doctor.name}
                         </h3>
                         <p className="eyebrow text-zinc-500 mt-1">{doctor.specialty}</p>
                       </div>
@@ -98,7 +98,7 @@ export function DoctorsPage() {
                         )}
                         {linked && (
                           <Link
-                            to={`/doctors/${doctor.id}`}
+                            to={`/doctors/${doctor.slug}`}
                             aria-label={`Подробнее о враче: ${doctor.name}`}
                             className="text-amber-500 hover:text-amber-600 transition-colors bg-amber-50 dark:bg-amber-500/10 p-2.5 rounded-full"
                           >

@@ -47,7 +47,7 @@ export function getAllRoutes(): RouteEntry[] {
   const doctors: RouteEntry[] = doctorsData
     .filter((d) => !d.support)
     .map((d) => ({
-      path: `/doctors/${d.id}`,
+      path: `/doctors/${d.slug}`,
       priority: 0.6,
       changefreq: 'monthly',
     }));

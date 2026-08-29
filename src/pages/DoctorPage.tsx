@@ -9,6 +9,8 @@ import { BlackPlaceholder } from '../components/ui/Placeholder';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { useContactModal } from '../context/ContactModalContext';
+import { CertificateLightbox } from '../components/modals/CertificateLightbox';
+import { NotFoundPage } from './NotFoundPage';
 import { Seo } from '../components/Seo';
 
 /** Заголовок секции — серифный, в тёплом акценте (в стиле макета). */
@@ -31,7 +33,15 @@ const cardClass =
  * читается из scrollLeft, а не хранится отдельным состоянием: иначе свайп и
  * стрелки разъезжались бы между собой.
  */
-function CertificatesStrip({ items, doctorName }: { items: Certificate[]; doctorName: string }) {
+function CertificatesStrip({
+  items,
+  doctorName,
+  onOpen,
+}: {
+  items: Certificate[];
+  doctorName: string;
+  onOpen: (index: number) => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ start: true, end: true });
 
@@ -73,6 +83,14 @@ function CertificatesStrip({ items, doctorName }: { items: Certificate[]; doctor
 
   // Обе границы сразу — плитки поместились целиком, листать нечего.
   const scrollable = !(edges.start && edges.end);
+
+  // Номер плитки среди тех, что можно открыть: заготовки без скана в окно не
+  // попадают, поэтому нумерация в ленте и в окне расходится. Считаем заранее,
+  // а не через indexOf по объекту — тот сломался бы на одинаковых записях.
+  const viewableIndex = useMemo(() => {
+    let n = 0;
+    return items.map((c) => (c.src ? n++ : -1));
+  }, [items]);
   const arrowClass =
     'flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 transition-colors hover:border-zinc-900 hover:bg-zinc-900 hover:text-white disabled:pointer-events-none disabled:opacity-30';
 
@@ -114,20 +132,38 @@ function CertificatesStrip({ items, doctorName }: { items: Certificate[]; doctor
         role="group"
         aria-label="Сертификаты врача"
       >
+        {/* Рамка задаёт только высоту, ширину диктует сам скан. Прежде плитка
+            была жёстко 3:4, и горизонтальные сертификаты (их у Виталия четыре
+            из девяти) висели посреди вертикальной белой подложки. Одинаковая
+            высота при этом сохраняется — лента остаётся ровной. */}
         {items.map((c, i) => (
-          <figure key={i} className="w-[9.5rem] sm:w-[11rem] shrink-0 snap-start">
-            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-white border border-black/[0.04] flex items-center justify-center">
-              {c.src ? (
+          <figure key={i} className="shrink-0 snap-start">
+            {c.src ? (
+              <button
+                type="button"
+                onClick={() => onOpen(viewableIndex[i])}
+                aria-label={
+                  c.title
+                    ? `Открыть сертификат: ${c.title}`
+                    : `Открыть сертификат ${i + 1} из ${items.length}`
+                }
+                // w-fit обязателен: у block-кнопки ширина auto растянула бы её
+                // на всю строку вместо подгонки под картинку. min-w держит
+                // место, пока ленивая картинка ещё не загрузилась.
+                className="group block h-52 sm:h-60 w-fit min-w-[7rem] overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+              >
                 <img
                   src={c.src}
                   alt={c.title ?? `Сертификат — ${doctorName}`}
                   loading="lazy"
-                  className="w-full h-full object-cover"
+                  className="h-full w-auto max-w-none rounded-2xl transition-transform duration-500 group-hover:scale-[1.04]"
                 />
-              ) : (
+              </button>
+            ) : (
+              <div className="flex h-52 sm:h-60 w-[9.5rem] sm:w-[11rem] items-center justify-center rounded-2xl border border-black/[0.04] bg-white">
                 <Award size={28} className="text-zinc-300" strokeWidth={1.5} />
-              )}
-            </div>
+              </div>
+            )}
             {c.title && (
               <figcaption className="mt-2 text-sm text-zinc-500 leading-snug">{c.title}</figcaption>
             )}
@@ -139,21 +175,36 @@ function CertificatesStrip({ items, doctorName }: { items: Certificate[]; doctor
 }
 
 export function DoctorPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   // С сервера (правки из админки), со статическим списком как запасным.
   const doctorsData = useDoctors();
-  const doctor = doctorsData.find((d) => d.id === id);
+  // Только по slug: внутренний id в адресе не участвует, и подбирать по нему
+  // страницу не нужно — такого адреса на сайте нет.
+  const doctor = doctorsData.find((d) => d.slug === slug);
   const { openModal } = useContactModal();
+
+  // Индекс сертификата, открытого в полноэкранном окне; null — окно закрыто.
+  const [certIndex, setCertIndex] = useState<number | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [id]);
+    // Переход к другому врачу при открытом окне оставил бы на экране чужой
+    // сертификат — закрываем вместе со сменой страницы.
+    setCertIndex(null);
+  }, [slug]);
+
+  // В окно попадают только плитки со сканом: у заготовки без файла показывать
+  // нечего, и листание не должно на неё натыкаться.
+  const viewableCerts = useMemo(
+    () => (doctor?.certificates ?? []).filter((c) => c.src),
+    [doctor?.certificates],
+  );
 
   // Вспомогательный персонал сюда не попадает: у него нет своей страницы,
   // ссылка вела бы на редирект обратно в список.
   const others = useMemo(
-    () => doctorsData.filter((d) => d.id !== id && !d.support).slice(0, 4),
-    [doctorsData, id],
+    () => doctorsData.filter((d) => d.id !== doctor?.id && !d.support).slice(0, 4),
+    [doctorsData, doctor?.id],
   );
 
   // Услуги врача разворачиваются из общего каталога направлений по маршруту:
@@ -204,16 +255,11 @@ export function DoctorPage() {
     return <Navigate to="/doctors" replace />;
   }
 
+  // Неизвестный slug — обычная несуществующая страница, а не особый экран
+  // «врач не найден»: такого адреса на сайте нет, и посетителю незачем знать,
+  // что он ошибся именно в имени врача. Заодно отсюда приходит noindex.
   if (!doctor) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center pt-24 pb-12">
-        <Seo title="Врач не найден" noindex path={`/doctors/${id ?? ''}`} />
-        <h1 className="text-3xl font-semibold mb-4 text-zinc-900">Врач не найден</h1>
-        <Link to="/" className="text-zinc-600 hover:text-zinc-900 underline underline-offset-4">
-          Вернуться на главную
-        </Link>
-      </div>
-    );
+    return <NotFoundPage />;
   }
 
   return (
@@ -223,7 +269,7 @@ export function DoctorPage() {
       <Seo
         title={`${doctor.name} — ${doctor.specialty}`}
         description={`${doctor.name}, ${doctor.specialty}. ${doctor.bio}`.slice(0, 160)}
-        path={`/doctors/${doctor.id}`}
+        path={`/doctors/${doctor.slug}`}
       />
       <div className="max-w-7xl mx-auto px-2 md:px-3">
         {/* Шапка врача — hero: фото + оранжевая карточка */}
@@ -364,7 +410,11 @@ export function DoctorPage() {
                   ))}
 
                   {doctor.certificates?.length ? (
-                    <CertificatesStrip items={doctor.certificates} doctorName={doctor.name} />
+                    <CertificatesStrip
+                      items={doctor.certificates}
+                      doctorName={doctor.name}
+                      onOpen={setCertIndex}
+                    />
                   ) : null}
                 </div>
               </section>
@@ -429,7 +479,7 @@ export function DoctorPage() {
                   {others.map((d) => (
                     <Link
                       key={d.id}
-                      to={`/doctors/${d.id}`}
+                      to={`/doctors/${d.slug}`}
                       className="group flex items-center gap-4 rounded-3xl bg-card border border-black/[0.05] shadow-sm hover:shadow-md hover:border-amber-500/40 p-4 transition-all"
                     >
                       <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-zinc-100">
@@ -462,6 +512,14 @@ export function DoctorPage() {
           </div>
         </div>
       </div>
+
+      <CertificateLightbox
+        items={viewableCerts}
+        index={certIndex}
+        doctorName={doctor.name}
+        onClose={() => setCertIndex(null)}
+        onNavigate={setCertIndex}
+      />
     </main>
   );
 }

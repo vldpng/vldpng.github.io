@@ -88,9 +88,19 @@ export function Hero() {
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="h-display italic text-4xl md:text-5xl lg:text-6xl text-[#FEF9EF] lg:text-zinc-900 whitespace-nowrap"
+              // Кегль подобран под реальную ширину колонки на каждом пороге:
+              // фраза «Найди свою улыбку в» требует примерно 9.5px ширины на
+              // каждый пиксель кегля. С lg колонка делится пополам с фото и
+              // сужается с 658px до 446px — отсюда уменьшение на этой границе,
+              // иначе строка рвётся посередине. Запас всюду около 11%.
+              className="h-display italic text-[28px] sm:text-4xl md:text-5xl lg:text-[42px] xl:text-[54px] 2xl:text-6xl text-[#FEF9EF] lg:text-zinc-900"
             >
-              Найди свою улыбку
+              {/* Перенос задан вручную: «Юрмале» стоит отдельной строкой на
+                  любой ширине. nowrap на первой фразе не даёт браузеру
+                  разорвать её самому и оставить «в» висеть в одиночестве. */}
+              <span className="whitespace-nowrap">Найди свою улыбку в</span>
+              <br />
+              Юрмале
             </motion.h1>
             <motion.p
               variants={{
@@ -121,7 +131,7 @@ export function Hero() {
                     visible: { opacity: 1, x: 0 },
                   }}
                   transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex items-center gap-3 text-[15px] font-medium text-[#FEF9EF] lg:text-zinc-900"
+                  className="flex items-center gap-3 text-[17px] font-medium text-[#FEF9EF] lg:text-zinc-900"
                 >
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500 text-zinc-900 shadow-sm">
                     <Check size={14} strokeWidth={3} />

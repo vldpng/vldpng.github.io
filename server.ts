@@ -4,9 +4,9 @@ import "./src/server/env";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { registerBookingRoutes } from "./src/server/booking";
 import { registerLeadRoutes } from "./src/server/leads";
 import { registerAdminRoutes } from "./src/server/admin";
+import { UPLOADS_STAFF_DIR } from "./src/server/paths";
 
 /**
  * Каталог приложения — считаем от самого файла, а не от process.cwd().
@@ -31,14 +31,18 @@ async function startServer() {
     res.json({ status: "ok" });
   });
 
-  registerBookingRoutes(app);
+  // Записи на приём как отдельной сущности у сайта нет: посетитель оставляет
+  // заявку на обратный звонок, она уходит администраторам в Telegram.
   registerLeadRoutes(app);
   registerAdminRoutes(app);
   // API routes end
 
-  // Фото сотрудников отдаём напрямую из public/: загруженные через админку
-  // файлы появляются там во время работы, а прод-статика (dist/) собирается
-  // один раз при деплое и новых файлов не содержит.
+  // Фото сотрудников ищем в двух местах, и порядок важен.
+  // Сначала постоянный каталог (paths.ts): туда админка кладёт загруженные
+  // снимки, и он переживает деплой, потому что лежит вне папки приложения.
+  // Затем те, что приехали с репозиторием: прод-статика dist/ собирается один
+  // раз при деплое и загруженных во время работы файлов не содержит.
+  app.use("/images/staff", express.static(UPLOADS_STAFF_DIR));
   app.use("/images/staff", express.static(path.join(APP_ROOT, "public/images/staff")));
 
   // Vite middleware for development.

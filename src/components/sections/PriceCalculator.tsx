@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, ArrowRight, Check, Info, Minus, ChevronDown, Calculator, MousePointerClick } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { FadeIn } from '../ui/fade-in';
@@ -109,11 +110,6 @@ const treatmentStages: TreatmentStage[] = [
 function formatEUR(value: number) {
   return `${value.toLocaleString('ru-RU')} EUR`;
 }
-/** Ежемесячный платёж по рассрочке (≈ на 9 месяцев). */
-function installment(value: number) {
-  return `${Math.round(value * 0.111).toLocaleString('ru-RU')} EUR/мес.`;
-}
-
 /** Русское склонение слова «зуб»: 1 зуб, 2 зуба, 5 зубов. */
 function teethWord(n: number) {
   const n10 = n % 10;
@@ -387,6 +383,11 @@ function StepIndicator({
 
 /* ═════════════════════════ КАЛЬКУЛЯТОР ═════════════════════════ */
 
+/** Поля контактной формы на шаге 3 одинаковы — класс держим в одном месте. */
+const calcLabelClass = 'block text-sm text-zinc-500 dark:text-zinc-400 mb-2';
+const calcInputClass =
+  'w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-50 px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors';
+
 export function PriceCalculator() {
   const [step, setStep] = useState(1);
   const [maxStep, setMaxStep] = useState(1);
@@ -397,8 +398,18 @@ export function PriceCalculator() {
   const [stageIdx, setStageIdx] = useState(0);
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
 
-  // Шаг 3 — поля формы
+  // Шаг 3 — поля формы. Всё управляемое: иначе введённое некуда забрать,
+  // а раньше кнопка «Отправить» просто открывала пустую общую модалку
+  // и данные пациента вместе с расчётом пропадали.
   const [age, setAge] = useState(30);
+  const [atrophy, setAtrophy] = useState('unknown');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { openModal } = useContactModal();
 
@@ -454,6 +465,52 @@ export function PriceCalculator() {
     { name: `Коронка «${crown.title}»`, unit: crown.price },
   ];
   const total = rows.reduce((sum, r) => sum + r.unit * count, 0);
+
+  // Восемь цифр — длина латвийского номера; код 371 в счёт не идёт.
+  const phoneValid = phone.replace(/\D/g, '').replace(/^371/, '').length >= 8;
+  const canSubmit =
+    firstName.trim().length >= 2 && lastName.trim().length >= 2 && phoneValid && consent && !submitting;
+
+  /**
+   * Заявка из калькулятора. Вместе с контактами уходит и сам расчёт: без него
+   * администратор перезванивает вслепую и заново выспрашивает, что человек
+   * уже выбрал на схеме.
+   */
+  const submitLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canSubmit) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const summary = [
+        `Имплант: ${implant.title} — ${formatEUR(implant.price)} × ${count}`,
+        `Коронка: ${crown.title} — ${formatEUR(crown.price)} × ${count}`,
+        `Зубы: верхняя челюсть — ${upperCount}, нижняя — ${lowerCount}, всего ${totalTeeth}`,
+        `Итого: ${formatEUR(total)}`,
+      ].join('\n');
+
+      const res = await fetch('/api/leads/calculator', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: firstName.trim(),
+          surname: lastName.trim(),
+          phone: phone.trim(),
+          age,
+          atrophy,
+          message: summary,
+          page: window.location.pathname,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || data?.success === false) throw new Error('lead_failed');
+      setSent(true);
+    } catch {
+      setError('Не удалось отправить заявку. Попробуйте позже или позвоните нам.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section
@@ -625,13 +682,12 @@ export function PriceCalculator() {
                 transition={{ duration: 0.25 }}
               >
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[640px] border-collapse">
+                  <table className="w-full min-w-[520px] border-collapse">
                     <thead>
                       <tr className="text-left text-zinc-500 text-sm">
                         <th className="font-normal py-4 pr-4">Процедуры</th>
                         <th className="font-normal py-4 px-4">Кол-во и цена</th>
-                        <th className="font-normal py-4 px-4 text-right">Стоимость</th>
-                        <th className="font-normal py-4 pl-4 text-right">Рассрочка</th>
+                        <th className="font-normal py-4 pl-4 text-right">Стоимость</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -647,11 +703,8 @@ export function PriceCalculator() {
                           <td className="py-4 px-4 whitespace-nowrap text-zinc-500 dark:text-zinc-400">
                             {count} <span className="text-amber-500">×</span> {formatEUR(r.unit)}
                           </td>
-                          <td className="py-4 px-4 text-right whitespace-nowrap">
+                          <td className="py-4 pl-4 text-right whitespace-nowrap rounded-r-lg">
                             {formatEUR(r.unit * count)}
-                          </td>
-                          <td className="py-4 pl-4 text-right whitespace-nowrap rounded-r-lg text-zinc-500 dark:text-zinc-400">
-                            {installment(r.unit * count)}
                           </td>
                         </tr>
                       ))}
@@ -660,11 +713,8 @@ export function PriceCalculator() {
                           Итого:
                         </td>
                         <td className="py-5 px-4" />
-                        <td className="py-5 px-4 text-right text-lg whitespace-nowrap">
+                        <td className="py-5 pl-4 text-right text-lg whitespace-nowrap rounded-r-lg">
                           {formatEUR(total)}
-                        </td>
-                        <td className="py-5 pl-4 text-right text-lg whitespace-nowrap rounded-r-lg text-amber-600">
-                          {installment(total)}
                         </td>
                       </tr>
                     </tbody>
@@ -700,7 +750,21 @@ export function PriceCalculator() {
                 className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16"
               >
                 {/* Форма */}
-                <div>
+                {sent ? (
+                <div className="flex flex-col items-start gap-4">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500 text-zinc-900">
+                    <Check size={28} strokeWidth={3} />
+                  </span>
+                  <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                    Спасибо, {firstName.trim()}!
+                  </h3>
+                  <p className="text-zinc-600 dark:text-zinc-300 max-w-md">
+                    Заявка принята вместе с вашим расчётом — администратор свяжется
+                    с вами и запишет на бесплатную 3D-томографию и консультацию.
+                  </p>
+                </div>
+                ) : (
+                <form onSubmit={submitLead} noValidate>
                   <p className="text-lg text-zinc-700 dark:text-zinc-200 mb-8 max-w-md">
                     Запись на бесплатную компьютерную 3D-томографию и консультацию
                   </p>
@@ -745,10 +809,11 @@ export function PriceCalculator() {
                       <div className="relative">
                         <select
                           id="atrophy"
-                          defaultValue=""
+                          value={atrophy}
+                          onChange={(e) => setAtrophy(e.target.value)}
                           className="w-full appearance-none rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-50 px-4 py-3 pr-10 focus:outline-none focus:border-amber-500 transition-colors"
                         >
-                          <option value="">Не знаю</option>
+                          <option value="unknown">Не знаю</option>
                           <option value="none">Нет</option>
                           <option value="mild">Незначительная</option>
                           <option value="severe">Значительная</option>
@@ -766,76 +831,109 @@ export function PriceCalculator() {
                     Цена может измениться в зависимости от выбранного пункта.
                   </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <label
-                        htmlFor="calc-name"
-                        className="block text-sm text-zinc-500 dark:text-zinc-400 mb-2"
-                      >
-                        Как вас зовут
+                      <label htmlFor="calc-name" className={calcLabelClass}>
+                        Имя <span className="text-amber-500">*</span>
                       </label>
                       <input
                         id="calc-name"
                         type="text"
-                        className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-50 px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors"
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        autoComplete="given-name"
+                        className={calcInputClass}
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor="calc-phone"
-                        className="block text-sm text-zinc-500 dark:text-zinc-400 mb-2"
-                      >
-                        Телефон
+                      <label htmlFor="calc-surname" className={calcLabelClass}>
+                        Фамилия <span className="text-amber-500">*</span>
+                      </label>
+                      <input
+                        id="calc-surname"
+                        type="text"
+                        required
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        autoComplete="family-name"
+                        className={calcInputClass}
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="calc-phone" className={calcLabelClass}>
+                        Телефон <span className="text-amber-500">*</span>
                       </label>
                       <input
                         id="calc-phone"
                         type="tel"
-                        className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-50 px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors"
+                        required
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        autoComplete="tel"
+                        className={calcInputClass}
                       />
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => openModal()}
-                    className="btn-sweep inline-flex items-center gap-3 rounded-full border-2 border-amber-500 text-amber-600 hover:text-white px-8 py-4 font-semibold transition-colors active:scale-95"
+                  {/* Кнопка до галочки заблокирована, поэтому подпись объясняет связь. */}
+                  <label
+                    htmlFor="calc-consent"
+                    className="mb-8 flex items-start gap-2.5 text-xs text-zinc-500 dark:text-zinc-400 max-w-md cursor-pointer select-none"
                   >
-                    Отправить
+                    <input
+                      id="calc-consent"
+                      type="checkbox"
+                      required
+                      checked={consent}
+                      onChange={(e) => setConsent(e.target.checked)}
+                      className="h-4 w-4 shrink-0 mt-0.5 cursor-pointer accent-amber-500"
+                    />
+                    <span>
+                      Я согласен на обработку моих персональных данных в соответствии с{' '}
+                      <Link to="/privacy" className="underline underline-offset-2 hover:text-amber-600">
+                        политикой конфиденциальности
+                      </Link>
+                    </span>
+                  </label>
+
+                  <button
+                    type="submit"
+                    disabled={!canSubmit}
+                    className="btn-sweep inline-flex items-center gap-3 rounded-full border-2 border-amber-500 text-amber-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed px-8 py-4 font-semibold transition-colors active:scale-95"
+                  >
+                    {submitting ? 'Отправляем…' : 'Отправить'}
                     <ArrowRight size={18} />
                   </button>
-                </div>
+                  {error && (
+                    <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">
+                      {error}
+                    </p>
+                  )}
+                </form>
+                )}
 
                 {/* Предварительный расчёт */}
                 <div className="lg:border-l lg:border-zinc-200 lg:dark:border-zinc-800 lg:pl-16">
                   <h3 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-50 mb-8">
                     Предварительный расчёт
                   </h3>
-                  <div className="flex flex-wrap gap-x-12 gap-y-4 mb-8">
-                    <div>
-                      <p className="text-sm text-zinc-500 mb-1">Стоимость</p>
-                      <p className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-                        {formatEUR(total)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-zinc-500 mb-1">Рассрочка</p>
-                      <p className="text-2xl md:text-3xl font-bold text-amber-600">
-                        {installment(total)}
-                      </p>
-                    </div>
+                  <div className="mb-8">
+                    <p className="text-sm text-zinc-500 mb-1">Стоимость</p>
+                    <p className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+                      {formatEUR(total)}
+                    </p>
                   </div>
-                  <div className="space-y-4 text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-md">
+                  <div className="text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-md">
                     <p>
                       Калькулятор содержит актуальные цены клиники RoyalDent. Итоговая
                       стоимость подтверждается после консультации и диагностики.
                     </p>
-                    <p>
-                      Рассрочка до 9 месяцев предоставляется банками-партнёрами. Узнайте
-                      о вашей персональной скидке на бесплатной консультации.
-                    </p>
                   </div>
                   <button
+                    type="button"
                     onClick={() => openModal()}
-                    className="mt-6 text-amber-600 font-semibold hover:text-amber-700 underline underline-offset-4 transition-colors"
+                    className="btn-sweep mt-6 inline-flex items-center bg-amber-500 hover:bg-amber-400 text-zinc-900 px-8 py-3.5 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-lg active:scale-95"
                   >
                     Заказать звонок
                   </button>

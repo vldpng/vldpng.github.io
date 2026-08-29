@@ -58,20 +58,51 @@ const columns = [
 const linkClass =
   'text-[13px] text-white/70 hover:text-amber-400 transition-colors';
 
+/** Поля формы обратного звонка одинаковы — держим класс в одном месте. */
+const callbackInputClass =
+  'w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-white/60 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors';
+
 export function Footer() {
   const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
   const [phone, setPhone] = useState('');
+  // Согласие на обработку данных — как в модалке записи: без него отправка
+  // заблокирована, иначе телефон уезжал бы к нам без разрешения посетителя.
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCallback = (e: React.FormEvent) => {
+  // Восемь цифр — длина латвийского номера; префикс 371 в счёт не идёт.
+  const phoneValid = phone.replace(/\D/g, '').replace(/^371/, '').length >= 8;
+  const canSubmit =
+    name.trim().length >= 2 && surname.trim().length >= 2 && phoneValid && consent && !submitting;
+
+  const handleCallback = async (e: React.FormEvent) => {
     e.preventDefault();
-    const phoneValue = phone.trim();
-    if (!phoneValue) return;
-    // Без бэкенда: открываем письмо клинике с данными пациента для обратного звонка.
-    const subject = encodeURIComponent('Заявка на обратный звонок — RoyalDent');
-    const body = encodeURIComponent(
-      `Здравствуйте! Прошу перезвонить мне.\nИмя: ${name.trim() || '—'}\nТелефон: ${phoneValue}`,
-    );
-    window.location.href = `${clinic.emailHref}?subject=${subject}&body=${body}`;
+    if (!canSubmit) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/leads/callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          surname: surname.trim(),
+          phone: phone.trim(),
+          // Страница нужна администратору: по ней видно, чем интересовался клиент.
+          page: window.location.pathname,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || data?.success === false) throw new Error('callback_failed');
+      setDone(true);
+    } catch {
+      setError('Не удалось отправить заявку. Попробуйте позже или позвоните нам.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -123,14 +154,31 @@ export function Footer() {
               Оставьте телефон и мы вам перезвоним
             </h3>
 
-            <form onSubmit={handleCallback} className="max-w-md flex flex-col gap-3">
+            {done ? (
+              <p className="max-w-md text-sm text-white/80 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3.5">
+                Спасибо, {name.trim()}! Заявка принята — мы перезвоним вам в ближайшее время.
+              </p>
+            ) : (
+            <form onSubmit={handleCallback} className="max-w-md flex flex-col gap-3" noValidate>
               <input
                 type="text"
+                required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ваше имя"
                 aria-label="Ваше имя"
-                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-white/60 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                autoComplete="given-name"
+                className={callbackInputClass}
+              />
+              <input
+                type="text"
+                required
+                value={surname}
+                onChange={(e) => setSurname(e.target.value)}
+                placeholder="Ваша фамилия"
+                aria-label="Ваша фамилия"
+                autoComplete="family-name"
+                className={callbackInputClass}
               />
               <input
                 type="tel"
@@ -139,15 +187,42 @@ export function Footer() {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Номер телефона"
                 aria-label="Номер телефона"
-                className="w-full rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder:text-white/60 px-4 py-3.5 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                autoComplete="tel"
+                className={callbackInputClass}
               />
+              <label
+                htmlFor="footer-consent"
+                className="flex items-start gap-2.5 text-xs text-white/60 cursor-pointer select-none"
+              >
+                <input
+                  id="footer-consent"
+                  type="checkbox"
+                  required
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="h-4 w-4 shrink-0 mt-0.5 cursor-pointer accent-amber-500"
+                />
+                <span>
+                  Я согласен на обработку моих персональных данных в соответствии с{' '}
+                  <Link to="/privacy" className="underline underline-offset-2 hover:text-amber-400">
+                    политикой конфиденциальности
+                  </Link>
+                </span>
+              </label>
               <button
                 type="submit"
-                className="btn-sweep self-start bg-amber-500 hover:bg-amber-400 text-zinc-900 px-7 py-3 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95"
+                disabled={!canSubmit}
+                className="btn-sweep self-start bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-900 px-7 py-3 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95"
               >
-                Заказать звонок
+                {submitting ? 'Отправляем…' : 'Заказать звонок'}
               </button>
+              {error && (
+                <p role="alert" className="text-xs text-red-400">
+                  {error}
+                </p>
+              )}
             </form>
+            )}
 
             {/* Соцсети */}
             <div className="flex items-center gap-3 mt-7">

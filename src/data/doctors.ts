@@ -29,7 +29,19 @@ export interface Certificate {
 }
 
 export interface Doctor {
+  /**
+   * Внутренний ключ: первичный ключ в базе, по нему панель администратора
+   * правит и переставляет карточки. В адресах не участвует — там slug.
+   * Наружу не показывается нигде.
+   */
   id: string;
+  /**
+   * Адрес страницы: /doctors/<slug>. Фамилия латиницей, строчными, через
+   * дефис. Обязан быть уникальным: страница ищется по нему, и дубль увёл бы
+   * один адрес на двух человек. У однофамильцев к фамилии добавляется имя —
+   * см. двух Двуреченских ниже.
+   */
+  slug: string;
   name: string;
   specialty: string;
   /** Стаж работы. Пусто — блок не отображается. TODO: заполнить. */
@@ -69,6 +81,9 @@ export interface Doctor {
 export const doctorsData: Doctor[] = [
   {
     id: "1",
+    // Второй Двуреченский — ассистент Владислав ниже; чистая фамилия достаётся
+    // врачу, у которого есть страница.
+    slug: "dvurechenskiy",
     name: "Виталий Двуреченский",
     specialty: "Хирург-имплантолог, ортопед",
     experience: "30 лет",
@@ -81,20 +96,32 @@ export const doctorsData: Doctor[] = [
       { title: 'Специализация по ортопедической стоматологии', subtitle: '1996 — 1997' },
       { title: 'Специализация по хирургической стоматологии', subtitle: '1997 — 1998' },
     ],
-    // TODO: положить сканы в public/images/certificates/ и проставить src с
-    // подписями. Пока три пустые рамки — заготовка ленты, не реальные данные.
-    certificates: [{}, {}, {}],
-    // TODO: положить снимки в public/images/cases/ и проставить before/after.
-    // Без путей слайдер показывает тёмную заглушку «[Фото до] / [Фото после]».
+    // Подписи не заполнены намеренно: что именно на каждом скане, знает только
+    // клиника — придумывать названия дипломам нельзя. Без title лента покажет
+    // плитки без подписей, это штатное поведение.
+    certificates: [
+      { src: '/images/certificates/Vitaly_certificate1.webp' },
+      { src: '/images/certificates/Vitaly_certificate2.webp' },
+      { src: '/images/certificates/Vitaly_certificate3.webp' },
+      { src: '/images/certificates/Vitaly_certificate4.webp' },
+      { src: '/images/certificates/Vitaly_certificate5.webp' },
+      { src: '/images/certificates/Vitaly_certificate6.webp' },
+      { src: '/images/certificates/Vitaly_certificate7.webp' },
+      { src: '/images/certificates/Vitaly_certificate8.webp' },
+      { src: '/images/certificates/Vitaly_certificate9.webp' },
+    ],
+    // Кейсы без снимков не заводим: слайдер показал бы тёмную заглушку
+    // «[Фото до] / [Фото после]» — на странице врача это выглядит недоделкой.
     cases: [
-      { title: 'Имплантация при полном отсутствии зубов' },
-      { title: 'Одномоментная имплантация после удаления' },
-      { title: 'Протезирование на имплантах' },
+      {
+        title: 'Тотальная реабилитация',
+        before: '/images/cases/total_rehabilitation_before.webp',
+        after: '/images/cases/total_rehabilitation_after.webp',
+      },
     ],
     bio: "Проводит дентальную имплантацию и хирургическое восстановление зубов, а также ортопедическое протезирование — от планирования до фиксации постоянных конструкций.",
     services: [
       '/services/prosthetics',
-      '/services/surgery',
       '/services/implants',
       '/services/microscope',
       '/services/tmj',
@@ -104,6 +131,7 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "13",
+    slug: "berze",
     name: "Эдгар Берзе",
     specialty: "Хирург-имплантолог",
     experience: "15 лет",
@@ -111,15 +139,16 @@ export const doctorsData: Doctor[] = [
       { title: 'Рижский университет имени Паула Страдыня' },
     ],
     bio: "Проводит установку имплантов и хирургическое лечение: удаление зубов любой сложности, костную пластику и подготовку челюсти к протезированию.",
-    services: ['/services/surgery', '/services/implants'],
+    services: ['/services/implants'],
     photoLabel: "[Фото — Эдгар Берзе, хирург-имплантолог]",
     photoUrl: "/images/staff/Edgar_Doctor.webp",
   },
   {
     id: "2",
+    slug: "heyfets",
     name: "Элина Хейфец",
     specialty: "Стоматолог-ортопед",
-    experience: "12 лет", // TODO: реальный стаж
+    experience: "35 лет",
     educationList: [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
@@ -130,9 +159,10 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "3",
+    slug: "ivanova",
     name: "Ирина Иванова",
     specialty: "Стоматолог-терапевт",
-    experience: "10 лет", // TODO: реальный стаж
+    experience: "30 лет",
     educationList: [
       { title: 'Стоматология', subtitle: 'Высшее медицинское образование' }, // TODO
     ],
@@ -145,8 +175,10 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "5",
+    slug: "kravchuk",
     name: "Валерия Кравчук",
     specialty: "Гигиенист",
+    experience: "6 лет",
     bio: "Проводит профессиональную чистку зубов, снятие налёта и зубного камня, профилактику кариеса и заболеваний дёсен.",
     services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Валерия Кравчук, гигиенист]",
@@ -154,8 +186,10 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "9",
+    slug: "purvinya",
     name: "Алина Пурвиня",
     specialty: "Гигиенист",
+    experience: "10 лет",
     bio: "Выполняет профессиональную гигиену полости рта, снятие зубных отложений и полировку, подбирает средства для домашнего ухода.",
     services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Алина Пурвиня, гигиенист]",
@@ -163,6 +197,7 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "10",
+    slug: "yakunchihina",
     name: "Елена Якунчихина",
     specialty: "Косметолог",
     bio: "Проводит эстетические процедуры для лица и зоны вокруг губ, дополняя работу стоматологов и помогая добиться гармоничного результата.",
@@ -172,16 +207,21 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "6",
-    name: "Даниэла Рожинская",
+    slug: "rozhinska",
+    name: "Даниэла Рожинска",
     specialty: "Ассистент",
     bio: "Ассистирует врачам во время приёма, готовит кабинет и материалы, помогает пациентам чувствовать себя комфортно на каждом этапе лечения.",
     services: [],
-    photoLabel: "[Фото — Даниэла Рожинская, ассистент]",
+    photoLabel: "[Фото — Даниэла Рожинска, ассистент]",
     photoUrl: "/images/staff/Daniela_asistent.webp",
     support: true,
   },
   {
     id: "8",
+    // С именем, потому что фамилия уже занята хирургом Виталием. Личной
+    // страницы у ассистента нет, но slug обязан быть уникальным: по нему
+    // ищется врач, и дубль увёл бы один адрес на двух человек.
+    slug: "dvurechenskiy-vladislav",
     name: "Владислав Двуреченский",
     specialty: "Ассистент",
     bio: "Ассистирует врачам на приёме, готовит кабинет и материалы, отвечает за стерильность инструментов и сопровождает пациента во время процедур.",
@@ -192,21 +232,23 @@ export const doctorsData: Doctor[] = [
   },
   {
     id: "11",
-    name: "Эдита", // TODO: добавить фамилию
+    slug: "cheme",
+    name: "Эдита Чеме",
     specialty: "Администратор",
     bio: "Встречает пациентов, ведёт запись на приём и помогает подобрать удобное время визита, отвечает на вопросы по лечению и документам.",
     services: [],
-    photoLabel: "[Фото — Эдита, администратор]",
+    photoLabel: "[Фото — Эдита Чеме, администратор]",
     photoUrl: "/images/staff/Edita_admin.webp",
     support: true,
   },
   {
     id: "12",
-    name: "Татьяна", // TODO: добавить фамилию
+    slug: "chernogortseva",
+    name: "Татьяна Черногорцева",
     specialty: "Администратор",
     bio: "Координирует расписание клиники и сопровождает пациентов от первого звонка до завершения лечения.",
     services: [],
-    photoLabel: "[Фото — Татьяна, администратор]",
+    photoLabel: "[Фото — Татьяна Черногорцева, администратор]",
     photoUrl: "/images/staff/Tatiana_admin.webp",
     support: true,
   },
