@@ -47,13 +47,16 @@ export function About() {
             <FadeIn>
               <SectionBadge>Кто мы</SectionBadge>
             </FadeIn>
-            <FadeIn delay={0.05} className="mt-6 flex-1 min-h-[260px]">
-              <div className="h-full overflow-hidden rounded-[2rem]">
+            <FadeIn
+              delay={0.05}
+              className="mt-6 flex-1 min-h-[260px] min-[1440px]:h-[clamp(20rem,21.5vw,25.625rem)] min-[1440px]:flex-none min-[1440px]:mr-[calc((100vw_-_100rem)_*_-0.5_-_0.75rem)]"
+            >
+              <div className="relative h-full overflow-hidden rounded-[2rem] min-[1440px]:rounded-r-none">
                 <img
                   src="/images/decor/two-tooth.webp"
                   alt="Стоматология RoyalDent"
                   loading="lazy"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover min-[1440px]:absolute min-[1440px]:inset-y-0 min-[1440px]:right-0 min-[1440px]:w-auto min-[1440px]:max-w-none min-[1440px]:object-contain"
                 />
               </div>
             </FadeIn>
