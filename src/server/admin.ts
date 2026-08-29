@@ -10,6 +10,8 @@ import path from 'node:path';
 import {
   getDoctorPublicationMissingFields,
   type Doctor,
+  type DoctorTranslation,
+  type EducationItem,
 } from '../data/doctors';
 import type { PriceCategory } from '../data/prices';
 import {
@@ -32,6 +34,28 @@ import { UPLOADS_STAFF_DIR } from './paths';
 
 const clean = (v: unknown, max = 200): string => String(v ?? '').trim().slice(0, max);
 
+/** Список образования: безымянные пункты выбрасываем — в вёрстке это дырка. */
+function cleanEducation(raw: unknown): EducationItem[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  return raw
+    .map((e: any) => ({
+      title: clean(e?.title, 200),
+      subtitle: clean(e?.subtitle, 200) || undefined,
+    }))
+    .filter((e) => e.title);
+}
+
+/** Одна языковая версия врача. Набор полей одинаков для всех языков. */
+function sanitizeTranslation(raw: unknown): DoctorTranslation {
+  const body = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
+  return {
+    specialty: clean(body.specialty, 160),
+    experience: clean(body.experience, 80) || undefined,
+    bio: clean(body.bio, 2000),
+    educationList: cleanEducation(body.educationList),
+  };
+}
+
 /**
  * Поля врача принимаем только по списку — иначе через админ-API в JSON можно
  * было бы дописать что угодно. Массивы и вложенные структуры проверяем
@@ -41,30 +65,11 @@ function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
   const services = Array.isArray(body.services)
     ? body.services.map((s) => clean(s, 100)).filter((s) => s.startsWith('/services/'))
     : [];
-  const educationList = Array.isArray(body.educationList)
-    ? body.educationList
-        .map((e: any) => ({
-          title: clean(e?.title, 200),
-          subtitle: clean(e?.subtitle, 200) || undefined,
-        }))
-        .filter((e) => e.title)
-    : undefined;
+  const educationList = cleanEducation(body.educationList);
   const translationsBody =
     body.translations && typeof body.translations === 'object'
       ? (body.translations as Record<string, unknown>)
       : {};
-  const englishBody =
-    translationsBody.en && typeof translationsBody.en === 'object'
-      ? (translationsBody.en as Record<string, unknown>)
-      : {};
-  const educationListEn = Array.isArray(englishBody.educationList)
-    ? englishBody.educationList
-        .map((e: any) => ({
-          title: clean(e?.title, 200),
-          subtitle: clean(e?.subtitle, 200) || undefined,
-        }))
-        .filter((e) => e.title)
-    : undefined;
 
   // Сертификаты и кейсы раньше в белый список не входили, и любое сохранение
   // врача в админке молча стирало ему обе секции: на странице пропадали и
@@ -115,12 +120,8 @@ function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
     photoLabel: `[Фото — ${name}]`,
     support: body.support === true || undefined,
     translations: {
-      en: {
-        specialty: clean(englishBody.specialty, 160),
-        experience: clean(englishBody.experience, 80) || undefined,
-        bio: clean(englishBody.bio, 2000),
-        educationList: educationListEn,
-      },
+      en: sanitizeTranslation(translationsBody.en),
+      lv: sanitizeTranslation(translationsBody.lv),
     },
   };
 }

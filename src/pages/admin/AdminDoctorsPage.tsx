@@ -30,6 +30,10 @@ const doctorPublicationFieldLabels: Record<DoctorPublicationField, string> = {
   experienceEn: 'Стаж на английском',
   bioEn: 'Описание на английском',
   educationListEn: 'Образование на английском',
+  specialtyLv: 'Специальность на латышском',
+  experienceLv: 'Стаж на латышском',
+  bioLv: 'Описание на латышском',
+  educationListLv: 'Образование на латышском',
 };
 
 /** «Учреждение — подпись», по строке на пункт: textarea проще динамических полей. */
@@ -78,6 +82,10 @@ function DoctorEditor({
     experienceEn: doctor.translations?.en?.experience ?? '',
     bioEn: doctor.translations?.en?.bio ?? '',
     educationEn: educationToText(doctor.translations?.en?.educationList),
+    specialtyLv: doctor.translations?.lv?.specialty ?? '',
+    experienceLv: doctor.translations?.lv?.experience ?? '',
+    bioLv: doctor.translations?.lv?.bio ?? '',
+    educationLv: educationToText(doctor.translations?.lv?.educationList),
     photoUrl: doctor.photoUrl ?? '',
     support: doctor.support === true,
   });
@@ -121,6 +129,12 @@ function DoctorEditor({
               experience: form.experienceEn,
               bio: form.bioEn,
               educationList: textToEducation(form.educationEn),
+            },
+            lv: {
+              specialty: form.specialtyLv,
+              experience: form.experienceLv,
+              bio: form.bioLv,
+              educationList: textToEducation(form.educationLv),
             },
           },
           // Панель их не редактирует, но обязана вернуть как есть: сервер
@@ -379,14 +393,12 @@ function DoctorEditor({
             </div>
           </div>
 
-          <div className="sm:col-span-2 mt-2 rounded-2xl border border-blue-200 bg-blue-50/70 p-4">
-            <h3 className="text-sm font-semibold text-blue-950">English version</h3>
-            <p className="mt-1 text-xs text-blue-700">
-              Для новых врачей эти поля обязательны перед публикацией. Имя укажите в официальном написании латиницей.
-            </p>
-          </div>
-          <div>
-            <label className={labelCls}>Имя на латышском / латиницей</label>
+          {/* Имя латиницей общее для латышской и английской версий, поэтому
+              стоит перед обоими языковыми блоками, а не внутри одного из них. */}
+          <div className="sm:col-span-2 mt-2">
+            <label className={labelCls}>
+              Имя на латышском / латиницей — используется в обеих языковых версиях
+            </label>
             <input
               value={form.nameLatin}
               onChange={(e) => set('nameLatin', e.target.value)}
@@ -394,8 +406,60 @@ function DoctorEditor({
               className={inputCls}
             />
           </div>
+
+          <div className="sm:col-span-2 mt-2 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
+            <h3 className="text-sm font-semibold text-emerald-950">Латышская версия</h3>
+            <p className="mt-1 text-xs text-emerald-700">
+              Основной язык сайта. Для новых врачей эти поля обязательны перед публикацией.
+            </p>
+          </div>
           <div>
-            <label className={labelCls}>Specialty</label>
+            <label className={labelCls}>Специальность на латышском</label>
+            <input
+              value={form.specialtyLv}
+              onChange={(e) => set('specialtyLv', e.target.value)}
+              placeholder="Zobārsts, protēzists"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className={labelCls}>Стаж на латышском</label>
+            <input
+              value={form.experienceLv}
+              onChange={(e) => set('experienceLv', e.target.value)}
+              placeholder="12 gadu pieredze"
+              className={inputCls}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelCls}>Описание на латышском</label>
+            <textarea
+              value={form.bioLv}
+              onChange={(e) => set('bioLv', e.target.value)}
+              rows={3}
+              className={cn(inputCls, 'resize-y')}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelCls}>
+              Образование на латышском — по одному пункту в строке: «Учреждение — подробности»
+            </label>
+            <textarea
+              value={form.educationLv}
+              onChange={(e) => set('educationLv', e.target.value)}
+              rows={2}
+              className={cn(inputCls, 'resize-y')}
+            />
+          </div>
+
+          <div className="sm:col-span-2 mt-2 rounded-2xl border border-blue-200 bg-blue-50/70 p-4">
+            <h3 className="text-sm font-semibold text-blue-950">Английская версия</h3>
+            <p className="mt-1 text-xs text-blue-700">
+              Для новых врачей эти поля обязательны перед публикацией.
+            </p>
+          </div>
+          <div>
+            <label className={labelCls}>Специальность на английском</label>
             <input
               value={form.specialtyEn}
               onChange={(e) => set('specialtyEn', e.target.value)}
@@ -404,7 +468,7 @@ function DoctorEditor({
             />
           </div>
           <div>
-            <label className={labelCls}>Work experience</label>
+            <label className={labelCls}>Стаж на английском</label>
             <input
               value={form.experienceEn}
               onChange={(e) => set('experienceEn', e.target.value)}
@@ -413,7 +477,7 @@ function DoctorEditor({
             />
           </div>
           <div className="sm:col-span-2">
-            <label className={labelCls}>Description in English</label>
+            <label className={labelCls}>Описание на английском</label>
             <textarea
               value={form.bioEn}
               onChange={(e) => set('bioEn', e.target.value)}
@@ -422,7 +486,9 @@ function DoctorEditor({
             />
           </div>
           <div className="sm:col-span-2">
-            <label className={labelCls}>Education in English — one entry per line: “Institution — details”</label>
+            <label className={labelCls}>
+              Образование на английском — по одному пункту в строке: «Учреждение — подробности»
+            </label>
             <textarea
               value={form.educationEn}
               onChange={(e) => set('educationEn', e.target.value)}

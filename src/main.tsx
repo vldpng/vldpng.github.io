@@ -12,6 +12,8 @@ import {
 } from './data/languages.ts';
 
 const { lang, prefix } = parseLangFromPath(window.location.pathname);
+const isLatvianPreview =
+  import.meta.env.DEV && new URLSearchParams(window.location.search).get('preview') === 'lv';
 
 /**
  * Пока основной язык (латышский) не переведён, корень уводим на готовую
@@ -21,7 +23,8 @@ const { lang, prefix } = parseLangFromPath(window.location.pathname);
  * replace, а не assign: иначе кнопка «назад» возвращала бы на корень,
  * который снова редиректит, и выйти из цикла было бы нельзя.
  */
-const needsFallback = lang === DEFAULT_LANG && !getLanguage(DEFAULT_LANG).ready;
+const needsFallback =
+  lang === DEFAULT_LANG && !getLanguage(DEFAULT_LANG).ready && !isLatvianPreview;
 
 if (needsFallback) {
   const target = getLanguage(FALLBACK_LANG).prefix;
@@ -50,6 +53,8 @@ if (needsFallback) {
     // намеренно остаётся русской даже при ручном переходе на /en/admin.
     const needsEnglish =
       lang === 'en' && !stripLangPrefix(window.location.pathname).startsWith('/admin');
+    const needsLatvian =
+      lang === 'lv' && !stripLangPrefix(window.location.pathname).startsWith('/admin');
 
     if (needsEnglish) {
       // Показываем полноценный первый кадр сразу: загрузка словаря больше не
@@ -65,6 +70,11 @@ if (needsFallback) {
       );
       const { installEnglishTranslation } = await import('./i18n/english.ts');
       installEnglishTranslation();
+    }
+
+    if (needsLatvian) {
+      const { installLatvianTranslation } = await import('./i18n/latvian.ts');
+      installLatvianTranslation();
     }
 
     renderApp();

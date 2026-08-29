@@ -44,19 +44,23 @@ for (const file of files) {
   );
 
   function visit(node) {
+    // Куски шаблонных литералов (`${n} лет`) отдельной строкой в переводчик
+    // не попадают: он всегда получает уже собранную строку. Требовать для
+    // такого фрагмента запись в словаре бессмысленно — за сборку отвечает
+    // translateDynamicString, а её проверяет check-english-regressions.
+    const isTemplateFragment =
+      ts.isTemplateHead(node) || ts.isTemplateMiddle(node) || ts.isTemplateTail(node);
+
     let value;
     if (
       ts.isStringLiteral(node) ||
       ts.isNoSubstitutionTemplateLiteral(node) ||
-      ts.isJsxText(node) ||
-      ts.isTemplateHead(node) ||
-      ts.isTemplateMiddle(node) ||
-      ts.isTemplateTail(node)
+      ts.isJsxText(node)
     ) {
       value = node.text;
     }
 
-    if (value && /[А-Яа-яЁё]/.test(value)) {
+    if (value && !isTemplateFragment && /[А-Яа-яЁё]/.test(value)) {
       publicStrings.add(value.replace(/\s+/g, ' ').trim());
     }
     ts.forEachChild(node, visit);

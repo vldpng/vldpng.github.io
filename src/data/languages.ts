@@ -29,10 +29,7 @@ export interface Language {
 }
 
 export const LANGUAGES: Language[] = [
-  // TODO: перевести сайт на латышский и поставить ready: true —
-  // после этого корень начнёт отдавать латышскую версию, а временный
-  // редирект на /ru в src/main.tsx нужно будет убрать.
-  { code: 'lv', label: 'LV', prefix: '', hreflang: 'lv', flag: '/icons/latvia.webp', ready: false },
+  { code: 'lv', label: 'LV', prefix: '', hreflang: 'lv', flag: '/icons/latvia.webp', ready: true },
   { code: 'ru', label: 'RU', prefix: '/ru', hreflang: 'ru', flag: '/icons/russia.webp', ready: true },
   // Английскому соответствует флаг Великобритании — общепринятая замена,
   // отдельного «английского» флага в наборе нет.

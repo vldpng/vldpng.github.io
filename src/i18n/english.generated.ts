@@ -1435,4 +1435,6 @@ export const generatedEnglishTranslations: Record<string, string> = {
   "до": "to",
   "от": "from",
   "и": "and"
+,
+  "Хирург устанавливает импланты в ходе операции": "Surgeon placing implants during surgery"
 };

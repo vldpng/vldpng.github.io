@@ -33,7 +33,10 @@ export function useDoctors(): Doctor[] {
   }, []);
 
   return useMemo(
-    () => (lang === 'en' ? doctors.map((doctor) => localizeDoctor(doctor, lang)) : doctors),
+    // Arī krievu versijai izlaižam datus caur localizeDoctor: vecos DB
+    // ierakstos pieredze var būt saglabāta kā kails skaitlis ("15"), un
+    // normalizētājs tam pievieno valodai atbilstošu mērvienību.
+    () => doctors.map((doctor) => localizeDoctor(doctor, lang)),
     [doctors, lang],
   );
 }

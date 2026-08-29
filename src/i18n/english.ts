@@ -6,6 +6,11 @@ import { setRuntimeTranslator } from './runtime';
  * The large generated dictionary stays reproducible; editorial fixes live here.
  */
 const manualTranslations: Record<string, string> = {
+  'Найди свою улыбку в': 'Find Your Smile in',
+  'Иван Граф': 'Ivan Graf',
+  'Гнатолог': 'Gnathologist',
+  'Институт имени Масима Горького - по специальности врач-стоматолог':
+    'Maxim Gorky Institute — Degree in Dentistry',
   'Имплантация': 'Dental Implants',
   'Имплантация зубов': 'Dental Implants',
   'Имплантация All-on-4': 'All-on-4 Dental Implants',
@@ -111,6 +116,9 @@ const manualTranslations: Record<string, string> = {
   'Настоящие Правила внутреннего распорядка стоматологической клиники «RoyalDent» (далее — Правила) являются организационно-правовым документом и разработаны в соответствии с законодательством Латвийской Республики, в том числе с Гражданским законом (Civillikums), законом «О правах пациентов» (Pacientu tiesību likums), законом «О медицинской деятельности» (Ārstniecības likums), законом «О защите прав потребителей» (Patērētāju tiesību aizsardzības likums), Регламентом (ЕС) 2016/679 (Общий регламент о защите данных, GDPR) и законом «Об обработке данных физических лиц» (Fizisko personu datu apstrādes likums), правилами Кабинета министров № 555 «Veselības aprūpes pakalpojumu organizēšanas un samaksas kārtība», а также иными нормативными актами.':
     'These Internal Rules of the RoyalDent dental clinic (the “Rules”) are an organisational and legal document developed in accordance with the laws of the Republic of Latvia, including the Civil Law (Civillikums), the Law on the Rights of Patients (Pacientu tiesību likums), the Medical Treatment Law (Ārstniecības likums), the Consumer Rights Protection Law (Patērētāju tiesību aizsardzības likums), Regulation (EU) 2016/679 (General Data Protection Regulation, GDPR), the Personal Data Processing Law (Fizisko personu datu apstrādes likums), Cabinet of Ministers Regulation No. 555 “Veselības aprūpes pakalpojumu organizēšanas un samaksas kārtība”, and other applicable laws and regulations.',
   '— скоро': '— coming soon',
+  // Хвост шаблона `${n} лет` из localizeDoctor: русский стаж собирается в
+  // рантайме, когда в базе у врача лежит голое число без единицы измерения.
+  'лет': 'years',
 };
 
 const translations = {

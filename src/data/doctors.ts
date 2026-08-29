@@ -28,7 +28,8 @@ export interface Certificate {
   title?: string;
 }
 
-export interface DoctorEnglishTranslation {
+/** Переводимые поля врача: набор одинаков для всех языков, кроме русского. */
+export interface DoctorTranslation {
   specialty: string;
   experience?: string;
   bio: string;
@@ -45,7 +46,11 @@ export type DoctorPublicationField =
   | 'specialtyEn'
   | 'experienceEn'
   | 'bioEn'
-  | 'educationListEn';
+  | 'educationListEn'
+  | 'specialtyLv'
+  | 'experienceLv'
+  | 'bioLv'
+  | 'educationListLv';
 
 export interface Doctor {
   /**
@@ -103,14 +108,14 @@ export interface Doctor {
    */
   requiresEnglishForPublication?: boolean;
   translations?: {
-    en?: DoctorEnglishTranslation;
+    en?: DoctorTranslation;
+    lv?: DoctorTranslation;
   };
 }
 
 /** Возвращает поля, без которых новый врач не может быть опубликован. */
 export function getDoctorPublicationMissingFields(doctor: Doctor): DoctorPublicationField[] {
   const missing: DoctorPublicationField[] = [];
-  const english = doctor.translations?.en;
 
   if (!doctor.name.trim() || doctor.name === 'Новый сотрудник') missing.push('name');
   if (!doctor.slug.trim() || doctor.slug === doctor.id) missing.push('slug');
@@ -118,35 +123,64 @@ export function getDoctorPublicationMissingFields(doctor: Doctor): DoctorPublica
   if (!doctor.bio.trim()) missing.push('bio');
   if (!doctor.support && !doctor.educationList?.length) missing.push('educationList');
   if (!doctor.nameLatin?.trim()) missing.push('nameLatin');
-  if (!english?.specialty.trim()) missing.push('specialtyEn');
-  if (doctor.experience?.trim() && !english?.experience?.trim()) missing.push('experienceEn');
-  if (!english?.bio.trim()) missing.push('bioEn');
-  if (!doctor.support && !english?.educationList?.length) missing.push('educationListEn');
+
+  // Латышский и английский требуются в одинаковом объёме: латышский —
+  // основной язык сайта, английский — вторая публичная версия. Русский
+  // лежит в самих полях врача и отдельной проверки не требует.
+  const localized = [
+    { translation: doctor.translations?.en, suffix: 'En' },
+    { translation: doctor.translations?.lv, suffix: 'Lv' },
+  ] as const;
+
+  for (const { translation, suffix } of localized) {
+    if (!translation?.specialty.trim()) missing.push(`specialty${suffix}`);
+    if (doctor.experience?.trim() && !translation?.experience?.trim()) {
+      missing.push(`experience${suffix}`);
+    }
+    if (!translation?.bio.trim()) missing.push(`bio${suffix}`);
+    if (!doctor.support && !translation?.educationList?.length) {
+      missing.push(`educationList${suffix}`);
+    }
+  }
 
   return missing;
 }
 
 /** Подставляет сохранённую английскую версию, не меняя технические поля врача. */
 export function localizeDoctor(doctor: Doctor, lang: 'ru' | 'en' | 'lv'): Doctor {
-  if (lang !== 'en') return doctor;
-  const english = doctor.translations?.en;
+  // Vecos ierakstos no administrācijas paneļa pieredze reizēm saglabāta kā
+  // kails skaitlis (piem., "15"). Pievienojam mērvienību, lai nevienā valodā
+  // publiskajā kartītē neparādītos "Стаж 15" / "Darba pieredze 15".
+  const numericExperience = doctor.experience?.trim().match(/^\d+$/u)?.[0];
+  const fallbackExperience = numericExperience
+    ? lang === 'lv'
+      ? `${numericExperience} gadi`
+      : lang === 'en'
+        ? `${numericExperience} years`
+        : `${numericExperience} лет`
+    : doctor.experience;
+
+  if (lang === 'ru') return { ...doctor, experience: fallbackExperience };
+  const translation = doctor.translations?.[lang];
+  // Неполный перевод не подставляем: смесь языков в одной карточке хуже,
+  // чем полностью русская карточка, которую добьёт словарь в i18n.
   if (
-    !english ||
+    !translation ||
     !doctor.nameLatin?.trim() ||
-    !english.specialty.trim() ||
-    !english.bio.trim()
+    !translation.specialty.trim() ||
+    !translation.bio.trim()
   ) {
-    return doctor;
+    return { ...doctor, experience: fallbackExperience };
   }
 
   return {
     ...doctor,
     name: doctor.nameLatin,
-    specialty: english.specialty,
-    experience: english.experience,
-    bio: english.bio,
-    educationList: english.educationList,
-    photoLabel: `[Photo — ${doctor.nameLatin}]`,
+    specialty: translation.specialty,
+    experience: translation.experience || fallbackExperience,
+    bio: translation.bio,
+    educationList: translation.educationList,
+    photoLabel: lang === 'lv' ? `[Foto — ${doctor.nameLatin}]` : `[Photo — ${doctor.nameLatin}]`,
   };
 }
 

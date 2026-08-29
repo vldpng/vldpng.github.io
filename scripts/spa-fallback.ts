@@ -16,12 +16,13 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { LANGUAGES } from '../src/data/languages';
+import { DEFAULT_LANG, LANGUAGES, type LangCode } from '../src/data/languages';
 import { getAllRoutes } from '../src/data/routes';
 import { servicesList } from '../src/data/services';
 import { doctorsData } from '../src/data/doctors';
 import { clinic } from '../src/data/clinic';
 import { translateEnglish } from '../src/i18n/english';
+import { translateLatvian } from '../src/i18n/latvian';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const index = join(dist, 'index.html');
@@ -123,12 +124,30 @@ function replaceMeta(html: string, attribute: 'name' | 'property', key: string, 
   return html.replace(pattern, `<meta ${attribute}="${key}" content="${escapeAttribute(content)}" />`);
 }
 
-function localizedHtml(route: string, code: 'ru' | 'en', prefix: string) {
+function translateMeta(code: LangCode, value: string) {
+  if (code === 'en') return translateEnglish(value);
+  if (code === 'lv') return translateLatvian(value);
+  return value;
+}
+
+function localizedHtml(route: string, code: LangCode, prefix: string) {
   const sourceMeta = routeMeta(route);
-  const title = code === 'en' ? translateEnglish(sourceMeta.title) : sourceMeta.title;
-  const description = truncateDescription(
-    code === 'en' ? translateEnglish(sourceMeta.description) : sourceMeta.description,
-  );
+  let title = translateMeta(code, sourceMeta.title);
+  let rawDescription = translateMeta(code, sourceMeta.description);
+
+  // Vārds, specialitāte un biogrāfija metadatos tiek salikti izpildlaikā,
+  // tāpēc precīzo atbilsmju vārdnīca visu teikumu neatpazīst.
+  if (route.startsWith('/doctors/') && code !== 'ru') {
+    const doctor = doctorsData.find((item) => route === `/doctors/${item.slug}`);
+    if (doctor) {
+      const name = translateMeta(code, doctor.name);
+      const specialty = translateMeta(code, doctor.specialty);
+      title = `${name} — ${specialty}`;
+      rawDescription = `${name}, ${specialty}. ${translateMeta(code, doctor.bio)}`;
+    }
+  }
+
+  const description = truncateDescription(rawDescription);
   const fullTitle = title.includes(clinic.name) ? title : `${title} | ${clinic.name}`;
   const canonical = `${clinic.siteUrl}${prefix}${route === '/' ? '/' : route}`;
   const readyLanguages = LANGUAGES.filter((language) => language.ready);
@@ -137,7 +156,7 @@ function localizedHtml(route: string, code: 'ru' | 'en', prefix: string) {
       (language) =>
         `<link rel="alternate" hreflang="${language.hreflang}" href="${clinic.siteUrl}${language.prefix}${route === '/' ? '/' : route}" />`,
     ),
-    `<link rel="alternate" hreflang="x-default" href="${clinic.siteUrl}/ru${route === '/' ? '/' : route}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${clinic.siteUrl}${LANGUAGES.find((language) => language.code === DEFAULT_LANG)?.prefix ?? ''}${route === '/' ? '/' : route}" />`,
   ].join('\n    ');
 
   let html = sourceHtml
@@ -146,7 +165,8 @@ function localizedHtml(route: string, code: 'ru' | 'en', prefix: string) {
     .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${canonical}" />\n    ${alternates}`);
 
   html = replaceMeta(html, 'name', 'description', description);
-  html = replaceMeta(html, 'property', 'og:locale', code === 'en' ? 'en_GB' : 'ru_RU');
+  const ogLocale = code === 'en' ? 'en_GB' : code === 'lv' ? 'lv_LV' : 'ru_RU';
+  html = replaceMeta(html, 'property', 'og:locale', ogLocale);
   html = replaceMeta(html, 'property', 'og:url', canonical);
   html = replaceMeta(html, 'property', 'og:title', fullTitle);
   html = replaceMeta(html, 'property', 'og:description', description);
@@ -166,7 +186,7 @@ copyFileSync(index, join(dist, '404.html'));
 
 const created: string[] = [];
 for (const lang of LANGUAGES) {
-  if (!lang.prefix || !lang.ready || (lang.code !== 'ru' && lang.code !== 'en')) continue;
+  if (!lang.ready) continue;
 
   for (const route of getAllRoutes()) {
     const relativeRoute = route.path === '/' ? '' : route.path.replace(/^\//, '');

@@ -3,6 +3,7 @@ import { translateEnglish } from '../src/i18n/english';
 import { generatedEnglishTranslations } from '../src/i18n/english.generated';
 
 const cases = new Map<string, string>([
+  ['Найди свою улыбку в', 'Find Your Smile in'],
   [
     'Сертификат 1 из 3 — Виталий Двуреченский',
     'Certificate 1 of 3 — Vitaly Dvurechensky',
