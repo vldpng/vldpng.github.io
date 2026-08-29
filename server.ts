@@ -3,6 +3,7 @@
 import "./src/server/env";
 import express from "express";
 import path from "path";
+import { existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { registerLeadRoutes } from "./src/server/leads";
 import { registerAdminRoutes } from "./src/server/admin";
@@ -59,9 +60,21 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(APP_ROOT, "dist");
-    app.use(express.static(distPath));
+    app.use(express.static(distPath, { redirect: false }));
     app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+      const cleanPath = req.path.replace(/^\/+|\/+$/g, "");
+      const isAdminPath = /^(?:ru\/|en\/)?admin(?:\/|$)/.test(cleanPath);
+      const localized = path.join(distPath, cleanPath, "index.html");
+      const language = cleanPath.split("/")[0];
+      const languageRoot = path.join(distPath, language, "index.html");
+
+      if (!isAdminPath && existsSync(localized)) {
+        return res.sendFile(localized);
+      }
+      if (!isAdminPath && (language === "ru" || language === "en") && existsSync(languageRoot)) {
+        return res.sendFile(languageRoot);
+      }
+      return res.sendFile(path.join(distPath, "index.html"));
     });
   }
 

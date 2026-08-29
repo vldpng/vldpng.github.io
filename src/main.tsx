@@ -31,16 +31,10 @@ if (needsFallback) {
 } else {
   // Язык страницы: важен для скринридеров (произношение) и для поисковиков.
   document.documentElement.lang = getLanguage(lang).hreflang;
+  const root = createRoot(document.getElementById('root')!);
 
-  const render = async () => {
-    // Словарь большой, поэтому русская версия его не загружает. Админка тоже
-    // намеренно остаётся русской даже при ручном переходе на /en/admin.
-    if (lang === 'en' && !stripLangPrefix(window.location.pathname).startsWith('/admin')) {
-      const { installEnglishTranslation } = await import('./i18n/english.ts');
-      installEnglishTranslation();
-    }
-
-    createRoot(document.getElementById('root')!).render(
+  const renderApp = () => {
+    root.render(
       <StrictMode>
         {/* basename снимает языковой префикс с путей, поэтому все <Link to="/prices">
             в коде остаются без изменений и сами получают нужный префикс. */}
@@ -49,6 +43,31 @@ if (needsFallback) {
         </BrowserRouter>
       </StrictMode>,
     );
+  };
+
+  const render = async () => {
+    // Словарь большой, поэтому русская версия его не загружает. Админка тоже
+    // намеренно остаётся русской даже при ручном переходе на /en/admin.
+    const needsEnglish =
+      lang === 'en' && !stripLangPrefix(window.location.pathname).startsWith('/admin');
+
+    if (needsEnglish) {
+      // Показываем полноценный первый кадр сразу: загрузка словаря больше не
+      // оставляет английскому посетителю пустой #root на медленной сети.
+      root.render(
+        <div className="flex min-h-[100svh] items-center justify-center bg-zinc-50">
+          <span
+            className="h-10 w-10 animate-spin rounded-full border-2 border-zinc-200 border-t-amber-500"
+            role="status"
+            aria-label="Loading"
+          />
+        </div>,
+      );
+      const { installEnglishTranslation } = await import('./i18n/english.ts');
+      installEnglishTranslation();
+    }
+
+    renderApp();
   };
 
   void render();

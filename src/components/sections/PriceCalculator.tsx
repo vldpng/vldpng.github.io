@@ -7,6 +7,7 @@ import { FadeIn } from '../ui/fade-in';
 import { BlackPlaceholder } from '../ui/Placeholder';
 import { SectionBadge } from '../ui/section-badge';
 import { useContactModal } from '../../context/ContactModalContext';
+import { parseLangFromPath } from '../../data/languages';
 
 interface Option {
   title: string;
@@ -112,6 +113,9 @@ function formatEUR(value: number) {
 }
 /** Русское склонение слова «зуб»: 1 зуб, 2 зуба, 5 зубов. */
 function teethWord(n: number) {
+  if (parseLangFromPath(window.location.pathname).lang === 'en') {
+    return n === 1 ? 'tooth' : 'teeth';
+  }
   const n10 = n % 10;
   const n100 = n % 100;
   if (n10 === 1 && n100 !== 11) return 'зуб';
