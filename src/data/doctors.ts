@@ -28,6 +28,25 @@ export interface Certificate {
   title?: string;
 }
 
+export interface DoctorEnglishTranslation {
+  specialty: string;
+  experience?: string;
+  bio: string;
+  educationList?: EducationItem[];
+}
+
+export type DoctorPublicationField =
+  | 'name'
+  | 'slug'
+  | 'specialty'
+  | 'bio'
+  | 'educationList'
+  | 'nameLatin'
+  | 'specialtyEn'
+  | 'experienceEn'
+  | 'bioEn'
+  | 'educationListEn';
+
 export interface Doctor {
   /**
    * Внутренний ключ: первичный ключ в базе, по нему панель администратора
@@ -43,6 +62,8 @@ export interface Doctor {
    */
   slug: string;
   name: string;
+  /** Официальное написание имени латиницей для английской версии. */
+  nameLatin?: string;
   specialty: string;
   /** Стаж работы. Пусто — блок не отображается. TODO: заполнить. */
   experience?: string;
@@ -76,6 +97,57 @@ export interface Doctor {
    * должность, но никуда не ведёт; /doctors/:id уводит обратно в список.
    */
   support?: boolean;
+  /**
+   * Новые записи из админ-панели публикуются только с заполненной английской
+   * версией. У старых записей флага нет — это сохраняет обратную совместимость.
+   */
+  requiresEnglishForPublication?: boolean;
+  translations?: {
+    en?: DoctorEnglishTranslation;
+  };
+}
+
+/** Возвращает поля, без которых новый врач не может быть опубликован. */
+export function getDoctorPublicationMissingFields(doctor: Doctor): DoctorPublicationField[] {
+  const missing: DoctorPublicationField[] = [];
+  const english = doctor.translations?.en;
+
+  if (!doctor.name.trim() || doctor.name === 'Новый сотрудник') missing.push('name');
+  if (!doctor.slug.trim() || doctor.slug === doctor.id) missing.push('slug');
+  if (!doctor.specialty.trim()) missing.push('specialty');
+  if (!doctor.bio.trim()) missing.push('bio');
+  if (!doctor.support && !doctor.educationList?.length) missing.push('educationList');
+  if (!doctor.nameLatin?.trim()) missing.push('nameLatin');
+  if (!english?.specialty.trim()) missing.push('specialtyEn');
+  if (doctor.experience?.trim() && !english?.experience?.trim()) missing.push('experienceEn');
+  if (!english?.bio.trim()) missing.push('bioEn');
+  if (!doctor.support && !english?.educationList?.length) missing.push('educationListEn');
+
+  return missing;
+}
+
+/** Подставляет сохранённую английскую версию, не меняя технические поля врача. */
+export function localizeDoctor(doctor: Doctor, lang: 'ru' | 'en' | 'lv'): Doctor {
+  if (lang !== 'en') return doctor;
+  const english = doctor.translations?.en;
+  if (
+    !english ||
+    !doctor.nameLatin?.trim() ||
+    !english.specialty.trim() ||
+    !english.bio.trim()
+  ) {
+    return doctor;
+  }
+
+  return {
+    ...doctor,
+    name: doctor.nameLatin,
+    specialty: english.specialty,
+    experience: english.experience,
+    bio: english.bio,
+    educationList: english.educationList,
+    photoLabel: `[Photo — ${doctor.nameLatin}]`,
+  };
 }
 
 export const doctorsData: Doctor[] = [

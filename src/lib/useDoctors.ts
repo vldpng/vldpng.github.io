@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { doctorsData, type Doctor } from '../data/doctors';
+import { useEffect, useMemo, useState } from 'react';
+import { doctorsData, localizeDoctor, type Doctor } from '../data/doctors';
+import { parseLangFromPath } from '../data/languages';
 
 /**
  * Список врачей для публичных страниц.
@@ -12,6 +13,7 @@ import { doctorsData, type Doctor } from '../data/doctors';
  */
 export function useDoctors(): Doctor[] {
   const [doctors, setDoctors] = useState<Doctor[]>(doctorsData);
+  const lang = parseLangFromPath(window.location.pathname).lang;
 
   useEffect(() => {
     let alive = true;
@@ -30,5 +32,8 @@ export function useDoctors(): Doctor[] {
     };
   }, []);
 
-  return doctors;
+  return useMemo(
+    () => (lang === 'en' ? doctors.map((doctor) => localizeDoctor(doctor, lang)) : doctors),
+    [doctors, lang],
+  );
 }

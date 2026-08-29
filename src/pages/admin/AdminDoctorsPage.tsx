@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Trash2, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { servicesList } from '../../data/services';
-import type { Doctor, EducationItem } from '../../data/doctors';
+import {
+  getDoctorPublicationMissingFields,
+  type Doctor,
+  type DoctorPublicationField,
+  type EducationItem,
+} from '../../data/doctors';
 
 interface DoctorRecord extends Doctor {
   visible: boolean;
@@ -13,6 +18,19 @@ const MAX_PHOTO_BYTES = 100 * 1024;
 const inputCls =
   'w-full rounded-xl bg-zinc-50 border border-zinc-200 px-3.5 py-2.5 text-sm outline-none focus:border-amber-500 transition-colors';
 const labelCls = 'block text-xs font-semibold text-zinc-500 mb-1.5';
+
+const doctorPublicationFieldLabels: Record<DoctorPublicationField, string> = {
+  name: 'Имя и фамилия на русском',
+  slug: 'Адрес страницы',
+  specialty: 'Специальность на русском',
+  bio: 'Описание на русском',
+  educationList: 'Образование на русском',
+  nameLatin: 'Имя на латышском / латиницей',
+  specialtyEn: 'Специальность на английском',
+  experienceEn: 'Стаж на английском',
+  bioEn: 'Описание на английском',
+  educationListEn: 'Образование на английском',
+};
 
 /** «Учреждение — подпись», по строке на пункт: textarea проще динамических полей. */
 const educationToText = (list?: EducationItem[]) =>
@@ -49,12 +67,17 @@ function DoctorEditor({
 }) {
   const [form, setForm] = useState({
     name: doctor.name,
+    nameLatin: doctor.nameLatin ?? '',
     slug: doctor.slug,
     specialty: doctor.specialty,
     experience: doctor.experience ?? '',
     bio: doctor.bio,
     services: doctor.services,
     education: educationToText(doctor.educationList),
+    specialtyEn: doctor.translations?.en?.specialty ?? '',
+    experienceEn: doctor.translations?.en?.experience ?? '',
+    bioEn: doctor.translations?.en?.bio ?? '',
+    educationEn: educationToText(doctor.translations?.en?.educationList),
     photoUrl: doctor.photoUrl ?? '',
     support: doctor.support === true,
   });
@@ -81,8 +104,25 @@ function DoctorEditor({
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...form,
+          name: form.name,
+          nameLatin: form.nameLatin,
+          slug: form.slug,
+          specialty: form.specialty,
+          experience: form.experience,
+          bio: form.bio,
+          services: form.services,
+          photoUrl: form.photoUrl,
+          photoPosition: doctor.photoPosition,
+          support: form.support,
           educationList: textToEducation(form.education),
+          translations: {
+            en: {
+              specialty: form.specialtyEn,
+              experience: form.experienceEn,
+              bio: form.bioEn,
+              educationList: textToEducation(form.educationEn),
+            },
+          },
           // Панель их не редактирует, но обязана вернуть как есть: сервер
           // собирает врача из присланного тела целиком, и отсутствие полей он
           // читает как «стереть». Раньше так и было — сохранение карточки
@@ -92,11 +132,24 @@ function DoctorEditor({
         }),
       });
       const json = await res.json();
-      if (!res.ok || !json.success) throw new Error();
+      if (!res.ok || !json.success) {
+        if (json.error === 'translation_incomplete' && Array.isArray(json.missing)) {
+          const labels = json.missing
+            .map((field: keyof typeof doctorPublicationFieldLabels) =>
+              doctorPublicationFieldLabels[field],
+            )
+            .filter(Boolean);
+          throw new Error(`Для публикации заполните: ${labels.join(', ')}.`);
+        }
+        throw new Error('Не удалось сохранить. Попробуйте ещё раз.');
+      }
       onSaved(json.data);
       setNote({ kind: 'ok', text: 'Сохранено.' });
-    } catch {
-      setNote({ kind: 'err', text: 'Не удалось сохранить. Попробуйте ещё раз.' });
+    } catch (error) {
+      setNote({
+        kind: 'err',
+        text: error instanceof Error ? error.message : 'Не удалось сохранить. Попробуйте ещё раз.',
+      });
     } finally {
       setBusy(false);
     }
@@ -151,8 +204,27 @@ function DoctorEditor({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ visible: next }),
     });
-    if (res.ok) onVisibility(doctor.id, next);
+    const json = await res.json().catch(() => null);
+    if (res.ok) {
+      onVisibility(doctor.id, next);
+      setNote({ kind: 'ok', text: next ? 'Врач опубликован.' : 'Врач скрыт.' });
+      return;
+    }
+    if (json?.error === 'translation_incomplete' && Array.isArray(json.missing)) {
+      const labels = json.missing
+        .map((field: keyof typeof doctorPublicationFieldLabels) =>
+          doctorPublicationFieldLabels[field],
+        )
+        .filter(Boolean);
+      setNote({ kind: 'err', text: `Для публикации заполните: ${labels.join(', ')}.` });
+      return;
+    }
+    setNote({ kind: 'err', text: 'Не удалось изменить видимость врача.' });
   };
+
+  const publicationMissing = doctor.requiresEnglishForPublication
+    ? getDoctorPublicationMissingFields(doctor)
+    : [];
 
   return (
     <article
@@ -306,8 +378,69 @@ function DoctorEditor({
               })}
             </div>
           </div>
+
+          <div className="sm:col-span-2 mt-2 rounded-2xl border border-blue-200 bg-blue-50/70 p-4">
+            <h3 className="text-sm font-semibold text-blue-950">English version</h3>
+            <p className="mt-1 text-xs text-blue-700">
+              Для новых врачей эти поля обязательны перед публикацией. Имя укажите в официальном написании латиницей.
+            </p>
+          </div>
+          <div>
+            <label className={labelCls}>Имя на латышском / латиницей</label>
+            <input
+              value={form.nameLatin}
+              onChange={(e) => set('nameLatin', e.target.value)}
+              placeholder="Elīna Heifeca"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className={labelCls}>Specialty</label>
+            <input
+              value={form.specialtyEn}
+              onChange={(e) => set('specialtyEn', e.target.value)}
+              placeholder="Prosthodontist"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className={labelCls}>Work experience</label>
+            <input
+              value={form.experienceEn}
+              onChange={(e) => set('experienceEn', e.target.value)}
+              placeholder="12 years"
+              className={inputCls}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelCls}>Description in English</label>
+            <textarea
+              value={form.bioEn}
+              onChange={(e) => set('bioEn', e.target.value)}
+              rows={3}
+              className={cn(inputCls, 'resize-y')}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelCls}>Education in English — one entry per line: “Institution — details”</label>
+            <textarea
+              value={form.educationEn}
+              onChange={(e) => set('educationEn', e.target.value)}
+              rows={2}
+              className={cn(inputCls, 'resize-y')}
+            />
+          </div>
         </div>
       </div>
+
+      {doctor.requiresEnglishForPublication && !doctor.visible && publicationMissing.length > 0 && (
+        <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="font-semibold">Черновик нельзя опубликовать</p>
+          <p className="mt-1">
+            Заполните и сохраните: {publicationMissing.map((field) => doctorPublicationFieldLabels[field]).join(', ')}.
+          </p>
+        </div>
+      )}
 
       {/* Действия */}
       <div className="mt-5 pt-4 border-t border-zinc-100 flex flex-wrap items-center gap-3">
@@ -322,7 +455,8 @@ function DoctorEditor({
         <button
           type="button"
           onClick={toggleVisible}
-          className="flex items-center gap-2 rounded-xl border border-zinc-300 hover:border-zinc-900 px-4 py-2.5 text-sm font-medium transition-colors"
+          disabled={!doctor.visible && publicationMissing.length > 0}
+          className="flex items-center gap-2 rounded-xl border border-zinc-300 hover:border-zinc-900 px-4 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-zinc-300"
         >
           {doctor.visible ? (
             <>

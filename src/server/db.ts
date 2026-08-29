@@ -208,13 +208,14 @@ export function getDoctor(id: string): DoctorRecord | null {
   return row ? rowToDoctor(row) : null;
 }
 
-export function createDoctor(doc: Doctor): void {
+export function createDoctor(doc: Doctor, visible = true): void {
   const pos = (db.prepare('SELECT COALESCE(MAX(position), -1) + 1 AS p FROM doctors').get() as {
     p: number;
   }).p;
-  db.prepare('INSERT INTO doctors (id, data, visible, position) VALUES (?, ?, 1, ?)').run(
+  db.prepare('INSERT INTO doctors (id, data, visible, position) VALUES (?, ?, ?, ?)').run(
     doc.id,
     JSON.stringify(doc),
+    visible ? 1 : 0,
     pos,
   );
 }

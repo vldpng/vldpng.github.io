@@ -7,7 +7,10 @@
 import express, { type Express, type Request, type Response } from 'express';
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
-import type { Doctor } from '../data/doctors';
+import {
+  getDoctorPublicationMissingFields,
+  type Doctor,
+} from '../data/doctors';
 import type { PriceCategory } from '../data/prices';
 import {
   createDoctor,
@@ -40,6 +43,22 @@ function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
     : [];
   const educationList = Array.isArray(body.educationList)
     ? body.educationList
+        .map((e: any) => ({
+          title: clean(e?.title, 200),
+          subtitle: clean(e?.subtitle, 200) || undefined,
+        }))
+        .filter((e) => e.title)
+    : undefined;
+  const translationsBody =
+    body.translations && typeof body.translations === 'object'
+      ? (body.translations as Record<string, unknown>)
+      : {};
+  const englishBody =
+    translationsBody.en && typeof translationsBody.en === 'object'
+      ? (translationsBody.en as Record<string, unknown>)
+      : {};
+  const educationListEn = Array.isArray(englishBody.educationList)
+    ? englishBody.educationList
         .map((e: any) => ({
           title: clean(e?.title, 200),
           subtitle: clean(e?.subtitle, 200) || undefined,
@@ -83,6 +102,7 @@ function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
     id,
     slug,
     name,
+    nameLatin: clean(body.nameLatin, 120) || undefined,
     specialty: clean(body.specialty, 160),
     experience: clean(body.experience, 80) || undefined,
     bio: clean(body.bio, 2000),
@@ -94,6 +114,14 @@ function sanitizeDoctor(id: string, body: Record<string, unknown>): Doctor {
     photoPosition: clean(body.photoPosition, 40) || undefined,
     photoLabel: `[Фото — ${name}]`,
     support: body.support === true || undefined,
+    translations: {
+      en: {
+        specialty: clean(englishBody.specialty, 160),
+        experience: clean(englishBody.experience, 80) || undefined,
+        bio: clean(englishBody.bio, 2000),
+        educationList: educationListEn,
+      },
+    },
   };
 }
 
@@ -156,9 +184,12 @@ export function registerAdminRoutes(app: Express) {
 
   app.post('/api/admin/doctors', requireAdmin, (req, res) => {
     // Метка времени как id: у затравки из doctors.ts id «1»–«13», коллизий нет.
-    const doc = sanitizeDoctor(String(Date.now()), req.body ?? {});
-    createDoctor(doc);
-    res.json({ success: true, data: { ...doc, visible: true } });
+    const doc: Doctor = {
+      ...sanitizeDoctor(String(Date.now()), req.body ?? {}),
+      requiresEnglishForPublication: true,
+    };
+    createDoctor(doc, false);
+    res.json({ success: true, data: { ...doc, visible: false } });
   });
 
   // Раньше маршрутов с :id — иначе «order» имеет шанс уйти в них как id.
@@ -180,13 +211,30 @@ export function registerAdminRoutes(app: Express) {
   app.put('/api/admin/doctors/:id', requireAdmin, (req, res) => {
     const existing = getDoctor(req.params.id);
     if (!existing) return res.status(404).json({ success: false, error: 'not_found' });
-    const doc = sanitizeDoctor(existing.id, req.body ?? {});
+    const doc: Doctor = {
+      ...sanitizeDoctor(existing.id, req.body ?? {}),
+      requiresEnglishForPublication: existing.requiresEnglishForPublication,
+    };
+    if (existing.visible && doc.requiresEnglishForPublication) {
+      const missing = getDoctorPublicationMissingFields(doc);
+      if (missing.length > 0) {
+        return res.status(422).json({ success: false, error: 'translation_incomplete', missing });
+      }
+    }
     updateDoctor(existing.id, doc);
     res.json({ success: true, data: { ...doc, visible: existing.visible } });
   });
 
   app.patch('/api/admin/doctors/:id/visibility', requireAdmin, (req, res) => {
     const visible = req.body?.visible === true;
+    const doctor = getDoctor(req.params.id);
+    if (!doctor) return res.status(404).json({ success: false, error: 'not_found' });
+    if (visible && doctor.requiresEnglishForPublication) {
+      const missing = getDoctorPublicationMissingFields(doctor);
+      if (missing.length > 0) {
+        return res.status(422).json({ success: false, error: 'translation_incomplete', missing });
+      }
+    }
     if (!setDoctorVisibility(req.params.id, visible)) {
       return res.status(404).json({ success: false, error: 'not_found' });
     }

@@ -41,6 +41,7 @@ const manualTranslations: Record<string, string> = {
   'Назад': 'Back',
   'Закрыть': 'Close',
   'Загрузка': 'Loading',
+  'Новый сотрудник': 'New team member',
   'До': 'Before',
   'После': 'After',
   'Отправляем…': 'Sending…',
