@@ -17,6 +17,7 @@ const cases = new Map<string, string>([
   ['Ортопедия', 'Prosthodontics'],
   ['Стаж работы', 'Work experience'],
   ['Этапы имплантации', 'Implantation stages'],
+  ['Элина Хейфец', 'Elīna Heifeca'],
   ['Лёгкая или умеренная атрофия костной ткани', 'Mild to moderate bone tissue atrophy'],
   ['Удерживающая капа после лечения на элайнерах', 'Retainer after aligner treatment'],
   [

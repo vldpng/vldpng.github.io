@@ -97,12 +97,12 @@ const manualTranslations: Record<string, string> = {
   'Прорезавшийся под наклоном моляр часто упирается в близлежащую семёрку, провоцируя её преждевременное разрушение.':
     'A third molar erupting at an angle often presses against the adjacent second molar and may cause its premature damage.',
   'Эдита Чеме': 'Edita Cheme',
-  'Элина Хейфец': 'Elina Heifets',
+  'Элина Хейфец': 'Elīna Heifeca',
   'Виталий Двуреченский': 'Vitaly Dvurechensky',
   'Владислав Двуреченский': 'Vladislav Dvurechensky',
   '[Фото — Эдита Чеме, администратор]': '[Photo — Edita Cheme, administrator]',
   '[Фото — Элина Хейфец, стоматолог-ортопед]':
-    '[Photo — Elina Heifets, prosthodontist]',
+    '[Photo — Elīna Heifeca, prosthodontist]',
   '[Фото — Виталий Двуреченский, хирург-имплантолог]':
     '[Photo — Vitaly Dvurechensky, implant surgeon]',
   '[Фото — Владислав Двуреченский, ассистент]':
