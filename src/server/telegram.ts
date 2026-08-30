@@ -19,7 +19,10 @@ function getConfig() {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  return { token, chatId, webhookSecret, enabled: Boolean(token && chatId) };
+  // Технические уведомления — в отдельный чат, чтобы сбои не перемешивались
+  // с обращениями пациентов. Не задан — алерты остаются только в логе.
+  const alertChatId = process.env.TELEGRAM_ALERT_CHAT_ID;
+  return { token, chatId, webhookSecret, alertChatId, enabled: Boolean(token && chatId) };
 }
 
 export function isTelegramConfigured(): boolean {
@@ -142,6 +145,33 @@ export async function sendTelegramMessage(html: string, leadId?: number): Promis
     console.error("[telegram] sendMessage error:", e);
     return false;
   }
+}
+
+/**
+ * Техническое уведомление о сбое — в чат из TELEGRAM_ALERT_CHAT_ID.
+ *
+ * Намеренно ничего не сообщает наверх и никогда не зовёт reportError:
+ * вызывается из обработчиков ошибок, и авария при отправке алерта не должна
+ * порождать следующий алерт — это замкнуло бы петлю. Провал остаётся в логе.
+ *
+ * Троттлинг живёт в alerts.ts: здесь только доставка.
+ */
+export async function sendTelegramAlert(html: string): Promise<boolean> {
+  const { token, alertChatId } = getConfig();
+  if (!token || !alertChatId) return false;
+
+  const result = await callTelegram(token, "sendMessage", {
+    chat_id: alertChatId,
+    text: html,
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
+    disable_notification: false,
+  });
+
+  if (!result.ok) {
+    console.error(`[telegram] alert failed: ${result.status} ${result.description ?? ""}`);
+  }
+  return result.ok;
 }
 
 type TelegramCallback = {

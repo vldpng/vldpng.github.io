@@ -425,3 +425,15 @@ export function sessionTimeLeft(token: string): number {
 export function deleteSession(token: string): void {
   db.prepare('DELETE FROM sessions WHERE token = ?').run(token);
 }
+
+/**
+ * Проверка живости базы для /api/health.
+ *
+ * Читаем реальную таблицу, а не `SELECT 1`: последнее ответило бы «всё
+ * хорошо» даже при отвалившемся файле базы. Внешний монитор должен отличать
+ * «процесс жив» от «приложение работает» — диск может пропасть, а Node
+ * продолжит отдавать 200 и молчать о том, что заявки больше не сохраняются.
+ */
+export function checkDatabase(): void {
+  db.prepare('SELECT COUNT(*) AS c FROM leads').get();
+}

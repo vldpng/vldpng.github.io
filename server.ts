@@ -9,6 +9,8 @@ import { registerLeadRoutes } from "./src/server/leads";
 import { registerAdminRoutes } from "./src/server/admin";
 import { UPLOADS_STAFF_DIR } from "./src/server/paths";
 import { registerTelegramRoutes } from "./src/server/telegram";
+import { installProcessAlerts, reportError } from "./src/server/alerts";
+import { checkDatabase } from "./src/server/db";
 
 /**
  * Каталог приложения — считаем от самого файла, а не от process.cwd().
@@ -20,6 +22,10 @@ import { registerTelegramRoutes } from "./src/server/telegram";
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 async function startServer() {
+  // Ставим до создания приложения: падение на старте (например, недоступный
+  // каталог данных) тоже должно дойти до Telegram, а не только в лог Plesk.
+  installProcessAlerts();
+
   const app = express();
   // Пустая строка и «0» — разные вещи, поэтому проверяем именно наличие:
   // под Phusion Passenger порт назначает он сам, и штатное значение PORT — 0.
@@ -29,8 +35,22 @@ async function startServer() {
   app.use(express.json());
 
   // API routes start
+  /*
+   * Точка для внешнего монитора. Проверяет базу, а не только живость
+   * процесса: без этого «200 OK» приходил бы и тогда, когда заявки уже
+   * никуда не сохраняются, и монитор считал бы сайт здоровым.
+   *
+   * Падение сайта целиком ловится только отсюда, снаружи — изнутри мёртвый
+   * процесс сообщить о себе не может.
+   */
   app.get("/api/health", (req, res) => {
-    res.json({ status: "ok" });
+    try {
+      checkDatabase();
+      res.json({ status: "ok" });
+    } catch (error) {
+      reportError("health", error);
+      res.status(503).json({ status: "error", error: "database_unavailable" });
+    }
   });
 
   // Записи на приём как отдельной сущности у сайта нет: посетитель оставляет
@@ -79,6 +99,18 @@ async function startServer() {
       return res.sendFile(path.join(distPath, "index.html"));
     });
   }
+
+  /*
+   * Последний рубеж: сюда попадает всё, что не поймали сами роуты.
+   * Регистрируется после всех маршрутов — Express выбирает обработчик
+   * ошибок по порядку и по четырём аргументам, поэтому `next` обязателен,
+   * даже если не используется.
+   */
+  app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    reportError("express", err, { Маршрут: `${req.method} ${req.originalUrl}` });
+    if (res.headersSent) return;
+    res.status(500).json({ success: false, error: "internal_error" });
+  });
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
