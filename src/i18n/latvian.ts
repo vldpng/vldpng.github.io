@@ -68,9 +68,13 @@ export const latvianTranslations: Record<string, string> = {
   'Отзывы пациентов': 'Pacientu atsauksmes',
   'Google Maps показывает ограниченную подборку отзывов, отсортированную по релевантности.':
     'Google Maps rāda ierobežotu atsauksmju izlasi, kas sakārtota pēc atbilstības.',
+  'Отзывы пациентов, опубликованные в профиле клиники на Google Maps.':
+    'Pacientu atsauksmes, kas publicētas klīnikas profilā pakalpojumā Google Maps.',
   'Отзывы пациентов о лечении в нашей клинике.': 'Pacientu atsauksmes par ārstēšanos mūsu klīnikā.',
   'Смотреть профиль в Google Maps': 'Skatīt profilu pakalpojumā Google Maps',
   'Открыть отзыв в Google Maps': 'Atvērt atsauksmi pakalpojumā Google Maps',
+  'Читать полностью': 'Lasīt visu atsauksmi',
+  'Свернуть': 'Rādīt mazāk',
   'Сохранено.': 'Saglabāts.',
   'Сохранить выбор': 'Saglabāt izvēli',
   'Выбор сделан': 'Izvēle veikta',

@@ -55,7 +55,8 @@ export function Marquee({
           style={{ animationDuration: `${duration}s` }}
           className={cn(
             'marquee-track flex shrink-0 flex-row justify-around [gap:var(--gap)] animate-marquee',
-            pauseOnHover && 'group-hover:[animation-play-state:paused]',
+            pauseOnHover &&
+              'group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]',
             reverse && '[animation-direction:reverse]',
           )}
         >

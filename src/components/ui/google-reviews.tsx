@@ -13,11 +13,24 @@ type ReviewCard = {
   name: string;
   role: string;
   text: string;
-  image: string;
+  image?: string;
   rating?: number;
   authorUri?: string;
   reviewUri?: string;
 };
+
+const GOOGLE_MAPS_PROFILE_URL =
+  `https://www.google.com/maps/search/?api=1&query=RoyalDent&query_place_id=${PLACE_ID}`;
+
+function mergeUniqueReviews(primary: ReviewCard[], saved: ReviewCard[]): ReviewCard[] {
+  const seenAuthors = new Set<string>();
+  return [...primary, ...saved].filter((review) => {
+    const author = review.name.trim().toLocaleLowerCase();
+    if (seenAuthors.has(author)) return false;
+    seenAuthors.add(author);
+    return true;
+  });
+}
 
 type ReviewsState = {
   reviews: ReviewCard[];
@@ -27,7 +40,13 @@ type ReviewsState = {
 
 export function GoogleReviewsIntegration({ fallbackReviews }: { fallbackReviews: ReviewCard[] }) {
   if (!API_KEY) {
-    return <Reviews reviews={fallbackReviews} live={false} />;
+    return (
+      <Reviews
+        reviews={fallbackReviews}
+        live={fallbackReviews.length > 0}
+        googleMapsUri={GOOGLE_MAPS_PROFILE_URL}
+      />
+    );
   }
 
   return (
@@ -65,21 +84,32 @@ function LiveReviewsFetch({ fallbackReviews }: { fallbackReviews: ReviewCard[] }
         }));
 
         if (fetchedReviews.length === 0) {
-          setState({ reviews: fallbackReviews, live: false });
+          setState({
+            reviews: fallbackReviews,
+            googleMapsUri: fetchedPlace.googleMapsURI || GOOGLE_MAPS_PROFILE_URL,
+            live: fallbackReviews.length > 0,
+          });
           return;
         }
 
-        // Places возвращает ограниченную подборку, отсортированную по релевантности.
-        // Не смешиваем её с локальными отзывами под маркировкой Google Maps.
+        // API возвращает максимум пять отзывов. Дополняем их сохранёнными
+        // отзывами из скриншотов и убираем повтор автора, если Google позднее
+        // включит тот же отзыв в автоматическую подборку.
         setState({
-          reviews: fetchedReviews,
-          googleMapsUri: fetchedPlace.googleMapsURI || undefined,
+          reviews: mergeUniqueReviews(fetchedReviews, fallbackReviews),
+          googleMapsUri: fetchedPlace.googleMapsURI || GOOGLE_MAPS_PROFILE_URL,
           live: true,
         });
       })
       .catch((error: unknown) => {
         console.error('Не удалось загрузить отзывы Google Maps:', error);
-        if (!cancelled) setState({ reviews: fallbackReviews, live: false });
+        if (!cancelled) {
+          setState({
+            reviews: fallbackReviews,
+            googleMapsUri: GOOGLE_MAPS_PROFILE_URL,
+            live: fallbackReviews.length > 0,
+          });
+        }
       });
 
     return () => {
@@ -133,7 +163,7 @@ function Reviews({
         </h2>
         <p className="mt-4 text-lead text-zinc-500 dark:text-zinc-400">
           {live
-            ? 'Google Maps показывает ограниченную подборку отзывов, отсортированную по релевантности.'
+            ? 'Отзывы пациентов, опубликованные в профиле клиники на Google Maps.'
             : 'Отзывы пациентов о лечении в нашей клинике.'}
         </p>
         {live && googleMapsUri && (
@@ -179,18 +209,30 @@ function Reviews({
  */
 function ReviewTile({ review }: { review: ReviewCard }) {
   const { name, role, text, image, rating = 5, authorUri, reviewUri } = review;
+  const initial = name.trim().charAt(0).toUpperCase() || 'R';
+  const [expanded, setExpanded] = useState(false);
+  const canExpand = text.length > 180;
 
   return (
     <figure className="w-[300px] shrink-0 rounded-[2rem] border border-zinc-200 bg-card p-6 shadow-sm sm:w-[340px] dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-xl">
       <div className="flex items-center gap-3">
-        <img
-          width={40}
-          height={40}
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="h-10 w-10 shrink-0 rounded-full border border-zinc-200 object-cover dark:border-zinc-800"
-        />
+        {image ? (
+          <img
+            width={40}
+            height={40}
+            src={image}
+            alt={name}
+            loading="lazy"
+            className="h-10 w-10 shrink-0 rounded-full border border-zinc-200 object-cover dark:border-zinc-800"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-500/15 font-semibold text-amber-700 dark:text-amber-300"
+          >
+            {initial}
+          </span>
+        )}
         <figcaption className="flex min-w-0 flex-col text-left">
           {authorUri ? (
             <a
@@ -202,11 +244,11 @@ function ReviewTile({ review }: { review: ReviewCard }) {
               {name}
             </a>
           ) : (
-            <span className="truncate font-semibold leading-tight tracking-tight text-zinc-900 dark:text-white">
+            <span translate="no" className="truncate font-semibold leading-tight tracking-tight text-zinc-900 dark:text-white">
               {name}
             </span>
           )}
-          <span className="mt-0.5 truncate text-[13px] tracking-tight text-zinc-500">{role}</span>
+          <span translate="no" className="mt-0.5 truncate text-[13px] tracking-tight text-zinc-500">{role}</span>
         </figcaption>
       </div>
 
@@ -223,9 +265,25 @@ function ReviewTile({ review }: { review: ReviewCard }) {
         ))}
       </div>
 
-      <blockquote className="mt-3 line-clamp-4 text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300">
+      <blockquote
+        translate="no"
+        className={`mt-3 text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300 ${
+          expanded ? '' : 'line-clamp-4'
+        }`}
+      >
         "{text}"
       </blockquote>
+
+      {canExpand && (
+        <button
+          type="button"
+          className="mt-3 text-xs font-semibold text-zinc-700 underline-offset-4 hover:underline dark:text-zinc-200"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((value) => !value)}
+        >
+          {expanded ? 'Свернуть' : 'Читать полностью'}
+        </button>
+      )}
 
       {reviewUri && (
         <a

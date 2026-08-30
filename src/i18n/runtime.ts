@@ -62,6 +62,10 @@ export function translateJsxProps<Props>(props: Props): Props {
   let translated: Record<string, unknown> | undefined;
   const source = props as Record<string, unknown>;
 
+  // Пользовательский контент (например, отзывы Google Maps) сохраняем на
+  // исходном языке. Атрибут совпадает со стандартным HTML translate="no".
+  if (source.translate === 'no') return props;
+
   for (const [name, value] of Object.entries(source)) {
     let next = value;
     if (name === 'children') {
