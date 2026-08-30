@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 import { registerLeadRoutes } from "./src/server/leads";
 import { registerAdminRoutes } from "./src/server/admin";
 import { UPLOADS_STAFF_DIR } from "./src/server/paths";
-import { registerTelegramRoutes } from "./src/server/telegram";
+import { ensureTelegramWebhook, registerTelegramRoutes } from "./src/server/telegram";
 import { installProcessAlerts, reportError } from "./src/server/alerts";
 import { checkDatabase } from "./src/server/db";
 
@@ -131,6 +131,9 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    // Не задерживаем запуск сайта внешним запросом к Telegram. Ошибка
+    // регистрации попадёт в лог Plesk, а сам HTTP-сервер останется доступен.
+    void ensureTelegramWebhook();
   });
 }
 

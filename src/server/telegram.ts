@@ -204,8 +204,61 @@ async function answerCallback(token: string, id: string | undefined, text: strin
 }
 
 /**
+ * Регистрирует webhook из окружения самого приложения.
+ *
+ * Plesk передаёт Custom environment variables процессу Passenger, но не
+ * командам из вкладки `Run Node.js commands`. Поэтому ручной `setWebhook`
+ * оттуда не видит токен и секрет. Проверка при старте решает это один раз и
+ * заодно восстанавливает webhook после смены токена или домена.
+ */
+export async function ensureTelegramWebhook(): Promise<void> {
+  const { token, webhookSecret } = getConfig();
+  const appUrl = process.env.APP_URL?.trim();
+  if (!token || !webhookSecret || !appUrl) {
+    console.warn(
+      "[telegram] webhook registration skipped: TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET or APP_URL is missing",
+    );
+    return;
+  }
+
+  let webhookUrl: string;
+  try {
+    const baseUrl = new URL(appUrl);
+    if (baseUrl.protocol !== "https:") {
+      console.warn("[telegram] webhook registration skipped: APP_URL must use HTTPS");
+      return;
+    }
+    webhookUrl = new URL("/api/telegram/webhook", baseUrl).toString();
+  } catch {
+    console.warn("[telegram] webhook registration skipped: APP_URL is invalid");
+    return;
+  }
+
+  const current = await callTelegram(token, "getWebhookInfo", {});
+  if (current.ok && current.result?.url === webhookUrl) {
+    console.log(`[telegram] webhook ready: ${webhookUrl}`);
+    return;
+  }
+
+  const registered = await callTelegram(token, "setWebhook", {
+    url: webhookUrl,
+    secret_token: webhookSecret,
+    allowed_updates: ["callback_query"],
+  });
+
+  if (!registered.ok) {
+    console.error(
+      `[telegram] setWebhook failed: ${registered.status} ${registered.description ?? ""}`,
+    );
+    return;
+  }
+
+  console.log(`[telegram] webhook registered: ${webhookUrl}`);
+}
+
+/**
  * Telegram присылает сюда нажатия на inline-кнопку. Endpoint начинает
- * работать только после явного setWebhook на публичный HTTPS-адрес сайта.
+ * работать после автоматического setWebhook при старте приложения.
  */
 export function registerTelegramRoutes(app: Express): void {
   app.post("/api/telegram/webhook", async (req: Request, res) => {
