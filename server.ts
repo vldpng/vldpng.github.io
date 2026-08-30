@@ -82,7 +82,23 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(APP_ROOT, "dist");
-    app.use(express.static(distPath, { redirect: false }));
+    app.use(express.static(distPath, {
+      redirect: false,
+      setHeaders(res, filePath) {
+        const normalized = filePath.replaceAll("\\", "/");
+        if (normalized.includes("/assets/")) {
+          // Vite includes a content hash in these names, so they never become
+          // stale: a changed file receives a new URL on the next deployment.
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        } else if (/\.(?:avif|gif|jpe?g|png|svg|webp|woff2?)$/i.test(normalized)) {
+          // Public media has stable names and can change between deployments,
+          // therefore it gets a long but finite cache rather than immutable.
+          res.setHeader("Cache-Control", "public, max-age=2592000");
+        } else if (normalized.endsWith(".html")) {
+          res.setHeader("Cache-Control", "no-cache");
+        }
+      },
+    }));
     app.get("*", (req, res) => {
       const cleanPath = req.path.replace(/^\/+|\/+$/g, "");
       const isAdminPath = /^(?:ru\/|en\/)?admin(?:\/|$)/.test(cleanPath);
@@ -90,6 +106,7 @@ async function startServer() {
       const language = cleanPath.split("/")[0];
       const languageRoot = path.join(distPath, language, "index.html");
 
+      res.setHeader("Cache-Control", "no-cache");
       if (!isAdminPath && existsSync(localized)) {
         return res.sendFile(localized);
       }

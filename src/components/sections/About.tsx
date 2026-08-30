@@ -54,6 +54,8 @@ export function About() {
               <div className="relative h-full overflow-hidden rounded-[2rem] min-[1440px]:rounded-r-none">
                 <img
                   src="/images/decor/two-tooth.webp"
+                  srcSet="/images/decor/two-tooth-800.webp 800w, /images/decor/two-tooth-1200.webp 1200w, /images/decor/two-tooth.webp 2000w"
+                  sizes="(min-width: 1024px) 36vw, calc(100vw - 1rem)"
                   alt="Стоматология RoyalDent"
                   loading="lazy"
                   className="w-full h-full object-cover min-[1440px]:absolute min-[1440px]:inset-y-0 min-[1440px]:right-0 min-[1440px]:w-auto min-[1440px]:max-w-none min-[1440px]:object-contain"

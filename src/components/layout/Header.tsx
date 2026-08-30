@@ -66,7 +66,7 @@ export function Header() {
               заданной ширины, и без него флекс сжимал его до нуля, как только
               содержимое шапки переставало помещаться. */}
           <img
-            src="/brand/logo.png"
+            src="/brand/logo.webp"
             alt="RoyalDent"
             width={374}
             height={67}

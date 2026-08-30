@@ -49,13 +49,41 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://royaldent.lv/" />
 
-    <!-- Шрифты: Playfair Display — серифные заголовки (с кириллицей),
-         Inter — текст/UI, Fragment Mono — мелкие метки-надзаголовки. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Критические ресурсы первого экрана начинаем загружать до запуска React. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Fragment+Mono&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/images/clinic/IMG_4273.jpg_2K_202607182302.webp"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="/fonts/google/inter-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/google/inter-latin-ext.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/google/playfair-italic-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/google/playfair-italic-latin-ext.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
 
     <link rel="icon" type="image/png" href="/brand/favicon.png" />
