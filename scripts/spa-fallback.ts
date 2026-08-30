@@ -19,7 +19,7 @@ import { dirname, join } from 'node:path';
 import { DEFAULT_LANG, LANGUAGES, type LangCode } from '../src/data/languages';
 import { getAllRoutes } from '../src/data/routes';
 import { servicesList } from '../src/data/services';
-import { doctorsData } from '../src/data/doctors';
+import { doctorsData, localizeDoctor } from '../src/data/doctors';
 import { clinic } from '../src/data/clinic';
 import { translateEnglish } from '../src/i18n/english';
 import { translateLatvian } from '../src/i18n/latvian';
@@ -135,15 +135,28 @@ function localizedHtml(route: string, code: LangCode, prefix: string) {
   let title = translateMeta(code, sourceMeta.title);
   let rawDescription = translateMeta(code, sourceMeta.description);
 
-  // Vārds, specialitāte un biogrāfija metadatos tiek salikti izpildlaikā,
-  // tāpēc precīzo atbilsmju vārdnīca visu teikumu neatpazīst.
+  /*
+   * Имя, специальность и биография собираются в предложение уже в рантайме,
+   * поэтому словарь точных соответствий целую фразу не распознаёт — собираем
+   * её здесь по частям.
+   *
+   * Источник тот же, что и у страницы: сначала localizeDoctor (языковая
+   * версия, записанная в самой карточке), затем словарь. Иначе метаданные
+   * разойдутся с содержимым — у врача с заполненным nameLatin в <title>
+   * стояло бы «Vitaly Dvurechensky», а на странице «Vitālijs Dvurečenskis».
+   *
+   * Порядок безопасен в обе стороны: localizeDoctor без перевода в карточке
+   * возвращает врача как есть, а translateMeta не трогает строки без
+   * кириллицы — то есть уже переведённые не портит.
+   */
   if (route.startsWith('/doctors/') && code !== 'ru') {
     const doctor = doctorsData.find((item) => route === `/doctors/${item.slug}`);
     if (doctor) {
-      const name = translateMeta(code, doctor.name);
-      const specialty = translateMeta(code, doctor.specialty);
+      const localized = localizeDoctor(doctor, code);
+      const name = translateMeta(code, localized.name);
+      const specialty = translateMeta(code, localized.specialty);
       title = `${name} — ${specialty}`;
-      rawDescription = `${name}, ${specialty}. ${translateMeta(code, doctor.bio)}`;
+      rawDescription = `${name}, ${specialty}. ${translateMeta(code, localized.bio)}`;
     }
   }
 

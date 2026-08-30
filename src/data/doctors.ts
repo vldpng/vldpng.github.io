@@ -234,6 +234,32 @@ export const doctorsData: Doctor[] = [
     ],
     photoLabel: "[Фото — Виталий Двуреченский, хирург-имплантолог]",
     photoUrl: "/images/staff/Vitalij_Doctor.webp",
+  
+    nameLatin: "Vitālijs Dvurečenskis",
+    translations: {
+      en: {
+        specialty: "Implant surgeon and prosthodontist",
+        experience: "30 years",
+        bio: "We perform dental implants and surgical restorations, as well as orthopedic prosthetics—from planning to the placement of permanent structures.",
+        educationList: [
+          { title: "Maxim Gorky Donetsk State Medical University", subtitle: "1989 — 1995" },
+          { title: "Internship in General Dentistry", subtitle: "1995 — 1996" },
+          { title: "Specialization in Prosthodontistry", subtitle: "1996 — 1997" },
+          { title: "Specialization in Surgical Dentistry", subtitle: "1997 — 1998" },
+        ],
+      },
+      lv: {
+        specialty: "Zobārsts, implantologs un protēzists",
+        experience: "30 gadi",
+        bio: "Veic zobu implantāciju un ķirurģisku zobu atjaunošanu, kā arī protezēšanu — no plānošanas līdz pastāvīgo konstrukciju fiksācijai.",
+        educationList: [
+          { title: "Doņeckas Maksima Gorkija Valsts medicīnas universitāte", subtitle: "1989 — 1995" },
+          { title: "Internatūra vispārējā zobārstniecībā", subtitle: "1995 — 1996" },
+          { title: "Specializācija zobu protezēšanā", subtitle: "1996 — 1997" },
+          { title: "Specializācija mutes ķirurģijā", subtitle: "1997 — 1998" },
+        ],
+      },
+    },
   },
   {
     id: "13",
@@ -248,6 +274,26 @@ export const doctorsData: Doctor[] = [
     services: ['/services/implants'],
     photoLabel: "[Фото — Эдгар Берзе, хирург-имплантолог]",
     photoUrl: "/images/staff/Edgar_Doctor.webp",
+  
+    nameLatin: "Edgars Bērze",
+    translations: {
+      en: {
+        specialty: "Implant Surgeon",
+        experience: "15 years",
+        bio: "Performs implant placement and surgical treatments: tooth extractions of any complexity, bone grafting, and jaw preparation for prosthetics.",
+        educationList: [
+          { title: "Riga Stradins University" },
+        ],
+      },
+      lv: {
+        specialty: "Zobārsts, implantologs",
+        experience: "15 gadi",
+        bio: "Veic implantu ievietošanu un ķirurģisko ārstēšanu: jebkuras sarežģītības zobu ekstrakciju, kaula plastiku un žokļa sagatavošanu protezēšanai.",
+        educationList: [
+          { title: "Rīgas Stradiņa universitāte" },
+        ],
+      },
+    },
   },
   {
     id: "2",
@@ -262,6 +308,26 @@ export const doctorsData: Doctor[] = [
     services: ['/services/prosthetics', '/services/implants'],
     photoLabel: "[Фото — Элина Хейфец, стоматолог-ортопед]",
     photoUrl: "/images/staff/Elina_doctor.webp",
+  
+    nameLatin: "Elīna Heifeca",
+    translations: {
+      en: {
+        specialty: "Prosthodontist",
+        experience: "35 years",
+        bio: "Specializes in dental prosthetics and restoration: crowns, veneers, bridges, and removable structures with an emphasis on aesthetics and long-lasting results.",
+        educationList: [
+          { title: "Dentistry", subtitle: "Higher medical education" },
+        ],
+      },
+      lv: {
+        specialty: "Zobārsts, protēzists",
+        experience: "35 gadi",
+        bio: "Nodarbojas ar zobu protezēšanu un atjaunošanu: kronīši, venīri, tiltiņi un izņemamās konstrukcijas ar uzsvaru uz estētiku un rezultāta ilgnoturību.",
+        educationList: [
+          { title: "Zobārstniecība", subtitle: "Augstākā medicīniskā izglītība" },
+        ],
+      },
+    },
   },
   {
     id: "3",
@@ -278,6 +344,26 @@ export const doctorsData: Doctor[] = [
     photoUrl: "/images/staff/Irina_Doctor.webp",
     // Кадр уже остальных (990×1485 против 1200×1600), от центра срезало макушку.
     photoPosition: "top",
+  
+    nameLatin: "Irina Ivanova",
+    translations: {
+      en: {
+        specialty: "Dentist-therapist",
+        experience: "30 years",
+        bio: "Treats caries and its complications, performs dental restorations and endodontic root canal treatment under a microscope while preserving the natural appearance of the tooth.",
+        educationList: [
+          { title: "Dentistry", subtitle: "Higher medical education" },
+        ],
+      },
+      lv: {
+        specialty: "Zobārsts",
+        experience: "30 gadi",
+        bio: "Ārstē kariesu un tā sarežģījumus, veic zobu restaurācijas un sakņu kanālu endodontisko ārstēšanu mikroskopā, saglabājot zoba dabisko izskatu.",
+        educationList: [
+          { title: "Zobārstniecība", subtitle: "Augstākā medicīniskā izglītība" },
+        ],
+      },
+    },
   },
   {
     id: "5",
@@ -289,6 +375,20 @@ export const doctorsData: Doctor[] = [
     services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Валерия Кравчук, гигиенист]",
     photoUrl: "/images/staff/Valerija_higienist.webp",
+  
+    nameLatin: "Valērija Kravčuka",
+    translations: {
+      en: {
+        specialty: "Hygienist",
+        experience: "6 years",
+        bio: "Performs professional teeth cleaning, plaque and tartar removal, and prevents caries and gum disease.",
+      },
+      lv: {
+        specialty: "Zobu higiēnists",
+        experience: "6 gadi",
+        bio: "Veic profesionālo zobu tīrīšanu, aplikuma un zobakmens noņemšanu, kariesa un smaganu slimību profilaksi.",
+      },
+    },
   },
   {
     id: "9",
@@ -300,6 +400,20 @@ export const doctorsData: Doctor[] = [
     services: ['/services/hygiene', '/services/whitening'],
     photoLabel: "[Фото — Алина Пурвиня, гигиенист]",
     photoUrl: "/images/staff/Alina_higienist.webp",
+  
+    nameLatin: "Alīna Purviņa",
+    translations: {
+      en: {
+        specialty: "Hygienist",
+        experience: "10 years",
+        bio: "Performs professional oral hygiene, scaling, and polishing, and selects home care products.",
+      },
+      lv: {
+        specialty: "Zobu higiēnists",
+        experience: "10 gadi",
+        bio: "Veic profesionālo mutes higiēnu, zobu nosēdumu noņemšanu un pulēšanu, kā arī iesaka mājas kopšanas līdzekļus.",
+      },
+    },
   },
   {
     id: "10",
@@ -310,6 +424,18 @@ export const doctorsData: Doctor[] = [
     services: [],
     photoLabel: "[Фото — Елена Якунчихина, косметолог]",
     photoUrl: "/images/staff/Jelena_cosmetology.webp",
+  
+    nameLatin: "Jeļena Jakunčihina",
+    translations: {
+      en: {
+        specialty: "Cosmetologist",
+        bio: "Performs aesthetic procedures for the face and around the lips, complementing the work of dentists and helping to achieve a harmonious result.",
+      },
+      lv: {
+        specialty: "Kosmetologs",
+        bio: "Veic estētiskās procedūras sejai un lūpu apvidum, papildinot zobārstu darbu un palīdzot sasniegt harmonisku rezultātu.",
+      },
+    },
   },
   {
     id: "6",
@@ -321,6 +447,18 @@ export const doctorsData: Doctor[] = [
     photoLabel: "[Фото — Даниэла Рожинска, ассистент]",
     photoUrl: "/images/staff/Daniela_asistent.webp",
     support: true,
+  
+    nameLatin: "Daniela Rožinska",
+    translations: {
+      en: {
+        specialty: "Assistant",
+        bio: "Assists doctors during appointments, prepares the office and materials, and helps patients feel comfortable at every stage of treatment.",
+      },
+      lv: {
+        specialty: "Zobārsta asistents",
+        bio: "Asistē ārstiem vizītes laikā, sagatavo kabinetu un materiālus, palīdz pacientiem justies komfortabli katrā ārstēšanas posmā.",
+      },
+    },
   },
   {
     id: "8",
@@ -335,6 +473,18 @@ export const doctorsData: Doctor[] = [
     photoLabel: "[Фото — Владислав Двуреченский, ассистент]",
     photoUrl: "", // TODO: фото ещё не снято
     support: true,
+  
+    nameLatin: "Vladislavs Dvurečenskis",
+    translations: {
+      en: {
+        specialty: "Assistant",
+        bio: "Assists doctors during appointments, prepares the office and materials, ensures the sterility of instruments, and accompanies the patient during procedures.",
+      },
+      lv: {
+        specialty: "Zobārsta asistents",
+        bio: "Asistē ārstiem vizītes laikā, sagatavo kabinetu un materiālus, atbild par instrumentu sterilitāti un pavada pacientu procedūru laikā.",
+      },
+    },
   },
   {
     id: "11",
@@ -346,6 +496,18 @@ export const doctorsData: Doctor[] = [
     photoLabel: "[Фото — Эдита Чеме, администратор]",
     photoUrl: "/images/staff/Edita_admin.webp",
     support: true,
+  
+    nameLatin: "Edita Čeme",
+    translations: {
+      en: {
+        specialty: "Administrator",
+        bio: "We greet patients, schedule appointments, help find a convenient time for your visit, and answer questions about treatment and documentation.",
+      },
+      lv: {
+        specialty: "Administrators",
+        bio: "Sagaida pacientus, veic pierakstu un palīdz izvēlēties ērtu vizītes laiku, atbild uz jautājumiem par ārstēšanu un dokumentiem.",
+      },
+    },
   },
   {
     id: "12",
@@ -357,5 +519,17 @@ export const doctorsData: Doctor[] = [
     photoLabel: "[Фото — Татьяна Черногорцева, администратор]",
     photoUrl: "/images/staff/Tatiana_admin.webp",
     support: true,
+  
+    nameLatin: "Tatjana Černogorceva",
+    translations: {
+      en: {
+        specialty: "Administrator",
+        bio: "Coordinates the clinic schedule and supports patients from the first call until the end of treatment.",
+      },
+      lv: {
+        specialty: "Administrators",
+        bio: "Koordinē klīnikas grafiku un pavada pacientus no pirmā zvana līdz ārstēšanas noslēgumam.",
+      },
+    },
   },
 ];
