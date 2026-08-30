@@ -12,6 +12,8 @@ import { ContactModalProvider } from './context/ContactModalContext';
 import { ContactModal } from './components/modals/ContactModal';
 import { ScrollToTopButton } from './components/ui/scroll-to-top-button';
 import { CookieBanner } from './components/CookieBanner';
+import { GoogleAnalytics } from './components/GoogleAnalytics';
+import { PlerdyAnalytics } from './components/PlerdyAnalytics';
 
 // Каждая страница загружается отдельным чанком — только при переходе на неё,
 // а не в момент первой загрузки сайта.
@@ -126,6 +128,8 @@ export default function App() {
     <ContactModalProvider>
       <div className="min-h-screen font-sans bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 selection:bg-zinc-200 dark:selection:bg-zinc-800 selection:text-zinc-900 dark:selection:text-zinc-100">
         <ScrollToTop />
+        {!isAdmin && <GoogleAnalytics />}
+        {!isAdmin && <PlerdyAnalytics />}
         {/* Притемнение полосы под часами — только в standalone (см. index.css) */}
         <div className="safe-area-scrim" aria-hidden="true" />
         {!isAdmin && <Topbar />}
