@@ -526,10 +526,7 @@ export function PriceCalculator() {
         <FadeIn>
           <SectionBadge className="mb-3">Имплантация</SectionBadge>
           <h2 id="implantaciya-heading" className="h-section text-zinc-900 dark:text-zinc-50">
-            Калькулятор цен на{' '}
-            <span className="underline decoration-dashed decoration-amber-500/70 underline-offset-8">
-              Имплантацию
-            </span>
+            Калькулятор цен на имплантацию
           </h2>
           <p className="text-lead text-zinc-500 dark:text-zinc-400 mt-4 max-w-3xl">
             Имплантация зубов в RoyalDent: выберите имплант, коронку и нужные зубы —

@@ -13,6 +13,7 @@ const manualTranslations: Record<string, string> = {
     'Maxim Gorky Institute — Degree in Dentistry',
   'Имплантация': 'Dental Implants',
   'Имплантация зубов': 'Dental Implants',
+  'Калькулятор цен на имплантацию': 'Price calculator for implantation',
   'Имплантация All-on-4': 'All-on-4 Dental Implants',
   'Имплантация All-on-6': 'All-on-6 Dental Implants',
   'Записаться на приём': 'Book an Appointment',

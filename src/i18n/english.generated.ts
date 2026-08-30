@@ -1153,6 +1153,7 @@ export const generatedEnglishTranslations: Record<string, string> = {
   "Сканирование зубов": "Dental scanning",
   "Хирургический этап": "Surgical stage",
   "Калькулятор цен на": "Price calculator",
+  "Калькулятор цен на имплантацию": "Price calculator for implantation",
   "Стоимость импланта": "Implant cost",
   "Расчёт имплантации": "Implantation cost",
   "Отзывы Google Maps": "Reviews Google Maps",
