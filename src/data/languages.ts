@@ -29,11 +29,11 @@ export interface Language {
 }
 
 export const LANGUAGES: Language[] = [
-  { code: 'lv', label: 'LV', prefix: '', hreflang: 'lv', flag: '/icons/latvia.webp', ready: true },
-  { code: 'ru', label: 'RU', prefix: '/ru', hreflang: 'ru', flag: '/icons/russia.webp', ready: true },
+  { code: 'lv', label: 'LV', prefix: '', hreflang: 'lv', flag: '/images/icons/latvia.webp', ready: true },
+  { code: 'ru', label: 'RU', prefix: '/ru', hreflang: 'ru', flag: '/images/icons/russia.webp', ready: true },
   // Английскому соответствует флаг Великобритании — общепринятая замена,
   // отдельного «английского» флага в наборе нет.
-  { code: 'en', label: 'EN', prefix: '/en', hreflang: 'en', flag: '/icons/united-kingdom.webp', ready: true },
+  { code: 'en', label: 'EN', prefix: '/en', hreflang: 'en', flag: '/images/icons/united-kingdom.webp', ready: true },
 ];
 
 export const DEFAULT_LANG: LangCode = 'lv';

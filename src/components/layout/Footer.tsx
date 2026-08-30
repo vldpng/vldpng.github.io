@@ -249,7 +249,7 @@ export function Footer() {
                   title="Панель администратора"
                   className={adminButtonClass}
                 >
-                  <MaskIcon src="/icons/padlock.webp" className="w-4 h-4" />
+                  <MaskIcon src="/images/icons/padlock.webp" className="w-4 h-4" />
                 </a>
               ) : (
                 <button
@@ -259,7 +259,7 @@ export function Footer() {
                   title="Панель администратора — скоро"
                   className={cn(adminButtonClass, 'opacity-40 cursor-not-allowed')}
                 >
-                  <MaskIcon src="/icons/padlock.webp" className="w-4 h-4" />
+                  <MaskIcon src="/images/icons/padlock.webp" className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -270,22 +270,22 @@ export function Footer() {
                 href={clinic.phoneHref}
                 className="flex items-center gap-2.5 text-base font-semibold text-white hover:text-amber-400 transition-colors"
               >
-                <MaskIcon src="/icons/phone-call.webp" className="w-4 h-4 shrink-0 text-amber-400" />
+                <MaskIcon src="/images/icons/phone-call.webp" className="w-4 h-4 shrink-0 text-amber-400" />
                 {clinic.phoneDisplay}
               </a>
               <a
                 href={clinic.emailHref}
                 className="flex items-center gap-2.5 text-[13px] text-white/70 hover:text-amber-400 transition-colors"
               >
-                <MaskIcon src="/icons/mail.webp" className="w-4 h-4 shrink-0 text-amber-400" />
+                <MaskIcon src="/images/icons/mail.webp" className="w-4 h-4 shrink-0 text-amber-400" />
                 {clinic.email}
               </a>
               <span className="flex items-center gap-2.5 text-[13px] text-white/70">
-                <MaskIcon src="/icons/placeholder.webp" className="w-4 h-4 shrink-0 text-amber-400" />
+                <MaskIcon src="/images/icons/placeholder.webp" className="w-4 h-4 shrink-0 text-amber-400" />
                 {clinic.address.full}
               </span>
               <span className="flex items-center gap-2.5 text-[13px] text-white/70">
-                <MaskIcon src="/icons/timing.webp" className="w-4 h-4 shrink-0 text-amber-400" />
+                <MaskIcon src="/images/icons/timing.webp" className="w-4 h-4 shrink-0 text-amber-400" />
                 {clinic.hours.short}
               </span>
             </div>

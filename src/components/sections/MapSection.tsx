@@ -43,7 +43,7 @@ export function MapSection() {
             <SectionBadge className="mb-4">Контакты</SectionBadge>
             <h2 className="h-section text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
               <MaskIcon
-                src="/icons/placeholder.webp"
+                src="/images/icons/placeholder.webp"
                 className="w-[0.9em] h-[0.9em] shrink-0 text-amber-500"
               />
               Как нас найти
@@ -63,7 +63,7 @@ export function MapSection() {
             <ul className="flex-1 flex flex-col justify-between gap-6 mb-8">
               <li className="flex items-start gap-4">
                 <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                  <MaskIcon src="/icons/placeholder.webp" className="w-[18px] h-[18px]" />
+                  <MaskIcon src="/images/icons/placeholder.webp" className="w-[18px] h-[18px]" />
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Адрес</p>
@@ -72,7 +72,7 @@ export function MapSection() {
               </li>
               <li className="flex items-start gap-4">
                 <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                  <MaskIcon src="/icons/timing.webp" className="w-[18px] h-[18px]" />
+                  <MaskIcon src="/images/icons/timing.webp" className="w-[18px] h-[18px]" />
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Часы работы</p>
@@ -82,7 +82,7 @@ export function MapSection() {
               </li>
               <li className="flex items-start gap-4">
                 <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                  <MaskIcon src="/icons/phone-call.webp" className="w-[18px] h-[18px]" />
+                  <MaskIcon src="/images/icons/phone-call.webp" className="w-[18px] h-[18px]" />
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Телефон</p>
@@ -93,7 +93,7 @@ export function MapSection() {
               </li>
               <li className="flex items-start gap-4">
                 <span className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                  <MaskIcon src="/icons/mail.webp" className="w-[18px] h-[18px]" />
+                  <MaskIcon src="/images/icons/mail.webp" className="w-[18px] h-[18px]" />
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-0.5">Почта</p>

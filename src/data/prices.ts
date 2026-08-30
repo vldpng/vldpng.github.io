@@ -16,7 +16,7 @@ export interface PriceCategory {
   title: string;
   /** Имя иконки из реестра price-icons. */
   icon: string;
-  /** Своя маска (svg или webp) из /public/icons. Нарисованы не для всех категорий. */
+  /** Своя маска (svg или webp) из /public/images/icons. Нарисованы не для всех категорий. */
   iconSrc?: string;
   items: PriceItem[];
 }
@@ -25,7 +25,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Диагностика",
     icon: 'Search',
-    iconSrc: "/icons/dental-checkup.svg",
+    iconSrc: "/images/icons/dental-checkup.svg",
     items: [
       { name: "Первичная консультация врача-стоматолога", price: "30 €" },
       { name: "Онлайн консультация врача-стоматолога", price: "15 €" },
@@ -38,7 +38,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Терапия",
     icon: 'Bandage',
-    iconSrc: "/icons/decay.svg",
+    iconSrc: "/images/icons/decay.svg",
     items: [
       { name: "Поверхностная анестезия", price: "5 €" },
       { name: "Анестезия", price: "30 €" },
@@ -51,7 +51,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Эндодонтия",
     icon: 'Microscope',
-    iconSrc: "/icons/root-canal.webp",
+    iconSrc: "/images/icons/root-canal.webp",
     items: [
       { name: "Поверхностная анестезия", price: "5 €" },
       { name: "Анестезия", price: "30 €" },
@@ -66,7 +66,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Ортопедия",
     icon: 'Layers',
-    iconSrc: "/icons/dental-crown.svg",
+    iconSrc: "/images/icons/dental-crown.svg",
     items: [
       { name: "Интраоральное 3D сканирование / слепки", price: "70 €" },
       { name: "Диагностическое моделирование (моделирование улыбки)", price: "Бесплатно в рамках консультации" },
@@ -85,7 +85,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Хирургия",
     icon: 'Syringe',
-    iconSrc: "/icons/tooth-extraction.webp",
+    iconSrc: "/images/icons/tooth-extraction.webp",
     items: [
       { name: "Поверхностная анестезия", price: "5 €" },
       { name: "Анестезия", price: "30 €" },
@@ -103,7 +103,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Имплантация",
     icon: 'Syringe',
-    iconSrc: "/icons/implant.svg",
+    iconSrc: "/images/icons/implant.svg",
     items: [
       { name: "Импланты фирмы Root + металлокерамическая коронка", price: "1100 €" },
       { name: "Импланты фирмы Root + циркониевая коронка", price: "1450 €" },
@@ -137,7 +137,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Ортодонтия",
     icon: 'Smile',
-    iconSrc: "/icons/braces.svg",
+    iconSrc: "/images/icons/braces.svg",
     items: [
       { name: "Составление плана лечения на элайнерах", price: "150 €" },
       { name: "Ordoline Basic — одна челюсть", price: "1200 €" },
@@ -152,7 +152,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Детская стоматология",
     icon: 'Baby',
-    iconSrc: "/icons/kids.svg",
+    iconSrc: "/images/icons/kids.svg",
     items: [
       { name: "Поверхностная анестезия", price: "5 €" },
       { name: "Анестезия", price: "30 €" },
@@ -167,7 +167,7 @@ export const priceCategories: PriceCategory[] = [
   {
     title: "Профессиональная гигиена",
     icon: 'Sparkles',
-    iconSrc: "/icons/higien.svg",
+    iconSrc: "/images/icons/higien.svg",
     items: [
       { name: "Профессиональная гигиена с использованием Air-Flow", price: "95 €" },
       { name: "Кабинетное отбеливание Fläsh", price: "135 €" },

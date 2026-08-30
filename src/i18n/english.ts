@@ -60,6 +60,16 @@ const manualTranslations: Record<string, string> = {
   'Этапы имплантации': 'Implantation stages',
   'прайс-листе клиники': "the clinic's price list",
   'Отзывы Google Maps': 'Google Maps reviews',
+  'Пользователь Google Maps': 'Google Maps user',
+  'Отзыв в Google Maps': 'Review on Google Maps',
+  'Отзыв оставлен без текста': 'Review submitted without text',
+  'Не удалось загрузить отзывы Google Maps:': 'Unable to load Google Maps reviews:',
+  'Отзывы пациентов': 'Patient reviews',
+  'Google Maps показывает ограниченную подборку отзывов, отсортированную по релевантности.':
+    'Google Maps displays a limited selection of reviews ordered by relevance.',
+  'Отзывы пациентов о лечении в нашей клинике.': 'Patient reviews about treatment at our clinic.',
+  'Смотреть профиль в Google Maps': 'View profile on Google Maps',
+  'Открыть отзыв в Google Maps': 'Open review on Google Maps',
   'долговечность': 'durability',
   'Обработка пародонтального кармана аппаратом Vector':
     'Periodontal pocket treatment with the Vector device',

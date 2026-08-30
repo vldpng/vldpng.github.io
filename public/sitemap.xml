@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://royaldent.lv/</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/"/>
@@ -11,7 +11,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services"/>
@@ -20,7 +20,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/prices</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/prices"/>
@@ -29,7 +29,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors"/>
@@ -38,7 +38,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/about</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/about"/>
@@ -47,7 +47,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/patients</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients"/>
@@ -56,7 +56,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/patients/rules</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/rules"/>
@@ -65,7 +65,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/patients/booking</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/booking"/>
@@ -74,7 +74,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/patients/diagnostics</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/diagnostics"/>
@@ -83,7 +83,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/privacy</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/privacy"/>
@@ -92,7 +92,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/cookies</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/cookies"/>
@@ -101,7 +101,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/implants</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/implants"/>
@@ -110,7 +110,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/prosthetics</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/prosthetics"/>
@@ -119,7 +119,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/all-on-4</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/all-on-4"/>
@@ -128,7 +128,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/all-on-6</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/all-on-6"/>
@@ -137,7 +137,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/wisdom-tooth</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/wisdom-tooth"/>
@@ -146,7 +146,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/kids</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/kids"/>
@@ -155,7 +155,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/vector</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/vector"/>
@@ -164,7 +164,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/tmj</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/tmj"/>
@@ -173,7 +173,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/microscope</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/microscope"/>
@@ -182,7 +182,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/hygiene</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/hygiene"/>
@@ -191,7 +191,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/whitening</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/whitening"/>
@@ -200,7 +200,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/services/aligners</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/aligners"/>
@@ -209,7 +209,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors/dvurechenskiy</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/dvurechenskiy"/>
@@ -218,7 +218,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors/berze</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/berze"/>
@@ -227,7 +227,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors/heyfets</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/heyfets"/>
@@ -236,7 +236,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors/ivanova</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/ivanova"/>
@@ -245,7 +245,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors/kravchuk</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/kravchuk"/>
@@ -254,7 +254,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors/purvinya</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/purvinya"/>
@@ -263,7 +263,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/doctors/yakunchihina</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/yakunchihina"/>
@@ -272,7 +272,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/"/>
@@ -281,7 +281,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services"/>
@@ -290,7 +290,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/prices</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/prices"/>
@@ -299,7 +299,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors"/>
@@ -308,7 +308,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/about</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/about"/>
@@ -317,7 +317,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/patients</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients"/>
@@ -326,7 +326,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/patients/rules</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/rules"/>
@@ -335,7 +335,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/patients/booking</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/booking"/>
@@ -344,7 +344,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/patients/diagnostics</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/diagnostics"/>
@@ -353,7 +353,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/privacy</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/privacy"/>
@@ -362,7 +362,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/cookies</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/cookies"/>
@@ -371,7 +371,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/implants</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/implants"/>
@@ -380,7 +380,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/prosthetics</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/prosthetics"/>
@@ -389,7 +389,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/all-on-4</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/all-on-4"/>
@@ -398,7 +398,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/all-on-6</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/all-on-6"/>
@@ -407,7 +407,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/wisdom-tooth</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/wisdom-tooth"/>
@@ -416,7 +416,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/kids</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/kids"/>
@@ -425,7 +425,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/vector</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/vector"/>
@@ -434,7 +434,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/tmj</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/tmj"/>
@@ -443,7 +443,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/microscope</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/microscope"/>
@@ -452,7 +452,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/hygiene</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/hygiene"/>
@@ -461,7 +461,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/whitening</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/whitening"/>
@@ -470,7 +470,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/services/aligners</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/aligners"/>
@@ -479,7 +479,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors/dvurechenskiy</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/dvurechenskiy"/>
@@ -488,7 +488,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors/berze</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/berze"/>
@@ -497,7 +497,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors/heyfets</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/heyfets"/>
@@ -506,7 +506,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors/ivanova</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/ivanova"/>
@@ -515,7 +515,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors/kravchuk</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/kravchuk"/>
@@ -524,7 +524,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors/purvinya</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/purvinya"/>
@@ -533,7 +533,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/ru/doctors/yakunchihina</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/yakunchihina"/>
@@ -542,7 +542,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/"/>
@@ -551,7 +551,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services"/>
@@ -560,7 +560,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/prices</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/prices"/>
@@ -569,7 +569,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors"/>
@@ -578,7 +578,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/about</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/about"/>
@@ -587,7 +587,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/patients</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients"/>
@@ -596,7 +596,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/patients/rules</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/rules"/>
@@ -605,7 +605,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/patients/booking</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/booking"/>
@@ -614,7 +614,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/patients/diagnostics</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/patients/diagnostics"/>
@@ -623,7 +623,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/privacy</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/privacy"/>
@@ -632,7 +632,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/cookies</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/cookies"/>
@@ -641,7 +641,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/implants</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/implants"/>
@@ -650,7 +650,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/prosthetics</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/prosthetics"/>
@@ -659,7 +659,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/all-on-4</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/all-on-4"/>
@@ -668,7 +668,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/all-on-6</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/all-on-6"/>
@@ -677,7 +677,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/wisdom-tooth</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/wisdom-tooth"/>
@@ -686,7 +686,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/kids</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/kids"/>
@@ -695,7 +695,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/vector</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/vector"/>
@@ -704,7 +704,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/tmj</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/tmj"/>
@@ -713,7 +713,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/microscope</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/microscope"/>
@@ -722,7 +722,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/hygiene</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/hygiene"/>
@@ -731,7 +731,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/whitening</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/whitening"/>
@@ -740,7 +740,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/services/aligners</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/services/aligners"/>
@@ -749,7 +749,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors/dvurechenskiy</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/dvurechenskiy"/>
@@ -758,7 +758,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors/berze</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/berze"/>
@@ -767,7 +767,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors/heyfets</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/heyfets"/>
@@ -776,7 +776,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors/ivanova</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/ivanova"/>
@@ -785,7 +785,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors/kravchuk</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/kravchuk"/>
@@ -794,7 +794,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors/purvinya</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/purvinya"/>
@@ -803,7 +803,7 @@
   </url>
   <url>
     <loc>https://royaldent.lv/en/doctors/yakunchihina</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="lv" href="https://royaldent.lv/doctors/yakunchihina"/>

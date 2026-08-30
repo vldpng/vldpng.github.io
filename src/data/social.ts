@@ -21,10 +21,10 @@ export interface SocialLink {
  */
 export const socialLinks: SocialLink[] = (
   [
-    { src: '/icons/instagram.webp', href: clinic.social.instagram, label: 'Instagram' },
-    { src: '/icons/facebook.webp', href: clinic.social.facebook, label: 'Facebook' },
-    { src: '/icons/whatsapp.webp', href: clinic.social.whatsapp, label: 'WhatsApp' },
-    { src: '/icons/telegram.webp', href: clinic.social.telegram, label: 'Telegram' },
+    { src: '/images/icons/instagram.webp', href: clinic.social.instagram, label: 'Instagram' },
+    { src: '/images/icons/facebook.webp', href: clinic.social.facebook, label: 'Facebook' },
+    { src: '/images/icons/whatsapp.webp', href: clinic.social.whatsapp, label: 'WhatsApp' },
+    { src: '/images/icons/telegram.webp', href: clinic.social.telegram, label: 'Telegram' },
   ] satisfies SocialLink[]
 ).filter((s) => s.href.length > 0);
 

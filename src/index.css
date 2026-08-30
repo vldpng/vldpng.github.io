@@ -54,6 +54,25 @@
   /* Контейнер: центрированная колонка 1600px (max-w-7xl mx-auto).
      Чем шире — тем меньше боковые поля (авто-margin) на широких экранах. */
   --container-7xl: 100rem;
+
+  /* Бегущая лента отзывов. В Tailwind v4 утилита animate-* берётся из
+     переменной --animate-*, отдельного tailwind.config.js в проекте нет.
+     Длительность здесь фиксированная, а не var(--duration): переменная из
+     @theme объявлена на :root и любой вложенный var() вычисляется тоже на
+     :root, где переопределения со строки ленты ещё не видно. Свою скорость
+     каждая строка ставит инлайновым animation-duration (см. marquee.tsx). */
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    /* Сдвиг на ширину копии плюс зазор: следующая копия встаёт ровно на место
+       предыдущей, поэтому стык не виден и лента идёт без рывка. */
+    to {
+      transform: translateX(calc(-100% - var(--gap, 1rem)));
+    }
+  }
 }
 
 @layer base {
@@ -216,6 +235,12 @@
 @media (prefers-reduced-motion: reduce) {
   .btn-sweep::after {
     transition: none;
+  }
+  /* Бесконечная лента отзывов — самая назойливая анимация на странице:
+     останавливаем, но не прячем, иначе отзывы просто исчезнут. Прокрутить
+     их можно пальцем или колесом, у ленты есть overflow-x. */
+  .marquee-track {
+    animation: none;
   }
 }
 
