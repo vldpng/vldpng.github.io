@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import { registerLeadRoutes } from "./src/server/leads";
 import { registerAdminRoutes } from "./src/server/admin";
 import { UPLOADS_STAFF_DIR } from "./src/server/paths";
+import { registerTelegramRoutes } from "./src/server/telegram";
 
 /**
  * Каталог приложения — считаем от самого файла, а не от process.cwd().
@@ -36,6 +37,7 @@ async function startServer() {
   // заявку на обратный звонок, она уходит администраторам в Telegram.
   registerLeadRoutes(app);
   registerAdminRoutes(app);
+  registerTelegramRoutes(app);
   // API routes end
 
   // Фото сотрудников ищем в двух местах, и порядок важен.

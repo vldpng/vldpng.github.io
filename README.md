@@ -39,6 +39,7 @@ npm run clean      # удалить dist/
 | `APP_URL` | Публичный URL сайта (абсолютные ссылки) |
 | `TELEGRAM_BOT_TOKEN` | Токен бота из @BotFather |
 | `TELEGRAM_CHAT_ID` | Id чата или группы, куда падают заявки |
+| `TELEGRAM_WEBHOOK_SECRET` | Секрет проверки webhook для кнопок под заявками |
 | `ADMIN_LOGIN`, `ADMIN_PASSWORD` | Учётные данные панели администратора |
 
 Пока оба ключа Telegram не заданы, заявки сохраняются в базу и пишутся в лог
@@ -99,6 +100,7 @@ custom environment variables), а не файлом `.env`:
 | `PORT` | `0` — порт назначает Passenger |
 | `DB_DIR` | абсолютный путь к `storage/` |
 | `ADMIN_LOGIN`, `ADMIN_PASSWORD` | учётные данные админки |
+| `TELEGRAM_WEBHOOK_SECRET` | случайная секретная строка для Telegram webhook |
 
 Первые четыре обязательны: без `ADMIN_*` и `DB_DIR` сервер осознанно не
 стартует (см. `src/server/env.ts`), иначе отказ был бы тихим — админка

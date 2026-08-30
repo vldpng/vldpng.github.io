@@ -37,6 +37,12 @@ db.exec(`
     ip         TEXT NOT NULL DEFAULT '',
     age        TEXT NOT NULL DEFAULT '', -- заполняет только калькулятор
     atrophy    TEXT NOT NULL DEFAULT '', -- атрофия костной ткани, оттуда же
+    called_at  TEXT NOT NULL DEFAULT '', -- когда администратор отметил звонок
+    called_by_id TEXT NOT NULL DEFAULT '',
+    called_by_name TEXT NOT NULL DEFAULT '',
+    telegram_chat_id TEXT NOT NULL DEFAULT '',
+    telegram_message_id TEXT NOT NULL DEFAULT '',
+    telegram_html TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL
   );
 
@@ -67,9 +73,19 @@ const leadColumns = new Set(
     (c) => c.name,
   ),
 );
-for (const column of ['age', 'atrophy']) {
+const leadColumnMigrations: Record<string, string> = {
+  age: "TEXT NOT NULL DEFAULT ''",
+  atrophy: "TEXT NOT NULL DEFAULT ''",
+  called_at: "TEXT NOT NULL DEFAULT ''",
+  called_by_id: "TEXT NOT NULL DEFAULT ''",
+  called_by_name: "TEXT NOT NULL DEFAULT ''",
+  telegram_chat_id: "TEXT NOT NULL DEFAULT ''",
+  telegram_message_id: "TEXT NOT NULL DEFAULT ''",
+  telegram_html: "TEXT NOT NULL DEFAULT ''",
+};
+for (const [column, definition] of Object.entries(leadColumnMigrations)) {
   if (!leadColumns.has(column)) {
-    db.exec(`ALTER TABLE leads ADD COLUMN ${column} TEXT NOT NULL DEFAULT ''`);
+    db.exec(`ALTER TABLE leads ADD COLUMN ${column} ${definition}`);
   }
 }
 
@@ -109,10 +125,28 @@ export interface LeadRow {
       имплантации, у остальных форм эти поля пустые. */
   age: string;
   atrophy: string;
+  called_at: string;
+  called_by_id: string;
+  called_by_name: string;
+  telegram_chat_id: string;
+  telegram_message_id: string;
+  telegram_html: string;
   created_at: string;
 }
 
-export function insertLead(lead: Omit<LeadRow, 'id' | 'created_at'>): number {
+type NewLead = Omit<
+  LeadRow,
+  | 'id'
+  | 'created_at'
+  | 'called_at'
+  | 'called_by_id'
+  | 'called_by_name'
+  | 'telegram_chat_id'
+  | 'telegram_message_id'
+  | 'telegram_html'
+>;
+
+export function insertLead(lead: NewLead): number {
   const res = db
     .prepare(
       `INSERT INTO leads (name, surname, email, phone, message, source, page, ip, age, atrophy, created_at)
@@ -132,6 +166,48 @@ export function insertLead(lead: Omit<LeadRow, 'id' | 'created_at'>): number {
       new Date().toISOString(),
     );
   return Number(res.lastInsertRowid);
+}
+
+/** Привязывает сохранённую заявку к уведомлению, которое вернул Telegram. */
+export function setLeadTelegramMessage(
+  id: number,
+  chatId: string,
+  messageId: string,
+  html: string,
+): void {
+  db.prepare(
+    `UPDATE leads
+        SET telegram_chat_id = ?, telegram_message_id = ?, telegram_html = ?
+      WHERE id = ?`,
+  ).run(chatId, messageId, html, id);
+}
+
+export function getLeadById(id: number): LeadRow | null {
+  return (
+    (db.prepare('SELECT * FROM leads WHERE id = ?').get(id) as unknown as LeadRow | undefined) ??
+    null
+  );
+}
+
+/**
+ * Первый клик побеждает: условие called_at = '' не даёт двум администраторам
+ * одновременно присвоить одну заявку себе.
+ */
+export function markLeadCalled(
+  id: number,
+  admin: { id: string; name: string },
+): { state: 'updated' | 'already' | 'missing'; lead: LeadRow | null } {
+  const calledAt = new Date().toISOString();
+  const result = db
+    .prepare(
+      `UPDATE leads
+          SET called_at = ?, called_by_id = ?, called_by_name = ?
+        WHERE id = ? AND called_at = ''`,
+    )
+    .run(calledAt, admin.id, admin.name, id);
+  const lead = getLeadById(id);
+  if (!lead) return { state: 'missing', lead: null };
+  return { state: Number(result.changes) > 0 ? 'updated' : 'already', lead };
 }
 
 /**

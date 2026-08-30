@@ -145,8 +145,9 @@ async function handleLead(req: Request, res: Response, source: string, requireEm
   }
 
   // Сначала база: заявка не должна зависеть от доступности Telegram.
+  let leadId: number;
   try {
-    insertLead({ ...lead, ip });
+    leadId = insertLead({ ...lead, ip });
   } catch (e) {
     console.error("[lead] запись в БД не удалась:", e);
     return res.status(500).json({ success: false, error: "storage_failed" });
@@ -155,7 +156,7 @@ async function handleLead(req: Request, res: Response, source: string, requireEm
   // Уведомление — вдогонку и без await: посетитель не ждёт Telegram,
   // а неудачная доставка уже не теряет заявку — она в базе и в админке.
   if (isTelegramConfigured()) {
-    void sendTelegramMessage(buildMessage(lead)).then((delivered) => {
+    void sendTelegramMessage(buildMessage(lead), leadId).then((delivered) => {
       if (!delivered) console.warn(`[lead:${source}] заявка в БД, но Telegram не доставлен`);
     });
   } else {
