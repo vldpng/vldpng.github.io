@@ -107,6 +107,23 @@ if (priceCount === 0) {
   priceCategories.forEach((cat, i) => ins.run(`cat-${i}`, JSON.stringify(cat), i));
 }
 
+// Иконки категорий переехали из public/icons в public/images/icons, но путь к
+// картинке лежит внутри JSON категории, то есть в базе. Заполненную базу сидинг
+// выше не трогает, поэтому на боевом сервере прайс продолжал просить /icons/* и
+// получал 404 на каждой категории. Починить через админку нельзя: поле iconSrc
+// она не редактирует, а `npm run prices:reset` затёр бы правки цен.
+// Условие в LIKE не совпадает с уже переписанным '"/images/icons/', так что
+// повторные запуски ничего не делают.
+const staleIconRows = db
+  .prepare(`SELECT id, data FROM price_categories WHERE data LIKE '%"/icons/%'`)
+  .all() as unknown as Array<{ id: string; data: string }>;
+if (staleIconRows.length) {
+  const upd = db.prepare('UPDATE price_categories SET data = ? WHERE id = ?');
+  for (const row of staleIconRows) {
+    upd.run(row.data.replaceAll('"/icons/', '"/images/icons/'), row.id);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Заявки
 // ---------------------------------------------------------------------------
@@ -424,4 +441,16 @@ export function sessionTimeLeft(token: string): number {
 
 export function deleteSession(token: string): void {
   db.prepare('DELETE FROM sessions WHERE token = ?').run(token);
+}
+
+/**
+ * Проверка живости базы для /api/health.
+ *
+ * Читаем реальную таблицу, а не `SELECT 1`: последнее ответило бы «всё
+ * хорошо» даже при отвалившемся файле базы. Внешний монитор должен отличать
+ * «процесс жив» от «приложение работает» — диск может пропасть, а Node
+ * продолжит отдавать 200 и молчать о том, что заявки больше не сохраняются.
+ */
+export function checkDatabase(): void {
+  db.prepare('SELECT COUNT(*) AS c FROM leads').get();
 }

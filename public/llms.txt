@@ -1,0 +1,36 @@
+# RoyalDent
+
+> RoyalDent is a multilingual dental clinic in Jūrmala, Latvia. The website provides information about dental services, doctors, prices, patient preparation, clinic contacts, and appointment requests in Latvian, Russian, and English.
+
+The clinic is located at Rīgas iela 20, Jūrmala, Latvia. This file is a navigation summary for language models and automated agents; medical decisions must always be made with a qualified clinician.
+
+## Main pages
+
+- [Latvian home](https://royaldent.lv/): Main information about the clinic and its services.
+- [Services](https://royaldent.lv/services): Dental services provided by RoyalDent.
+- [Doctors](https://royaldent.lv/doctors): RoyalDent medical team and professional profiles.
+- [Prices](https://royaldent.lv/prices): Current dental service prices.
+- [Patient information](https://royaldent.lv/patients): Booking, clinic rules, and preparation for diagnostics.
+- [About the clinic](https://royaldent.lv/about): Clinic, technologies, location, and contact information.
+
+## Key treatments
+
+- [Dental implants](https://royaldent.lv/services/implants): Implant treatment information and cost calculator.
+- [Microscope-assisted dentistry](https://royaldent.lv/services/microscope): Root canal and microscope-assisted treatment.
+- [Dental prosthetics](https://royaldent.lv/services/prosthetics): Crowns, bridges, and prosthetic treatment.
+- [Professional dental hygiene](https://royaldent.lv/services/hygiene): Professional oral hygiene services.
+- [Teeth whitening](https://royaldent.lv/services/whitening): Professional whitening procedures.
+- [Children's dentistry](https://royaldent.lv/services/kids): Dental care for children.
+- [Aligners](https://royaldent.lv/services/aligners): Orthodontic treatment with clear aligners.
+
+## Languages
+
+- [Latviešu](https://royaldent.lv/): Latvian version and default language.
+- [Русский](https://royaldent.lv/ru/): Russian version.
+- [English](https://royaldent.lv/en/): English version.
+
+## Policies
+
+- [Privacy policy](https://royaldent.lv/privacy): Personal data processing information.
+- [Cookie information](https://royaldent.lv/cookies): Cookie categories and consent management.
+- [Sitemap](https://royaldent.lv/sitemap.xml): Complete index of public pages.

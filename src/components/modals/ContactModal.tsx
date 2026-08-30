@@ -203,17 +203,17 @@ export function ContactModal() {
                   
                   <div className="space-y-8 text-[15px]">
                     <div className="flex items-center gap-6">
-                      <MaskIcon src="/icons/phone-call.webp" className="text-amber-500 shrink-0 w-6 h-6" />
+                      <MaskIcon src="/images/icons/phone-call.webp" className="text-amber-500 shrink-0 w-6 h-6" />
                       <a href={clinic.phoneHref} className="opacity-90 hover:opacity-100 transition-opacity font-light">{clinic.phoneDisplay}</a>
                     </div>
 
                     <div className="flex items-center gap-6">
-                      <MaskIcon src="/icons/mail.webp" className="text-amber-500 shrink-0 w-6 h-6" />
+                      <MaskIcon src="/images/icons/mail.webp" className="text-amber-500 shrink-0 w-6 h-6" />
                       <a href={clinic.emailHref} className="opacity-90 hover:opacity-100 transition-opacity font-light">{clinic.email}</a>
                     </div>
 
                     <div className="flex items-start gap-6">
-                      <MaskIcon src="/icons/placeholder.webp" className="text-amber-500 mt-1 shrink-0 w-6 h-6" />
+                      <MaskIcon src="/images/icons/placeholder.webp" className="text-amber-500 mt-1 shrink-0 w-6 h-6" />
                       <p className="opacity-90 font-light leading-relaxed max-w-[200px]">{clinic.address.full}, Latvia</p>
                     </div>
                   </div>

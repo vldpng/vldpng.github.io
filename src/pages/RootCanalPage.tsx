@@ -259,8 +259,8 @@ export function RootCanalPage() {
             </p>
             <ul className="space-y-4 pt-1">
               {[
-                { icon: '/icons/decay.svg', text: 'устранить воспаление и не допустить его повторного появления' },
-                { icon: '/icons/dental-crown.svg', text: 'укрепить зуб и восстановить его точную форму и эстетику' },
+                { icon: '/images/icons/decay.svg', text: 'устранить воспаление и не допустить его повторного появления' },
+                { icon: '/images/icons/dental-crown.svg', text: 'укрепить зуб и восстановить его точную форму и эстетику' },
               ].map((task) => (
                 <li key={task.icon} className="flex gap-4 items-center">
                   <MaskIcon src={task.icon} className="w-10 h-10 shrink-0 text-amber-500" />

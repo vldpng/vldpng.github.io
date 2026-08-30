@@ -82,12 +82,7 @@ export function Hero() {
             }}
             className="relative flex flex-col items-start max-w-2xl lg:max-w-3xl lg:pl-8 mt-16 sm:mt-24 lg:mt-0"
           >
-            <motion.h1
-              variants={{
-                hidden: { opacity: 0, y: 28 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            <h1
               // Кегль подобран под реальную ширину колонки на каждом пороге:
               // фраза «Найди свою улыбку в» требует примерно 9.5px ширины на
               // каждый пиксель кегля. С lg колонка делится пополам с фото и
@@ -101,18 +96,13 @@ export function Hero() {
               <span className="whitespace-nowrap">Найди свою улыбку в</span>
               <br />
               Юрмале
-            </motion.h1>
-            <motion.p
-              variants={{
-                hidden: { opacity: 0, y: 24 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            </h1>
+            <p
               className="text-lead text-[#FEF9EF]/85 lg:text-zinc-500 max-w-[46ch] lg:max-w-[54ch] mt-6"
             >
               Установка виниров с минимальной обточкой зуба. Вашу будущую улыбку
               вы можете увидеть ещё до начала лечения.
-            </motion.p>
+            </p>
 
             {/* Преимущества — 2 колонки, оранжевые чек-иконки.
                 Проявляются по очереди, выезжая слева (stagger от контейнера). */}

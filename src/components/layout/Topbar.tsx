@@ -12,12 +12,12 @@ export function Topbar() {
           {/* Иконки клиники — чёрные контуры на прозрачном фоне, поэтому идут
               маской: на тёмной полосе они должны быть светлыми, а <img> не
               умеет наследовать цвет текста. */}
-          <MaskIcon src="/icons/placeholder.webp" className="w-3.5 h-3.5 shrink-0 text-white/55" />
+          <MaskIcon src="/images/icons/placeholder.webp" className="w-3.5 h-3.5 shrink-0 text-white/55" />
           {clinic.address.full}
         </span>
         <span className="hidden sm:inline text-white/25">|</span>
         <span className="flex items-center gap-1.5 hover:text-white transition-colors cursor-default">
-          <MaskIcon src="/icons/timing.webp" className="w-3.5 h-3.5 shrink-0 text-white/55" />
+          <MaskIcon src="/images/icons/timing.webp" className="w-3.5 h-3.5 shrink-0 text-white/55" />
           {clinic.hours.short}
         </span>
         <span className="hidden sm:inline text-white/25">|</span>
@@ -29,7 +29,7 @@ export function Topbar() {
 
       <div className="flex items-center gap-4">
         <a href={clinic.phoneHref} className="flex items-center gap-1.5 hover:text-white transition-colors font-medium">
-          <MaskIcon src="/icons/phone-call.webp" className="w-3.5 h-3.5 shrink-0 text-white/55" />
+          <MaskIcon src="/images/icons/phone-call.webp" className="w-3.5 h-3.5 shrink-0 text-white/55" />
           {clinic.phoneDisplay}
         </a>
         <span className="hidden sm:inline text-white/25">|</span>

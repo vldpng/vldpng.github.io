@@ -106,20 +106,20 @@ export const serviceCards: {
  * уже импортирует отсюда serviceCards, и обратный импорт замкнул бы модули.
  */
 export const serviceIcons: Record<string, React.ReactNode> = {
-  '/services/prosthetics': <MaskIcon src="/icons/dental-crown.svg" className="w-6 h-6" />,
-  '/services/aligners': <MaskIcon src="/icons/braces.svg" className="w-6 h-6" />,
-  '/services/wisdom-tooth': <MaskIcon src="/icons/tooth-extraction.webp" className="w-6 h-6" />,
-  '/services/implants': <MaskIcon src="/icons/implant.svg" className="w-6 h-6" />,
-  '/services/all-on-4': <MaskIcon src="/icons/dentures.webp" className="w-6 h-6" />,
-  '/services/all-on-6': <MaskIcon src="/icons/dentures.webp" className="w-6 h-6" />,
-  '/services/microscope': <MaskIcon src="/icons/root-canal.webp" className="w-6 h-6" />,
-  '/services/hygiene': <MaskIcon src="/icons/higien.svg" className="w-6 h-6" />,
-  '/services/kids': <MaskIcon src="/icons/kids.svg" className="w-6 h-6" />,
+  '/services/prosthetics': <MaskIcon src="/images/icons/dental-crown.svg" className="w-6 h-6" />,
+  '/services/aligners': <MaskIcon src="/images/icons/braces.svg" className="w-6 h-6" />,
+  '/services/wisdom-tooth': <MaskIcon src="/images/icons/tooth-extraction.webp" className="w-6 h-6" />,
+  '/services/implants': <MaskIcon src="/images/icons/implant.svg" className="w-6 h-6" />,
+  '/services/all-on-4': <MaskIcon src="/images/icons/dentures.webp" className="w-6 h-6" />,
+  '/services/all-on-6': <MaskIcon src="/images/icons/dentures.webp" className="w-6 h-6" />,
+  '/services/microscope': <MaskIcon src="/images/icons/root-canal.webp" className="w-6 h-6" />,
+  '/services/hygiene': <MaskIcon src="/images/icons/higien.svg" className="w-6 h-6" />,
+  '/services/kids': <MaskIcon src="/images/icons/kids.svg" className="w-6 h-6" />,
   // Направление называется «Лечение сустава», но лечит его гнатолог —
   // отсюда иконка челюстного сустава, а не абстрактный пульс lucide.
-  '/services/tmj': <MaskIcon src="/icons/gnatology.webp" className="w-6 h-6" />,
-  '/services/vector': <MaskIcon src="/icons/vector.webp" className="w-6 h-6" />,
-  '/services/whitening': <MaskIcon src="/icons/whitening.svg" className="w-6 h-6" />,
+  '/services/tmj': <MaskIcon src="/images/icons/gnatology.webp" className="w-6 h-6" />,
+  '/services/vector': <MaskIcon src="/images/icons/vector.webp" className="w-6 h-6" />,
+  '/services/whitening': <MaskIcon src="/images/icons/whitening.svg" className="w-6 h-6" />,
   // Фирменной иконки у косметологии пока нет — до неё общий значок lucide,
   // но не дежурный стетоскоп: направление не стоматологическое.
   '/doctors/yakunchihina': <Sparkles size={24} />,

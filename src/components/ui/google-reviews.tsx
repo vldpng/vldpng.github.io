@@ -1,72 +1,148 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { APIProvider, useMapsLibrary } from '@vis.gl/react-google-maps';
 import { motion } from 'motion/react';
 import { Star } from 'lucide-react';
-import { TestimonialsColumn } from './testimonials-columns-1';
+import { Marquee } from './marquee';
 
-const API_KEY =
-  process.env.GOOGLE_MAPS_PLATFORM_KEY ||
-  (import.meta as any).env?.VITE_GOOGLE_MAPS_PLATFORM_KEY ||
-  (globalThis as any).GOOGLE_MAPS_PLATFORM_KEY ||
-  '';
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_PLATFORM_KEY || '';
+const PLACE_ID = import.meta.env.VITE_GOOGLE_PLACE_ID || 'ChIJmW83sRvd7kYRDQZdAt_PQfk';
 
-export function GoogleReviewsIntegration({ fallbackReviews }: { fallbackReviews: any[] }) {
+type ReviewCard = {
+  name: string;
+  role: string;
+  text: string;
+  image?: string;
+  rating?: number;
+  authorUri?: string;
+  reviewUri?: string;
+};
+
+const GOOGLE_MAPS_PROFILE_URL =
+  `https://www.google.com/maps/search/?api=1&query=RoyalDent&query_place_id=${PLACE_ID}`;
+
+function mergeUniqueReviews(primary: ReviewCard[], saved: ReviewCard[]): ReviewCard[] {
+  const seenAuthors = new Set<string>();
+  return [...primary, ...saved].filter((review) => {
+    const author = review.name.trim().toLocaleLowerCase();
+    if (seenAuthors.has(author)) return false;
+    seenAuthors.add(author);
+    return true;
+  });
+}
+
+type ReviewsState = {
+  reviews: ReviewCard[];
+  googleMapsUri?: string;
+  live: boolean;
+};
+
+export function GoogleReviewsIntegration({ fallbackReviews }: { fallbackReviews: ReviewCard[] }) {
   if (!API_KEY) {
-     return <Reviews reviews={fallbackReviews} hasKey={false} />;
+    return (
+      <Reviews
+        reviews={fallbackReviews}
+        live={fallbackReviews.length > 0}
+        googleMapsUri={GOOGLE_MAPS_PROFILE_URL}
+      />
+    );
   }
 
   return (
-    <APIProvider apiKey={API_KEY} version="weekly">
-       <LiveReviewsFetch fallbackReviews={fallbackReviews} />
+    <APIProvider apiKey={API_KEY} version="weekly" language="lv" region="LV">
+      <LiveReviewsFetch fallbackReviews={fallbackReviews} />
     </APIProvider>
-  )
+  );
 }
 
-function LiveReviewsFetch({ fallbackReviews }: { fallbackReviews: any[] }) {
+function LiveReviewsFetch({ fallbackReviews }: { fallbackReviews: ReviewCard[] }) {
   const placesLib = useMapsLibrary('places');
-  const [reviews, setReviews] = useState<any[] | null>(null);
+  const [state, setState] = useState<ReviewsState | null>(null);
 
   useEffect(() => {
     if (!placesLib) return;
-    
-    // Пытаемся найти клинику по ссылке или названию
-    placesLib.Place.searchByText({
-      textQuery: 'https://maps.app.goo.gl/xxSxTXSLivYSAL7s5 Jūrmala dental', // Поиск по ссылке
-      fields: ['id', 'reviews', 'displayName']
-    }).then(({ places }) => {
-      if (places && places[0] && places[0].reviews && places[0].reviews.length > 0) {
-        const fetchedReviews = places[0].reviews.map((r: any) => ({
-           name: r.authorAttribution?.displayName || 'Пользователь Google',
-           role: 'Пациент клиники',
-           text: r.text || 'Оценил(а) на отлично',
-           image: r.authorAttribution?.photoURI || 'https://ui-avatars.com/api/?name=G&background=random'
+
+    let cancelled = false;
+    const place = new placesLib.Place({ id: PLACE_ID });
+
+    void place
+      .fetchFields({
+        fields: ['displayName', 'reviews', 'rating', 'userRatingCount', 'googleMapsURI'],
+      })
+      .then(({ place: fetchedPlace }) => {
+        if (cancelled) return;
+
+        const fetchedReviews: ReviewCard[] = (fetchedPlace.reviews ?? []).map((review) => ({
+          name: review.authorAttribution?.displayName || 'Пользователь Google Maps',
+          role: review.relativePublishTimeDescription || 'Отзыв в Google Maps',
+          text: review.text || 'Отзыв оставлен без текста',
+          image: review.authorAttribution?.photoURI || '/images/icons/placeholder.webp',
+          rating: review.rating ?? undefined,
+          authorUri: review.authorAttribution?.uri || undefined,
+          reviewUri: review.googleMapsURI || undefined,
         }));
-        
-        // Так как Google API возвращает до 5 отзывов, мы дополняем их нашими, чтобы заполнить колонки
-        const combined = [...fetchedReviews, ...fallbackReviews];
-        
-        // Убираем возможные дубликаты и оставляем нужное количество (до 9 для красивой сетки)
-        setReviews(combined.slice(0, 9));
-      } else {
-        setReviews(fallbackReviews);
-      }
-    }).catch((e) => {
-      console.error('Не удалось загрузить отзывы:', e);
-      setReviews(fallbackReviews);
-    });
+
+        if (fetchedReviews.length === 0) {
+          setState({
+            reviews: fallbackReviews,
+            googleMapsUri: fetchedPlace.googleMapsURI || GOOGLE_MAPS_PROFILE_URL,
+            live: fallbackReviews.length > 0,
+          });
+          return;
+        }
+
+        // API возвращает максимум пять отзывов. Дополняем их сохранёнными
+        // отзывами из скриншотов и убираем повтор автора, если Google позднее
+        // включит тот же отзыв в автоматическую подборку.
+        setState({
+          reviews: mergeUniqueReviews(fetchedReviews, fallbackReviews),
+          googleMapsUri: fetchedPlace.googleMapsURI || GOOGLE_MAPS_PROFILE_URL,
+          live: true,
+        });
+      })
+      .catch((error: unknown) => {
+        console.error('Не удалось загрузить отзывы Google Maps:', error);
+        if (!cancelled) {
+          setState({
+            reviews: fallbackReviews,
+            googleMapsUri: GOOGLE_MAPS_PROFILE_URL,
+            live: fallbackReviews.length > 0,
+          });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [placesLib, fallbackReviews]);
 
-  const displayReviews = reviews || fallbackReviews;
-  
-  return <Reviews reviews={displayReviews} hasKey={true} loading={!reviews} />;
+  return (
+    <Reviews
+      reviews={state?.reviews ?? fallbackReviews}
+      live={state?.live ?? false}
+      googleMapsUri={state?.googleMapsUri}
+      loading={!state}
+    />
+  );
 }
 
-function Reviews({ reviews, hasKey, loading = false }: { reviews: any[], hasKey: boolean, loading?: boolean }) {
-  const firstColumn = reviews.slice(0, Math.ceil(reviews.length / 3));
-  const secondColumn = reviews.slice(Math.ceil(reviews.length / 3), Math.ceil((reviews.length / 3) * 2));
-  const thirdColumn = reviews.slice(Math.ceil((reviews.length / 3) * 2));
+function Reviews({
+  reviews,
+  live,
+  googleMapsUri,
+  loading = false,
+}: {
+  reviews: ReviewCard[];
+  live: boolean;
+  googleMapsUri?: string;
+  loading?: boolean;
+}) {
+  // Две встречные строки. При нечётном числе отзывов перевес отдаём верхней:
+  // Google обычно возвращает пять штук, и нижняя строка не должна остаться одна.
+  const half = Math.ceil(reviews.length / 2);
+  const firstRow = reviews.slice(0, half);
+  const secondRow = reviews.slice(half);
 
   return (
     <div className="bg-zinc-50 dark:bg-zinc-950 py-20 px-2 md:px-3 relative w-full">
@@ -79,22 +155,146 @@ function Reviews({ reviews, hasKey, loading = false }: { reviews: any[], hasKey:
       >
         <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20">
           <Star className="w-3.5 h-3.5 fill-amber-500" />
-          Отзывы Google Maps
+          {live ? 'Отзывы Google Maps' : 'Отзывы пациентов'}
         </div>
 
         <h2 className="h-section text-zinc-900 dark:text-white mt-5">
           {loading ? "Синхронизация..." : "Что говорят пациенты"}
         </h2>
         <p className="mt-4 text-lead text-zinc-500 dark:text-zinc-400">
-          Действительные и честные оценки на основе реального опыта лечения в нашей клинике.
+          {live
+            ? 'Отзывы пациентов, опубликованные в профиле клиники на Google Maps.'
+            : 'Отзывы пациентов о лечении в нашей клинике.'}
         </p>
+        {live && googleMapsUri && (
+          <a
+            className="mt-3 text-sm font-semibold text-blue-600 underline-offset-4 hover:underline dark:text-blue-400"
+            href={googleMapsUri}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Смотреть профиль в Google Maps
+          </a>
+        )}
       </motion.div>
 
-      <div className="flex justify-center gap-6 mt-14 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] max-h-[700px] overflow-hidden">
-        {firstColumn.length > 0 && <TestimonialsColumn testimonials={firstColumn} duration={35} />}
-        {secondColumn.length > 0 && <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={45} />}
-        {thirdColumn.length > 0 && <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={35} />}
+      <div className="relative mt-14 flex w-full flex-col gap-6 overflow-hidden">
+        <Marquee pauseOnHover duration={60}>
+          {firstRow.map((review, i) => (
+            <ReviewTile key={`top-${review.name}-${i}`} review={review} />
+          ))}
+        </Marquee>
+
+        {secondRow.length > 0 && (
+          <Marquee reverse pauseOnHover duration={75}>
+            {secondRow.map((review, i) => (
+              <ReviewTile key={`bottom-${review.name}-${i}`} review={review} />
+            ))}
+          </Marquee>
+        )}
+
+        {/* Шторки: лента должна утекать за край, а не обрываться. Цвет повторяет
+            фон секции, поэтому градиент задан теми же zinc-50/zinc-950. */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-zinc-50 dark:from-zinc-950 sm:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-zinc-50 dark:from-zinc-950 sm:w-32" />
       </div>
     </div>
+  );
+}
+
+/**
+ * Карточка отзыва в ленте. В отличие от вертикальных колонок здесь фиксированная
+ * ширина и обрезка текста: у бегущей строки все карточки должны быть одной
+ * высоты, иначе лента дёргается по вертикали на каждом стыке.
+ */
+function ReviewTile({ review }: { review: ReviewCard }) {
+  const { name, role, text, image, rating = 5, authorUri, reviewUri } = review;
+  const initial = name.trim().charAt(0).toUpperCase() || 'R';
+  const [expanded, setExpanded] = useState(false);
+  const canExpand = text.length > 180;
+
+  return (
+    <figure className="w-[300px] shrink-0 rounded-[2rem] border border-zinc-200 bg-card p-6 shadow-sm sm:w-[340px] dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-xl">
+      <div className="flex items-center gap-3">
+        {image ? (
+          <img
+            width={40}
+            height={40}
+            src={image}
+            alt={name}
+            loading="lazy"
+            className="h-10 w-10 shrink-0 rounded-full border border-zinc-200 object-cover dark:border-zinc-800"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-500/15 font-semibold text-amber-700 dark:text-amber-300"
+          >
+            {initial}
+          </span>
+        )}
+        <figcaption className="flex min-w-0 flex-col text-left">
+          {authorUri ? (
+            <a
+              className="truncate font-semibold leading-tight tracking-tight text-zinc-900 hover:underline dark:text-white"
+              href={authorUri}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {name}
+            </a>
+          ) : (
+            <span translate="no" className="truncate font-semibold leading-tight tracking-tight text-zinc-900 dark:text-white">
+              {name}
+            </span>
+          )}
+          <span translate="no" className="mt-0.5 truncate text-[13px] tracking-tight text-zinc-500">{role}</span>
+        </figcaption>
+      </div>
+
+      <div className="mt-4 flex gap-1">
+        {[...Array(5)].map((_, starIndex) => (
+          <Star
+            key={starIndex}
+            className={`h-4 w-4 ${
+              starIndex < Math.round(rating)
+                ? 'fill-amber-500 text-amber-500'
+                : 'fill-transparent text-zinc-300 dark:text-zinc-700'
+            }`}
+          />
+        ))}
+      </div>
+
+      <blockquote
+        translate="no"
+        className={`mt-3 text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300 ${
+          expanded ? '' : 'line-clamp-4'
+        }`}
+      >
+        "{text}"
+      </blockquote>
+
+      {canExpand && (
+        <button
+          type="button"
+          className="mt-3 text-xs font-semibold text-zinc-700 underline-offset-4 hover:underline dark:text-zinc-200"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((value) => !value)}
+        >
+          {expanded ? 'Свернуть' : 'Читать полностью'}
+        </button>
+      )}
+
+      {reviewUri && (
+        <a
+          className="mt-4 inline-block text-xs font-semibold text-blue-600 underline-offset-4 hover:underline dark:text-blue-400"
+          href={reviewUri}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Открыть отзыв в Google Maps
+        </a>
+      )}
+    </figure>
   );
 }

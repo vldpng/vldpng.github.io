@@ -13,6 +13,7 @@ const manualTranslations: Record<string, string> = {
     'Maxim Gorky Institute — Degree in Dentistry',
   'Имплантация': 'Dental Implants',
   'Имплантация зубов': 'Dental Implants',
+  'Калькулятор цен на имплантацию': 'Price calculator for implantation',
   'Имплантация All-on-4': 'All-on-4 Dental Implants',
   'Имплантация All-on-6': 'All-on-6 Dental Implants',
   'Записаться на приём': 'Book an Appointment',
@@ -60,6 +61,20 @@ const manualTranslations: Record<string, string> = {
   'Этапы имплантации': 'Implantation stages',
   'прайс-листе клиники': "the clinic's price list",
   'Отзывы Google Maps': 'Google Maps reviews',
+  'Пользователь Google Maps': 'Google Maps user',
+  'Отзыв в Google Maps': 'Review on Google Maps',
+  'Отзыв оставлен без текста': 'Review submitted without text',
+  'Не удалось загрузить отзывы Google Maps:': 'Unable to load Google Maps reviews:',
+  'Отзывы пациентов': 'Patient reviews',
+  'Google Maps показывает ограниченную подборку отзывов, отсортированную по релевантности.':
+    'Google Maps displays a limited selection of reviews ordered by relevance.',
+  'Отзывы пациентов, опубликованные в профиле клиники на Google Maps.':
+    "Patient reviews published on the clinic's Google Maps profile.",
+  'Отзывы пациентов о лечении в нашей клинике.': 'Patient reviews about treatment at our clinic.',
+  'Смотреть профиль в Google Maps': 'View profile on Google Maps',
+  'Открыть отзыв в Google Maps': 'Open review on Google Maps',
+  'Читать полностью': 'Read full review',
+  'Свернуть': 'Show less',
   'долговечность': 'durability',
   'Обработка пародонтального кармана аппаратом Vector':
     'Periodontal pocket treatment with the Vector device',

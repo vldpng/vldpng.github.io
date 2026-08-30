@@ -8,7 +8,9 @@ import { fileURLToPath } from "url";
 import { registerLeadRoutes } from "./src/server/leads";
 import { registerAdminRoutes } from "./src/server/admin";
 import { UPLOADS_STAFF_DIR } from "./src/server/paths";
-import { registerTelegramRoutes } from "./src/server/telegram";
+import { ensureTelegramWebhook, registerTelegramRoutes } from "./src/server/telegram";
+import { installProcessAlerts, reportError } from "./src/server/alerts";
+import { checkDatabase } from "./src/server/db";
 
 /**
  * Каталог приложения — считаем от самого файла, а не от process.cwd().
@@ -20,6 +22,10 @@ import { registerTelegramRoutes } from "./src/server/telegram";
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 async function startServer() {
+  // Ставим до создания приложения: падение на старте (например, недоступный
+  // каталог данных) тоже должно дойти до Telegram, а не только в лог Plesk.
+  installProcessAlerts();
+
   const app = express();
   // Пустая строка и «0» — разные вещи, поэтому проверяем именно наличие:
   // под Phusion Passenger порт назначает он сам, и штатное значение PORT — 0.
@@ -29,8 +35,22 @@ async function startServer() {
   app.use(express.json());
 
   // API routes start
+  /*
+   * Точка для внешнего монитора. Проверяет базу, а не только живость
+   * процесса: без этого «200 OK» приходил бы и тогда, когда заявки уже
+   * никуда не сохраняются, и монитор считал бы сайт здоровым.
+   *
+   * Падение сайта целиком ловится только отсюда, снаружи — изнутри мёртвый
+   * процесс сообщить о себе не может.
+   */
   app.get("/api/health", (req, res) => {
-    res.json({ status: "ok" });
+    try {
+      checkDatabase();
+      res.json({ status: "ok" });
+    } catch (error) {
+      reportError("health", error);
+      res.status(503).json({ status: "error", error: "database_unavailable" });
+    }
   });
 
   // Записи на приём как отдельной сущности у сайта нет: посетитель оставляет
@@ -62,7 +82,23 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(APP_ROOT, "dist");
-    app.use(express.static(distPath, { redirect: false }));
+    app.use(express.static(distPath, {
+      redirect: false,
+      setHeaders(res, filePath) {
+        const normalized = filePath.replaceAll("\\", "/");
+        if (normalized.includes("/assets/")) {
+          // Vite includes a content hash in these names, so they never become
+          // stale: a changed file receives a new URL on the next deployment.
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        } else if (/\.(?:avif|gif|jpe?g|png|svg|webp|woff2?)$/i.test(normalized)) {
+          // Public media has stable names and can change between deployments,
+          // therefore it gets a long but finite cache rather than immutable.
+          res.setHeader("Cache-Control", "public, max-age=2592000");
+        } else if (normalized.endsWith(".html")) {
+          res.setHeader("Cache-Control", "no-cache");
+        }
+      },
+    }));
     app.get("*", (req, res) => {
       const cleanPath = req.path.replace(/^\/+|\/+$/g, "");
       const isAdminPath = /^(?:ru\/|en\/)?admin(?:\/|$)/.test(cleanPath);
@@ -70,6 +106,7 @@ async function startServer() {
       const language = cleanPath.split("/")[0];
       const languageRoot = path.join(distPath, language, "index.html");
 
+      res.setHeader("Cache-Control", "no-cache");
       if (!isAdminPath && existsSync(localized)) {
         return res.sendFile(localized);
       }
@@ -80,8 +117,23 @@ async function startServer() {
     });
   }
 
+  /*
+   * Последний рубеж: сюда попадает всё, что не поймали сами роуты.
+   * Регистрируется после всех маршрутов — Express выбирает обработчик
+   * ошибок по порядку и по четырём аргументам, поэтому `next` обязателен,
+   * даже если не используется.
+   */
+  app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    reportError("express", err, { Маршрут: `${req.method} ${req.originalUrl}` });
+    if (res.headersSent) return;
+    res.status(500).json({ success: false, error: "internal_error" });
+  });
+
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    // Не задерживаем запуск сайта внешним запросом к Telegram. Ошибка
+    // регистрации попадёт в лог Plesk, а сам HTTP-сервер останется доступен.
+    void ensureTelegramWebhook();
   });
 }
 

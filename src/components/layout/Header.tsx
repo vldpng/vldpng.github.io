@@ -66,7 +66,7 @@ export function Header() {
               заданной ширины, и без него флекс сжимал его до нуля, как только
               содержимое шапки переставало помещаться. */}
           <img
-            src="/brand/logo.png"
+            src="/brand/logo.webp"
             alt="RoyalDent"
             width={374}
             height={67}
@@ -174,19 +174,19 @@ export function Header() {
 
           <div className="mt-auto pt-6 flex flex-col gap-3 shrink-0">
             <span className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-              <MaskIcon src="/icons/placeholder.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
+              <MaskIcon src="/images/icons/placeholder.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
               <span className="truncate">{clinic.address.full}</span>
             </span>
             <span className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-              <MaskIcon src="/icons/timing.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
+              <MaskIcon src="/images/icons/timing.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
               {clinic.hours.short}
             </span>
             <a href={clinic.phoneHref} className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white font-medium">
-              <MaskIcon src="/icons/phone-call.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
+              <MaskIcon src="/images/icons/phone-call.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
               {clinic.phoneDisplay}
             </a>
             <a href={clinic.emailHref} className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white font-medium pb-2">
-              <MaskIcon src="/icons/mail.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
+              <MaskIcon src="/images/icons/mail.webp" className="w-4 h-4 shrink-0 text-zinc-400" />
               {clinic.email}
             </a>
 

@@ -13,6 +13,7 @@
  */
 import type { Express, Request, Response } from "express";
 import { insertLead } from "./db";
+import { reportError } from "./alerts";
 import { escapeHtml, isTelegramConfigured, monoTable, rigaTimestamp, sendTelegramMessage } from "./telegram";
 
 export interface Lead {
@@ -149,7 +150,13 @@ async function handleLead(req: Request, res: Response, source: string, requireEm
   try {
     leadId = insertLead({ ...lead, ip });
   } catch (e) {
-    console.error("[lead] запись в БД не удалась:", e);
+    // Самый дорогой сбой на сайте: посетитель оставил телефон, а заявка
+    // пропала. Не только в лог — об этом нужно узнать сразу.
+    reportError("lead:insert", e, {
+      Телефон: lead.phone,
+      Источник: lead.source || "—",
+      Страница: lead.page || "—",
+    });
     return res.status(500).json({ success: false, error: "storage_failed" });
   }
 

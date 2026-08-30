@@ -53,6 +53,7 @@ export const latvianRemainingTranslations: Record<string, string> = {
   "Каждый выбранный зуб — это 1 имплант и 1 коронка.": "Katrs izvēlētais zobs atbilst 1 implantam un 1 kronim.",
   "Какие данные обрабатываются и на каком основании": "Kādi dati tiek apstrādāti un uz kāda pamata",
   "Калькулятор содержит актуальные цены клиники RoyalDent. Итоговая стоимость подтверждается после консультации и диагностики.": "Kalkulatorā izmantotas aktuālās RoyalDent klīnikas cenas. Galīgās izmaksas tiek apstiprinātas pēc konsultācijas un diagnostikas.",
+  "Калькулятор цен на имплантацию": "Zobu implantācijas cenu kalkulators",
   "Калькулятор цен на": "Cenu kalkulators",
   "Клиника оказывает платную амбулаторную специализированную стоматологическую помощь. Услуги взрослым пациентам в Латвии, как правило, не оплачиваются из государственного бюджета и предоставляются на платной основе.": "Klīnika sniedz maksas ambulatoros specializētos zobārstniecības pakalpojumus. Pieaugušo zobārstniecības pakalpojumi Latvijā parasti netiek apmaksāti no valsts budžeta un tiek sniegti par maksu.",
   "Компания не продаёт и не передаёт персональные данные третьим лицам в маркетинговых целях.": "Sabiedrība nepārdod un nenodod personas datus trešajām personām mārketinga nolūkos.",

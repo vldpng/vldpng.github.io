@@ -19,7 +19,10 @@ function getConfig() {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  return { token, chatId, webhookSecret, enabled: Boolean(token && chatId) };
+  // Технические уведомления — в отдельный чат, чтобы сбои не перемешивались
+  // с обращениями пациентов. Не задан — алерты остаются только в логе.
+  const alertChatId = process.env.TELEGRAM_ALERT_CHAT_ID;
+  return { token, chatId, webhookSecret, alertChatId, enabled: Boolean(token && chatId) };
 }
 
 export function isTelegramConfigured(): boolean {
@@ -144,6 +147,33 @@ export async function sendTelegramMessage(html: string, leadId?: number): Promis
   }
 }
 
+/**
+ * Техническое уведомление о сбое — в чат из TELEGRAM_ALERT_CHAT_ID.
+ *
+ * Намеренно ничего не сообщает наверх и никогда не зовёт reportError:
+ * вызывается из обработчиков ошибок, и авария при отправке алерта не должна
+ * порождать следующий алерт — это замкнуло бы петлю. Провал остаётся в логе.
+ *
+ * Троттлинг живёт в alerts.ts: здесь только доставка.
+ */
+export async function sendTelegramAlert(html: string): Promise<boolean> {
+  const { token, alertChatId } = getConfig();
+  if (!token || !alertChatId) return false;
+
+  const result = await callTelegram(token, "sendMessage", {
+    chat_id: alertChatId,
+    text: html,
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
+    disable_notification: false,
+  });
+
+  if (!result.ok) {
+    console.error(`[telegram] alert failed: ${result.status} ${result.description ?? ""}`);
+  }
+  return result.ok;
+}
+
 type TelegramCallback = {
   id?: string;
   data?: string;
@@ -174,8 +204,61 @@ async function answerCallback(token: string, id: string | undefined, text: strin
 }
 
 /**
+ * Регистрирует webhook из окружения самого приложения.
+ *
+ * Plesk передаёт Custom environment variables процессу Passenger, но не
+ * командам из вкладки `Run Node.js commands`. Поэтому ручной `setWebhook`
+ * оттуда не видит токен и секрет. Проверка при старте решает это один раз и
+ * заодно восстанавливает webhook после смены токена или домена.
+ */
+export async function ensureTelegramWebhook(): Promise<void> {
+  const { token, webhookSecret } = getConfig();
+  const appUrl = process.env.APP_URL?.trim();
+  if (!token || !webhookSecret || !appUrl) {
+    console.warn(
+      "[telegram] webhook registration skipped: TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET or APP_URL is missing",
+    );
+    return;
+  }
+
+  let webhookUrl: string;
+  try {
+    const baseUrl = new URL(appUrl);
+    if (baseUrl.protocol !== "https:") {
+      console.warn("[telegram] webhook registration skipped: APP_URL must use HTTPS");
+      return;
+    }
+    webhookUrl = new URL("/api/telegram/webhook", baseUrl).toString();
+  } catch {
+    console.warn("[telegram] webhook registration skipped: APP_URL is invalid");
+    return;
+  }
+
+  const current = await callTelegram(token, "getWebhookInfo", {});
+  if (current.ok && current.result?.url === webhookUrl) {
+    console.log(`[telegram] webhook ready: ${webhookUrl}`);
+    return;
+  }
+
+  const registered = await callTelegram(token, "setWebhook", {
+    url: webhookUrl,
+    secret_token: webhookSecret,
+    allowed_updates: ["callback_query"],
+  });
+
+  if (!registered.ok) {
+    console.error(
+      `[telegram] setWebhook failed: ${registered.status} ${registered.description ?? ""}`,
+    );
+    return;
+  }
+
+  console.log(`[telegram] webhook registered: ${webhookUrl}`);
+}
+
+/**
  * Telegram присылает сюда нажатия на inline-кнопку. Endpoint начинает
- * работать только после явного setWebhook на публичный HTTPS-адрес сайта.
+ * работать после автоматического setWebhook при старте приложения.
  */
 export function registerTelegramRoutes(app: Express): void {
   app.post("/api/telegram/webhook", async (req: Request, res) => {

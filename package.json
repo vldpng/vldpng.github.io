@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
     "dev": "tsx server.ts",
     "sitemap": "tsx scripts/generate-sitemap.ts",
@@ -20,7 +23,8 @@
     "doctors:reset": "tsx scripts/reset-doctors.ts",
     "doctors:backfill": "tsx scripts/backfill-doctor-translations.ts",
     "telegram:chat-id": "tsx scripts/telegram-chat-id.ts",
-    "telegram:test": "tsx scripts/telegram-test-lead.ts"
+    "telegram:test": "tsx scripts/telegram-test-lead.ts",
+    "telegram:test-alert": "tsx scripts/telegram-test-alert.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.3.0",
